@@ -4,12 +4,29 @@ import { Analytics } from '@vercel/analytics/react';
 import { ErrorBoundary } from './components/layout/ErrorBoundary';
 import { Layout } from './components/layout/Layout';
 
-const Overview = lazy(() => import('./components/modules/Overview').then(m => ({ default: m.Overview })));
-const Transformers = lazy(() => import('./components/modules/Transformers').then(m => ({ default: m.Transformers })));
-const LumpedDistributed = lazy(() => import('./components/modules/LumpedDistributed').then(m => ({ default: m.LumpedDistributed })));
-const TransmissionLines = lazy(() => import('./components/modules/TransmissionLines').then(m => ({ default: m.TransmissionLines })));
-const Transients = lazy(() => import('./components/modules/Transients').then(m => ({ default: m.Transients })));
-const Antennas = lazy(() => import('./components/modules/Antennas').then(m => ({ default: m.Antennas })));
+// Retry dynamic imports once on failure (handles stale service worker cache)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function lazyRetry(importFn: () => Promise<any>) {
+  return lazy(() =>
+    importFn().catch(() => {
+      const reloaded = sessionStorage.getItem('chunk-reload');
+      if (!reloaded) {
+        sessionStorage.setItem('chunk-reload', '1');
+        window.location.reload();
+        return new Promise(() => {}); // never resolves — page is reloading
+      }
+      sessionStorage.removeItem('chunk-reload');
+      return importFn();
+    }),
+  );
+}
+
+const Overview = lazyRetry(() => import('./components/modules/Overview').then(m => ({ default: m.Overview })));
+const Transformers = lazyRetry(() => import('./components/modules/Transformers').then(m => ({ default: m.Transformers })));
+const LumpedDistributed = lazyRetry(() => import('./components/modules/LumpedDistributed').then(m => ({ default: m.LumpedDistributed })));
+const TransmissionLines = lazyRetry(() => import('./components/modules/TransmissionLines').then(m => ({ default: m.TransmissionLines })));
+const Transients = lazyRetry(() => import('./components/modules/Transients').then(m => ({ default: m.Transients })));
+const Antennas = lazyRetry(() => import('./components/modules/Antennas').then(m => ({ default: m.Antennas })));
 
 function PageLoader() {
   return (
@@ -21,23 +38,19 @@ function PageLoader() {
 
 function App() {
   return (
-    <ErrorBoundary>
-      <Router basename={import.meta.env.BASE_URL}>
-        <Layout>
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Overview />} />
-              <Route path="/transformers" element={<Transformers />} />
-              <Route path="/lumped-distributed" element={<LumpedDistributed />} />
-              <Route path="/transmission-lines" element={<TransmissionLines />} />
-              <Route path="/transients" element={<Transients />} />
-              <Route path="/antennas" element={<Antennas />} />
-            </Routes>
-          </Suspense>
-        </Layout>
-      </Router>
+    <Router basename={import.meta.env.BASE_URL}>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><Overview /></Suspense></ErrorBoundary>} />
+          <Route path="/transformers" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><Transformers /></Suspense></ErrorBoundary>} />
+          <Route path="/lumped-distributed" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><LumpedDistributed /></Suspense></ErrorBoundary>} />
+          <Route path="/transmission-lines" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><TransmissionLines /></Suspense></ErrorBoundary>} />
+          <Route path="/transients" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><Transients /></Suspense></ErrorBoundary>} />
+          <Route path="/antennas" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><Antennas /></Suspense></ErrorBoundary>} />
+        </Routes>
+      </Layout>
       <Analytics />
-    </ErrorBoundary>
+    </Router>
   );
 }
 
