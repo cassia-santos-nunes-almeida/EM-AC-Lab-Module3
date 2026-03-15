@@ -134,7 +134,6 @@ export function SmithChartSim({ className }: SmithChartSimProps) {
 
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
-    const size = Math.min(rect.width, rect.height);
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
