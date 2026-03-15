@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { MathWrapper } from '../common/MathWrapper';
-import { PredictionGate } from '../common/PredictionGate';
-import { ConceptCheck } from '../common/ConceptCheck';
-import { YourTurnPanel } from '../common/YourTurnPanel';
-import { SectionHook } from '../common/SectionHook';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { useProgressStore } from '../../store/progressStore';
-import { LadderAnimation } from '../simulations/LadderAnimation';
+import { MathWrapper } from '@/components/common/MathWrapper';
+import { PredictionGate } from '@/components/common/PredictionGate';
+import { ConceptCheck } from '@/components/common/ConceptCheck';
+import { YourTurnPanel } from '@/components/common/YourTurnPanel';
+import { SectionHook } from '@/components/common/SectionHook';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { useProgressStore } from '@/store/progressStore';
+import { LadderAnimation } from '@/components/simulations/LadderAnimation';
 
 /**
  * Section 2 page: Lumped to Distributed.

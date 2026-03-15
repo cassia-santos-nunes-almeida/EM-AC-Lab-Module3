@@ -5,7 +5,7 @@ import {
   calculateActualSecondaryVoltage,
   calculateSecondaryCurrent,
   calculateReflectedImpedance,
-} from '../../utils/transmissionMath';
+} from '@/utils/transmissionMath';
 
 /** Props for the CoupledCoilsSim component. */
 interface CoupledCoilsSimProps {

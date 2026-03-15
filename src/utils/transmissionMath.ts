@@ -1,4 +1,4 @@
-import type { BounceEvent } from '../types/transmission';
+import type { BounceEvent } from '@/types/transmission';
 
 /** Speed of light in vacuum (m/s). */
 export const C = 3e8;

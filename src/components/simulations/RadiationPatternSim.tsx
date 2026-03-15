@@ -4,7 +4,7 @@ import {
   calculateDirectivity,
   calculateRadiationResistance,
   calculateHPBW,
-} from '../../utils/transmissionMath';
+} from '@/utils/transmissionMath';
 
 /** Props for the RadiationPatternSim component. */
 interface RadiationPatternSimProps {
@@ -211,6 +211,7 @@ export function RadiationPatternSim({ className = '' }: RadiationPatternSimProps
           </div>
           <input
             type="range"
+            aria-label="Dipole Length"
             min={0.1}
             max={1.5}
             step={0.05}

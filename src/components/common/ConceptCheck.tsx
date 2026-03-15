@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { HelpCircle, Lightbulb } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 interface MultipleChoiceOption {
   text: string;

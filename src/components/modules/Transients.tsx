@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
-import { MathWrapper } from '../common/MathWrapper';
-import { PredictionGate } from '../common/PredictionGate';
-import { ConceptCheck } from '../common/ConceptCheck';
-import { CollapsibleSection } from '../common/CollapsibleSection';
-import { YourTurnPanel } from '../common/YourTurnPanel';
-import { SectionHook } from '../common/SectionHook';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { useProgressStore } from '../../store/progressStore';
-import { BounceDiagram } from '../simulations/BounceDiagram';
+import { MathWrapper } from '@/components/common/MathWrapper';
+import { PredictionGate } from '@/components/common/PredictionGate';
+import { ConceptCheck } from '@/components/common/ConceptCheck';
+import { CollapsibleSection } from '@/components/common/CollapsibleSection';
+import { YourTurnPanel } from '@/components/common/YourTurnPanel';
+import { SectionHook } from '@/components/common/SectionHook';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { useProgressStore } from '@/store/progressStore';
+import { BounceDiagram } from '@/components/simulations/BounceDiagram';
 
 /**
  * Section 4: Transients on Transmission Lines.

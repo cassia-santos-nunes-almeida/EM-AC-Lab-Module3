@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
 import { Radio, Wifi, Satellite, Smartphone, Tv } from 'lucide-react';
-import { MathWrapper } from '../common/MathWrapper';
-import { PredictionGate } from '../common/PredictionGate';
-import { ConceptCheck } from '../common/ConceptCheck';
-import { CollapsibleSection } from '../common/CollapsibleSection';
-import { YourTurnPanel } from '../common/YourTurnPanel';
-import { SectionHook } from '../common/SectionHook';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { useProgressStore } from '../../store/progressStore';
-import { RadiationPatternSim } from '../simulations/RadiationPatternSim';
-import { MODULE_URLS } from '../../constants/modules';
+import { MathWrapper } from '@/components/common/MathWrapper';
+import { PredictionGate } from '@/components/common/PredictionGate';
+import { ConceptCheck } from '@/components/common/ConceptCheck';
+import { CollapsibleSection } from '@/components/common/CollapsibleSection';
+import { YourTurnPanel } from '@/components/common/YourTurnPanel';
+import { SectionHook } from '@/components/common/SectionHook';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { useProgressStore } from '@/store/progressStore';
+import { RadiationPatternSim } from '@/components/simulations/RadiationPatternSim';
+import { MODULE_URLS } from '@/constants/modules';
 
 /** Antenna type card data. */
 interface AntennaCard {

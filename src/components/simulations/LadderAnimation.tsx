@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Play, Pause, SkipForward } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 /* ── Subdivision stages ──────────────────────────────────────────── */
 
@@ -143,6 +143,8 @@ export function LadderAnimation({
   const lastAdvanceRef = useRef(0);
   /** requestAnimationFrame handle. */
   const rafRef = useRef(0);
+  /** Stable reference to the render function (avoids self-referencing useCallback). */
+  const renderRef = useRef<FrameRequestCallback>(() => {});
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -416,7 +418,7 @@ export function LadderAnimation({
       }
     }
 
-    rafRef.current = requestAnimationFrame(render);
+    rafRef.current = requestAnimationFrame(renderRef.current);
   }, [stageIndex, playing, totalL, totalC, advanceStage]);
 
   /* ── Lifecycle ─────────────────────────────────────────────────── */
@@ -430,6 +432,7 @@ export function LadderAnimation({
   }, []);
 
   useEffect(() => {
+    renderRef.current = render;
     rafRef.current = requestAnimationFrame(render);
     return () => cancelAnimationFrame(rafRef.current);
   }, [render]);

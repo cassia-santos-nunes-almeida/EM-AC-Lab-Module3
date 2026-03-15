@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Lightbulb } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 /** Props for the SectionHook component that displays a real-world context card at the top of each section. */
 interface SectionHookProps {

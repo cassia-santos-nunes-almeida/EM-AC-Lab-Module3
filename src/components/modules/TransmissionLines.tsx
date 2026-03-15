@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
-import { MathWrapper } from '../common/MathWrapper';
-import { PredictionGate } from '../common/PredictionGate';
-import { ConceptCheck } from '../common/ConceptCheck';
-import { CollapsibleSection } from '../common/CollapsibleSection';
-import { YourTurnPanel } from '../common/YourTurnPanel';
-import { SectionHook } from '../common/SectionHook';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { useProgressStore } from '../../store/progressStore';
-import { TransmissionLineSim } from '../simulations/TransmissionLineSim';
-import { StandingWaveQuiz } from '../simulations/StandingWaveQuiz';
-import { SmithChartSim } from '../simulations/SmithChartSim';
+import { MathWrapper } from '@/components/common/MathWrapper';
+import { PredictionGate } from '@/components/common/PredictionGate';
+import { ConceptCheck } from '@/components/common/ConceptCheck';
+import { CollapsibleSection } from '@/components/common/CollapsibleSection';
+import { YourTurnPanel } from '@/components/common/YourTurnPanel';
+import { SectionHook } from '@/components/common/SectionHook';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { Tabs } from '@/components/common/Tabs';
+import { useProgressStore } from '@/store/progressStore';
+import { TransmissionLineSim } from '@/components/simulations/TransmissionLineSim';
+import { StandingWaveQuiz } from '@/components/simulations/StandingWaveQuiz';
+import { SmithChartSim } from '@/components/simulations/SmithChartSim';
 
 /**
  * Section 3 page: Transmission Lines.
@@ -36,6 +37,11 @@ export function TransmissionLines() {
 
       <SectionHook text="Every high-speed digital bus, every RF cable, and every PCB trace longer than a few centimetres behaves as a transmission line. Understanding impedance matching and reflections is the difference between a clean signal and a corrupted one." />
 
+      <Tabs tabs={[
+        {
+          label: 'Theory',
+          content: (
+            <div className="space-y-10">
       {/* ================================================================
           3.1 — Characteristic impedance
           ================================================================ */}
@@ -164,7 +170,13 @@ export function TransmissionLines() {
           }}
         />
       </section>
-
+            </div>
+          ),
+        },
+        {
+          label: 'Simulations',
+          content: (
+            <div className="space-y-10">
       {/* ================================================================
           3.3 — Transmission line simulation (gated)
           ================================================================ */}
@@ -336,7 +348,13 @@ export function TransmissionLines() {
           hints={['Normalize: z_L = Z_L/Z\u2080 = 1.5 + j1.0. Then \u0393 = (z_L \u2212 1)/(z_L + 1).']}
         />
       </section>
-
+            </div>
+          ),
+        },
+        {
+          label: 'Practice',
+          content: (
+            <div className="space-y-10">
       {/* ================================================================
           3.5 — Inverse problem: standing wave quiz
           ================================================================ */}
@@ -385,6 +403,10 @@ export function TransmissionLines() {
           }}
         />
       </section>
+            </div>
+          ),
+        },
+      ]} />
 
       <ModuleNavigation />
     </div>

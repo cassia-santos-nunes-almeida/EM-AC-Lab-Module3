@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { MessageSquare, Menu, WifiOff } from 'lucide-react';
 import { Sidebar } from './Sidebar';
-import { AiTutor, type TutorMode } from '../common/AiTutor';
-import { useOnlineStatus } from '../../hooks/useOnlineStatus';
+import { AiTutor, type TutorMode } from '@/components/common/AiTutor';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 
 interface LayoutProps {
   children: ReactNode;

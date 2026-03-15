@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Eye, CheckCircle, XCircle, SkipForward } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 /** A single prediction option that can include a visual (e.g., SVG curve sketch). */
 interface PredictionOption {
