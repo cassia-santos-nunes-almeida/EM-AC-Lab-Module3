@@ -8,6 +8,7 @@ import { ModuleNavigation } from '../common/ModuleNavigation';
 import { useProgressStore } from '../../store/progressStore';
 import { TransmissionLineSim } from '../simulations/TransmissionLineSim';
 import { StandingWaveQuiz } from '../simulations/StandingWaveQuiz';
+import { SmithChartSim } from '../simulations/SmithChartSim';
 
 /**
  * Section 3 page: Transmission Lines.
@@ -230,11 +231,28 @@ export function TransmissionLines() {
       </section>
 
       {/* ================================================================
-          3.4 — Inverse problem: standing wave quiz
+          3.4 — The Smith Chart
+          ================================================================ */}
+      <section id="smith-chart" className="space-y-4">
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+          <span className="text-engineering-blue-600 dark:text-engineering-blue-400 font-mono text-sm">3.4</span>
+          The Smith Chart
+        </h2>
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          The Smith chart is a graphical tool that maps every possible complex impedance onto a circle.
+          The center represents a matched load (&Gamma; = 0), the left edge is a short circuit (&Gamma; = &minus;1),
+          and the right edge is an open circuit (&Gamma; = +1). Constant-resistance circles and constant-reactance
+          arcs form the grid. Click anywhere on the chart to place an impedance point.
+        </p>
+        <SmithChartSim />
+      </section>
+
+      {/* ================================================================
+          3.5 — Inverse problem: standing wave quiz
           ================================================================ */}
       <section className="space-y-4">
         <h2 className="text-lg font-bold text-slate-900 dark:text-white">
-          3.4 &mdash; Inverse Problem: Identifying Terminations
+          3.5 &mdash; Inverse Problem: Identifying Terminations
         </h2>
 
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">

@@ -7,6 +7,7 @@ import { SectionHook } from '../common/SectionHook';
 import { ModuleNavigation } from '../common/ModuleNavigation';
 import { useProgressStore } from '../../store/progressStore';
 import { RadiationPatternSim } from '../simulations/RadiationPatternSim';
+import { MODULE_URLS } from '../../constants/modules';
 
 /** Antenna type card data. */
 interface AntennaCard {
@@ -399,7 +400,7 @@ export function Antennas() {
         {/* Bottom navigation links */}
         <div className="flex items-center justify-between pt-4">
           <a
-            href="/module-2"
+            href={MODULE_URLS.module2}
             className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-engineering-blue-600 dark:hover:text-engineering-blue-400 transition-colors"
           >
             <span aria-hidden="true">{'\u2190'}</span> Back to Module 2
