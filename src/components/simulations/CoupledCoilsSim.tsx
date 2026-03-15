@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   calculateMutualInductance,
   calculateSecondaryVoltage,
+  calculateActualSecondaryVoltage,
   calculateSecondaryCurrent,
   calculateReflectedImpedance,
 } from '../../utils/transmissionMath';
@@ -41,7 +42,8 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
   /* ── Derived electrical values ────────────────────────────────── */
 
   const M = calculateMutualInductance(k, L1, L2);
-  const V2 = calculateSecondaryVoltage(VS, N1, N2);
+  const V2ideal = calculateSecondaryVoltage(VS, N1, N2);
+  const V2actual = calculateActualSecondaryVoltage(VS, N1, N2, k);
   const Zref = calculateReflectedImpedance(N1, N2, ZL);
   const I1 = Zref === 0 ? 0 : VS / Zref;
   const I2 = calculateSecondaryCurrent(I1, N1, N2);
@@ -241,19 +243,6 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
     animFrameRef.current = requestAnimationFrame(render);
   }, [k, N1, N2, drawCoil, drawFieldLines]);
 
-  /** Set up resize observer for responsive canvas. */
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const observer = new ResizeObserver(() => {
-      // The render loop handles canvas size on every frame,
-      // so no explicit action needed here beyond triggering a frame.
-    });
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
-
   /** Start / restart the animation loop whenever render changes. */
   useEffect(() => {
     animFrameRef.current = requestAnimationFrame(render);
@@ -344,14 +333,18 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
           </div>
 
           {/* Computed values */}
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
             <ReadoutCard
               label="Mutual inductance M"
               value={`${(M * 1e3).toFixed(2)} mH`}
             />
             <ReadoutCard
-              label="Secondary voltage V₂"
-              value={`${V2.toFixed(1)} V`}
+              label="V₂ (ideal, k=1)"
+              value={`${V2ideal.toFixed(1)} V`}
+            />
+            <ReadoutCard
+              label="V₂ (actual)"
+              value={`${V2actual.toFixed(1)} V`}
             />
             <ReadoutCard
               label="Secondary current I₂"
@@ -363,10 +356,22 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
             />
           </div>
 
+          {/* Coupling warning */}
+          {k < 0.9 && (
+            <div className="flex items-start gap-2 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 px-3 py-2">
+              <span className="text-amber-600 dark:text-amber-400 text-sm mt-0.5">⚠</span>
+              <p className="text-xs text-amber-700 dark:text-amber-300">
+                <strong>k = {k.toFixed(2)} &lt; 0.9</strong> — significant flux leakage.
+                The actual secondary voltage is reduced to k &times; V<sub>ideal</sub> = {V2actual.toFixed(1)} V.
+                I₂ and Z<sub>ref</sub> still use the ideal transformer model.
+              </p>
+            </div>
+          )}
+
           {/* Fixed parameter note */}
           <p className="text-[11px] text-slate-400 dark:text-slate-500">
             Fixed: L₁ = 10 mH, L₂ = 10 mH, V<sub>s</sub> = 120 V.
-            V₂, I₂, and Z<sub>ref</sub> assume ideal coupling (k&nbsp;=&nbsp;1). The field-line visualization reflects the actual k value.
+            V₂ (actual) ≈ k &times; V<sub>s</sub> &times; N₂/N₁. I₂ and Z<sub>ref</sub> use the ideal transformer model (k = 1).
           </p>
         </div>
       </div>

@@ -280,18 +280,6 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
     return () => cancelAnimationFrame(animFrameRef.current);
   }, [render]);
 
-  /* -- Lifecycle: responsive canvas via ResizeObserver ------------------- */
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const observer = new ResizeObserver(() => {
-      // render loop picks up new size on next frame
-    });
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
-
   /* -- Lifecycle: redraw on dark mode toggle ----------------------------- */
 
   useEffect(() => {

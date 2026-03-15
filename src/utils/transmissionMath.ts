@@ -14,6 +14,12 @@ export function calculateSecondaryVoltage(V1: number, N1: number, N2: number): n
   return V1 * (N2 / N1);
 }
 
+/** Calculate actual secondary voltage accounting for coupling: V2 ≈ k * V1 * (N2/N1). */
+export function calculateActualSecondaryVoltage(V1: number, N1: number, N2: number, k: number): number {
+  if (N1 === 0) return 0;
+  return k * V1 * (N2 / N1);
+}
+
 /** Calculate ideal transformer secondary current: I2 = I1 * (N1/N2). */
 export function calculateSecondaryCurrent(I1: number, N1: number, N2: number): number {
   if (N2 === 0) return 0;
@@ -240,4 +246,22 @@ export function calculateHPBW(dipoleLengthFraction: number): number {
   }
 
   return (theta2 - theta1) * (180 / Math.PI);
+}
+
+/** Calculate complex reflection coefficient for complex load impedance. */
+export function calculateComplexReflectionCoefficient(
+  ZLr: number, ZLi: number, Z0: number
+): { real: number; imag: number; magnitude: number; phaseDeg: number } {
+  // Gamma = (ZL - Z0) / (ZL + Z0) where ZL = ZLr + jZLi
+  const numR = ZLr - Z0;
+  const numI = ZLi;
+  const denR = ZLr + Z0;
+  const denI = ZLi;
+  const denMagSq = denR * denR + denI * denI;
+  if (denMagSq === 0) return { real: 1, imag: 0, magnitude: 1, phaseDeg: 0 };
+  const real = (numR * denR + numI * denI) / denMagSq;
+  const imag = (numI * denR - numR * denI) / denMagSq;
+  const magnitude = Math.sqrt(real * real + imag * imag);
+  const phaseDeg = Math.atan2(imag, real) * (180 / Math.PI);
+  return { real, imag, magnitude, phaseDeg };
 }
