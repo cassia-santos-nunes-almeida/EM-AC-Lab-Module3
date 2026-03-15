@@ -1,0 +1,370 @@
+import { useEffect } from 'react';
+import { Radio, Wifi, Satellite, Smartphone, Tv } from 'lucide-react';
+import { MathWrapper } from '../common/MathWrapper';
+import { PredictionGate } from '../common/PredictionGate';
+import { SectionHook } from '../common/SectionHook';
+import { ModuleNavigation } from '../common/ModuleNavigation';
+import { useProgressStore } from '../../store/progressStore';
+import { RadiationPatternSim } from '../simulations/RadiationPatternSim';
+
+/** Antenna type card data. */
+interface AntennaCard {
+  /** Display name of the antenna type. */
+  name: string;
+  /** Typical applications. */
+  applications: string;
+  /** Typical frequency range. */
+  freqRange: string;
+  /** Key characteristic. */
+  characteristic: string;
+  /** Lucide icon component. */
+  icon: React.ElementType;
+}
+
+const antennaCards: AntennaCard[] = [
+  {
+    name: '\u03BB/2 Dipole',
+    applications: 'TV, FM radio',
+    freqRange: '88\u2013108 MHz (FM), 470\u2013890 MHz (UHF TV)',
+    characteristic: 'Omnidirectional in H-plane',
+    icon: Tv,
+  },
+  {
+    name: 'Patch Antenna',
+    applications: 'Mobile phones, GPS',
+    freqRange: '1\u20136 GHz',
+    characteristic: 'Low profile, easy to manufacture',
+    icon: Smartphone,
+  },
+  {
+    name: 'Yagi-Uda',
+    applications: 'WiFi directional, amateur radio',
+    freqRange: '144 MHz \u2013 5 GHz',
+    characteristic: 'High gain, narrow beam',
+    icon: Wifi,
+  },
+  {
+    name: 'Parabolic Dish',
+    applications: 'Satellite, radar',
+    freqRange: '1\u201340 GHz',
+    characteristic: 'Very high gain, pencil beam',
+    icon: Satellite,
+  },
+];
+
+export function Antennas() {
+  const markVisited = useProgressStore((s) => s.markVisited);
+  useEffect(() => { markVisited('antennas'); }, [markVisited]);
+
+  return (
+    <div className="space-y-10">
+      {/* ═══════════════════════════════════════════════════════════════
+          Section 5.1 — From transmission line to antenna
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="space-y-5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-engineering-blue-100 dark:bg-engineering-blue-900/30 rounded-lg flex items-center justify-center">
+            <Radio className="w-5 h-5 text-engineering-blue-600 dark:text-engineering-blue-400" />
+          </div>
+          <div>
+            <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
+              Section 5.1
+            </p>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              From Transmission Line to Antenna
+            </h2>
+          </div>
+        </div>
+
+        <SectionHook text="Every wireless device you use — phone, WiFi router, satellite dish — relies on antennas. An antenna is simply a transmission line that has been opened up to let energy escape into free space." />
+
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 space-y-4">
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            Imagine taking a transmission line and flaring its conductors apart. Instead of guiding
+            the wave between two conductors, the fields now radiate outward into space. This is
+            the fundamental transition from a transmission line to a <strong>dipole antenna</strong>.
+          </p>
+
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            On a terminated transmission line, an open circuit produces a reflection coefficient{' '}
+            <MathWrapper formula="\Gamma = +1" />. But when the line is flared into an antenna,
+            the energy that would have been reflected is instead <em>radiated</em>. The antenna
+            converts guided-wave energy into free-space radiation.
+          </p>
+
+          <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4 space-y-3">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+              Radiation Resistance
+            </h3>
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              From the transmission line's perspective, the antenna looks like a resistor. The
+              power "consumed" by this resistor is actually the power radiated into space. This
+              equivalent resistance is called the <strong>radiation resistance</strong>{' '}
+              <MathWrapper formula="R_{\text{rad}}" />.
+            </p>
+            <MathWrapper
+              formula="P_{\text{rad}} = \frac{1}{2} |I_0|^2 R_{\text{rad}}"
+              block
+            />
+          </div>
+
+          <div className="bg-engineering-blue-50 dark:bg-engineering-blue-900/10 rounded-lg p-4 border-l-4 border-engineering-blue-500">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              <strong>Key insight:</strong> The feed-point impedance of a{' '}
+              <MathWrapper formula="\lambda/2" /> dipole is approximately{' '}
+              <MathWrapper formula="73\,\Omega" />. This is remarkably close to the{' '}
+              <MathWrapper formula="75\,\Omega" /> standard for coaxial cable — and that is
+              not a coincidence. The 75{'\u2009'}{'\u03A9'} coaxial standard was chosen specifically
+              because it provides a near-perfect impedance match to a half-wave dipole.
+            </p>
+            <MathWrapper
+              formula="Z_{\text{in}}(\lambda/2 \text{ dipole}) \approx 73 + j42.5\,\Omega \approx 73\,\Omega \text{ (at resonance)}"
+              block
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          Section 5.2 — Radiation pattern simulation
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="space-y-5">
+        <div>
+          <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
+            Section 5.2
+          </p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            Radiation Pattern Simulation
+          </h2>
+        </div>
+
+        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          The <strong>radiation pattern</strong> describes how an antenna distributes energy
+          as a function of direction. For a dipole aligned along the z-axis, the pattern depends
+          on the dipole length relative to the wavelength. Use the simulation below to explore
+          how the pattern changes.
+        </p>
+
+        <PredictionGate
+          question="If you double the dipole length from \u03BB/4 to \u03BB/2, does the directivity increase, decrease, or stay the same?"
+          options={[
+            { id: 'increases', label: 'Increases' },
+            { id: 'decreases', label: 'Decreases' },
+            { id: 'same', label: 'Stays the same' },
+          ]}
+          getCorrectAnswer={() => 'increases'}
+          explanation={
+            <p>
+              A longer dipole is more directional. The {'\u03BB'}/2 dipole has a narrower beam
+              and higher directivity than the {'\u03BB'}/4 monopole equivalent. As the antenna
+              becomes longer relative to the wavelength, it concentrates energy into a narrower
+              angular range.
+            </p>
+          }
+        >
+          <RadiationPatternSim className="mt-4" />
+        </PredictionGate>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          Section 5.3 — Near field vs far field
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="space-y-5">
+        <div>
+          <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
+            Section 5.3
+          </p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            Near Field vs. Far Field
+          </h2>
+        </div>
+
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 space-y-4">
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            The space around an antenna is divided into two distinct regions based on how the
+            electromagnetic fields behave:
+          </p>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="bg-amber-50 dark:bg-amber-900/10 rounded-lg p-4 border border-amber-200 dark:border-amber-800">
+              <h3 className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-2">
+                Near Field (Reactive)
+              </h3>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                Energy is stored and exchanged between electric and magnetic fields, oscillating
+                back and forth. The fields are complex, non-radiating, and decay rapidly
+                (as 1/r{'\u00B2'} or 1/r{'\u00B3'}).
+              </p>
+            </div>
+            <div className="bg-engineering-blue-50 dark:bg-engineering-blue-900/10 rounded-lg p-4 border border-engineering-blue-200 dark:border-engineering-blue-800">
+              <h3 className="text-sm font-semibold text-engineering-blue-800 dark:text-engineering-blue-300 mb-2">
+                Far Field (Radiative)
+              </h3>
+              <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+                Energy propagates outward as a true electromagnetic wave. E and H fields are
+                in phase, perpendicular to each other, and decay as 1/r. This is where the
+                radiation pattern applies.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed mb-2">
+              The boundary between these regions is approximately at the{' '}
+              <strong>Fraunhofer distance</strong>:
+            </p>
+            <MathWrapper
+              formula="r_{\text{far}} = \frac{2D^2}{\lambda}"
+              block
+            />
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+              where <MathWrapper formula="D" /> is the largest dimension of the antenna and{' '}
+              <MathWrapper formula="\lambda" /> is the operating wavelength.
+            </p>
+          </div>
+
+          {/* Near field / far field diagram */}
+          <div className="flex justify-center py-4">
+            <div className="relative w-80 h-80">
+              {/* Far field zone */}
+              <div className="absolute inset-0 rounded-full bg-engineering-blue-100/50 dark:bg-engineering-blue-900/20 border-2 border-dashed border-engineering-blue-300 dark:border-engineering-blue-700 flex items-start justify-center pt-4">
+                <span className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 bg-white dark:bg-slate-800 px-2 py-0.5 rounded">
+                  Far Field (radiating)
+                </span>
+              </div>
+              {/* Near field zone */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full bg-amber-100/70 dark:bg-amber-900/20 border-2 border-amber-400 dark:border-amber-600 flex items-start justify-center pt-3">
+                <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 bg-white dark:bg-slate-800 px-2 py-0.5 rounded">
+                  Near Field (reactive)
+                </span>
+              </div>
+              {/* Antenna dot at center */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-slate-800 dark:bg-white rounded-full" />
+              <span className="absolute top-1/2 left-1/2 translate-x-3 -translate-y-1 text-[10px] font-mono text-slate-600 dark:text-slate-400">
+                Antenna
+              </span>
+              {/* Boundary label */}
+              <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-mono text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded whitespace-nowrap">
+                r = 2D{'\u00B2'}/{'\u03BB'}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          Section 5.4 — Practical antennas (concept cards)
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="space-y-5">
+        <div>
+          <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
+            Section 5.4
+          </p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            Practical Antennas
+          </h2>
+        </div>
+
+        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          While the dipole is the fundamental antenna, real-world applications use a variety of
+          antenna designs optimized for specific frequency ranges, gain requirements, and physical
+          constraints.
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          {antennaCards.map((card) => (
+            <div
+              key={card.name}
+              className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-5 space-y-3 border border-slate-200 dark:border-slate-700 hover:border-engineering-blue-300 dark:hover:border-engineering-blue-600 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 bg-engineering-blue-100 dark:bg-engineering-blue-900/30 rounded-lg flex items-center justify-center">
+                  <card.icon className="w-5 h-5 text-engineering-blue-600 dark:text-engineering-blue-400" />
+                </div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white">{card.name}</h3>
+              </div>
+              <div className="space-y-1.5">
+                <p className="text-xs text-slate-600 dark:text-slate-400">
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">Applications:</span>{' '}
+                  {card.applications}
+                </p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">Frequency:</span>{' '}
+                  {card.freqRange}
+                </p>
+                <p className="text-xs text-slate-600 dark:text-slate-400">
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">Pattern:</span>{' '}
+                  {card.characteristic}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          "Does this make sense?" callout
+          ═══════════════════════════════════════════════════════════════ */}
+      <div className="bg-gradient-to-r from-engineering-blue-50 to-slate-50 dark:from-engineering-blue-900/15 dark:to-slate-800 rounded-xl p-6 border border-engineering-blue-200 dark:border-engineering-blue-800">
+        <p className="text-xs font-semibold text-engineering-blue-700 dark:text-engineering-blue-400 uppercase tracking-wide mb-2">
+          Does this make sense?
+        </p>
+        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          A {'\u03BB'}/2 dipole has{' '}
+          <MathWrapper formula="R_{\text{rad}} \approx 73\,\Omega" /> and a coaxial feed
+          line has <MathWrapper formula="Z_0 = 75\,\Omega" />. Is this a coincidence, or was
+          the coaxial standard chosen with dipole antennas in mind?
+        </p>
+      </div>
+
+      {/* ═══════════════════════════════════════════════════════════════
+          Module Navigation
+          ═══════════════════════════════════════════════════════════════ */}
+      <ModuleNavigation />
+
+      {/* ═══════════════════════════════════════════════════════════════
+          Section 6 — Module Close: "The loop closes"
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="space-y-6">
+        <div>
+          <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
+            Section 6
+          </p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            Module Close: The Loop Closes
+          </h2>
+        </div>
+
+        <div className="bg-gradient-to-br from-engineering-blue-600 to-engineering-blue-800 rounded-2xl p-8 text-white space-y-4">
+          <p className="text-engineering-blue-100 leading-relaxed">
+            In Module 1 you learned that changing magnetic fields induce electric fields
+            (Faraday's Law), and that electric and magnetic fields propagate together as waves.
+            In Module 2 you learned to analyze lumped circuits using Kirchhoff's laws and Laplace
+            transforms. In this module, you applied Kirchhoff's laws to an infinitesimal
+            segment — and the wave equation appeared. The transmission line is not a new theory.
+            It is Modules 1 and 2, applied to the same conductor at the same time.
+          </p>
+          <p className="text-engineering-blue-100 leading-relaxed">
+            The antenna is where the circuit ends and free space begins. The impedance matching
+            problem — <span className="font-mono font-semibold text-white">Z{'\u2080'} = R<sub>rad</sub></span> — is
+            the same reflection coefficient calculation you did on transmission lines. Everything
+            is connected.
+          </p>
+        </div>
+
+        {/* Bottom navigation links */}
+        <div className="flex items-center justify-between pt-4">
+          <a
+            href="/module-2"
+            className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-engineering-blue-600 dark:hover:text-engineering-blue-400 transition-colors"
+          >
+            <span aria-hidden="true">{'\u2190'}</span> Back to Module 2
+          </a>
+          <div className="flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-full text-sm font-semibold">
+            Course complete {'\u2713'}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
