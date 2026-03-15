@@ -8,8 +8,8 @@ This app is part of a three-module progressive learning sequence:
 
 | Module | Focus | Description |
 |---|---|---|
-| [Module 1](https://cassia-santos-nunes-almeida.github.io/EM-AC-Lab-Module1) | Electromagnetic Fundamentals | Maxwell's equations, field laws, EM waves, magnetic circuits |
-| [Module 2](https://cassia-santos-nunes-almeida.github.io/EM-AC-Lab-Module2) | Circuit Analysis | Component physics, time/s-domain analysis, Laplace transforms |
+| [Module 1](https://em-ac-lab-module1.vercel.app/) | Electromagnetic Fundamentals | Maxwell's equations, field laws, EM waves, magnetic circuits |
+| [Module 2](https://em-ac-lab-module.vercel.app/) | Circuit Analysis | Component physics, time/s-domain analysis, Laplace transforms |
 | **Module 3 (this app)** | Transmission Lines & Antennas | Coupled coils, transmission line theory, Smith chart, antennas |
 
 **Module 2 → Module 3:** Laplace transforms, impedance concepts, and transformer theory from Module 2 provide the foundation for coupled coils and transmission line impedance analysis here. **Module 1 → Module 3:** EM wave propagation and phasor concepts from Module 1 connect directly to standing waves and antenna radiation patterns.
@@ -93,9 +93,9 @@ The AI Tutor uses Google Gemini. To enable it:
 Copy `.env.example` to `.env` and configure module URLs:
 
 ```bash
-VITE_MODULE1_URL=https://cassia-santos-nunes-almeida.github.io/EM-AC-Lab-Module1
-VITE_MODULE2_URL=https://cassia-santos-nunes-almeida.github.io/EM-AC-Lab-Module2
-VITE_MODULE3_URL=https://cassia-santos-nunes-almeida.github.io/EM-AC-Lab-Module3
+VITE_MODULE1_URL=https://em-ac-lab-module1.vercel.app
+VITE_MODULE2_URL=https://em-ac-lab-module.vercel.app
+VITE_MODULE3_URL=https://em-ac-lab-module3.vercel.app
 ```
 
 ## Project Structure
