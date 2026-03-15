@@ -171,7 +171,7 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
     [],
   );
 
-  /** Main render loop. */
+  /** Main render loop (called each frame by the effect loop). */
   const render = useCallback((timestamp: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -240,12 +240,15 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
     const dt = (timestamp - lastTimeRef.current) / 1000;
     lastTimeRef.current = timestamp;
     timeRef.current += dt;
-    animFrameRef.current = requestAnimationFrame(render);
   }, [k, N1, N2, drawCoil, drawFieldLines]);
 
-  /** Start / restart the animation loop whenever render changes. */
+  /** Animation loop: schedules render on every frame. */
   useEffect(() => {
-    animFrameRef.current = requestAnimationFrame(render);
+    const loop = (timestamp: number) => {
+      render(timestamp);
+      animFrameRef.current = requestAnimationFrame(loop);
+    };
+    animFrameRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animFrameRef.current);
   }, [render]);
 

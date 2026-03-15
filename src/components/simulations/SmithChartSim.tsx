@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   calculateComplexReflectionCoefficient,
   calculateVSWR,
@@ -19,6 +19,45 @@ const R_CIRCLES = [0, 0.2, 0.5, 1, 2, 5];
 
 /** Constant-reactance arc values to draw. */
 const X_ARCS = [0.2, 0.5, 1, 2, 5];
+
+/* ── Pure helper functions (no React dependencies) ─────────────── */
+
+/** Convert Gamma coordinates (-1..1) to canvas pixel coordinates. */
+function _gammaToPixel(gr: number, gi: number, cx: number, cy: number, radius: number) {
+  return { x: cx + gr * radius, y: cy - gi * radius };
+}
+
+/** Convert canvas pixel to Gamma coordinates. */
+function _pixelToGamma(px: number, py: number, cx: number, cy: number, radius: number) {
+  return { real: (px - cx) / radius, imag: -(py - cy) / radius };
+}
+
+/** Convert Gamma to ZL. */
+function _gammaToZL(gr: number, gi: number, z0: number) {
+  const denR = 1 - gr;
+  const denI = -gi;
+  const numR = 1 + gr;
+  const numI = gi;
+  const denMagSq = denR * denR + denI * denI;
+  if (denMagSq < 1e-12) return { real: 500, imag: 0 };
+  const zlr = z0 * (numR * denR + numI * denI) / denMagSq;
+  const zli = z0 * (numI * denR - numR * denI) / denMagSq;
+  return { real: zlr, imag: zli };
+}
+
+/** Draw an arrowhead at the end of a line. */
+function _drawArrowhead(
+  ctx: CanvasRenderingContext2D,
+  fromX: number, fromY: number, toX: number, toY: number, size: number,
+) {
+  const angle = Math.atan2(toY - fromY, toX - fromX);
+  ctx.beginPath();
+  ctx.moveTo(toX, toY);
+  ctx.lineTo(toX - size * Math.cos(angle - Math.PI / 6), toY - size * Math.sin(angle - Math.PI / 6));
+  ctx.lineTo(toX - size * Math.cos(angle + Math.PI / 6), toY - size * Math.sin(angle + Math.PI / 6));
+  ctx.closePath();
+  ctx.fill();
+}
 
 /**
  * Interactive HTML5 Canvas Smith chart simulation.
@@ -63,323 +102,236 @@ export function SmithChartSim({ className }: SmithChartSimProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
 
-  /** Convert Gamma coordinates (-1..1) to canvas pixel coordinates. */
-  const gammaToPixel = useCallback(
-    (gr: number, gi: number, cx: number, cy: number, radius: number) => ({
-      x: cx + gr * radius,
-      y: cy - gi * radius, // Canvas y is inverted
-    }),
-    [],
-  );
+  /** Ref holding derived values for the canvas render function. */
+  const stateRef = useRef({ gamma, zr, zi });
+  useEffect(() => { stateRef.current = { gamma, zr, zi }; }, [gamma, zr, zi]);
 
-  /** Convert canvas pixel to Gamma coordinates. */
-  const pixelToGamma = useCallback(
-    (px: number, py: number, cx: number, cy: number, radius: number) => ({
-      real: (px - cx) / radius,
-      imag: -(py - cy) / radius, // Canvas y is inverted
-    }),
-    [],
-  );
+  /** Animation loop — reads latest state from ref, never re-created. */
+  useEffect(() => {
+    const loop = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) { animFrameRef.current = requestAnimationFrame(loop); return; }
+      const ctx = canvas.getContext('2d');
+      if (!ctx) { animFrameRef.current = requestAnimationFrame(loop); return; }
 
-  /** Convert Gamma to ZL. */
-  const gammaToZL = useCallback(
-    (gr: number, gi: number, z0: number) => {
-      // ZL = Z0 * (1 + Gamma) / (1 - Gamma)
-      const denR = 1 - gr;
-      const denI = -gi;
-      const numR = 1 + gr;
-      const numI = gi;
-      const denMagSq = denR * denR + denI * denI;
-      if (denMagSq < 1e-12) return { real: 500, imag: 0 }; // Near open circuit
-      const zlr = z0 * (numR * denR + numI * denI) / denMagSq;
-      const zli = z0 * (numI * denR - numR * denI) / denMagSq;
-      return { real: zlr, imag: zli };
-    },
-    [],
-  );
+      const { gamma: g, zr: znr, zi: zni } = stateRef.current;
 
-  /** Draw an arrowhead at the end of a line. */
-  const drawArrowhead = useCallback(
-    (
-      ctx: CanvasRenderingContext2D,
-      fromX: number,
-      fromY: number,
-      toX: number,
-      toY: number,
-      size: number,
-    ) => {
-      const angle = Math.atan2(toY - fromY, toX - fromX);
-      ctx.beginPath();
-      ctx.moveTo(toX, toY);
-      ctx.lineTo(
-        toX - size * Math.cos(angle - Math.PI / 6),
-        toY - size * Math.sin(angle - Math.PI / 6),
-      );
-      ctx.lineTo(
-        toX - size * Math.cos(angle + Math.PI / 6),
-        toY - size * Math.sin(angle + Math.PI / 6),
-      );
-      ctx.closePath();
-      ctx.fill();
-    },
-    [],
-  );
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
 
-  /** Main render function. */
-  const render = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+      const w = rect.width;
+      const h = rect.height;
+      const dark = isDark();
 
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = dark ? '#1e293b' : '#ffffff';
+      ctx.fillRect(0, 0, w, h);
 
-    const w = rect.width;
-    const h = rect.height;
-    const dark = isDark();
+      const cx = w / 2;
+      const cy = h / 2;
+      const chartRadius = Math.min(w, h) * 0.4;
 
-    // Clear
-    ctx.clearRect(0, 0, w, h);
+      // ── Constant-resistance circles ──
+      ctx.strokeStyle = dark ? 'rgba(148,163,184,0.3)' : 'rgba(156,163,175,0.4)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([]);
 
-    // Background
-    ctx.fillStyle = dark ? '#1e293b' : '#ffffff';
-    ctx.fillRect(0, 0, w, h);
-
-    // Smith chart center and radius
-    const cx = w / 2;
-    const cy = h / 2;
-    const chartRadius = Math.min(w, h) * 0.4;
-
-    // ── Draw constant-resistance circles ──
-    ctx.strokeStyle = dark ? 'rgba(148,163,184,0.3)' : 'rgba(156,163,175,0.4)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([]);
-
-    for (const r of R_CIRCLES) {
-      const centerX = cx + (r / (r + 1)) * chartRadius;
-      const centerY = cy;
-      const radius = (1 / (r + 1)) * chartRadius;
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.stroke();
-
-      // Label
-      ctx.font = '10px ui-sans-serif, system-ui, sans-serif';
-      ctx.fillStyle = dark ? 'rgba(148,163,184,0.6)' : 'rgba(107,114,128,0.7)';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'bottom';
-      if (r === 0) {
-        ctx.fillText('0', cx - chartRadius, cy - 4);
-      } else {
-        const labelX = cx + (r / (r + 1)) * chartRadius + radius;
-        if (labelX <= cx + chartRadius + 5) {
-          ctx.fillText(String(r), Math.min(labelX, cx + chartRadius - 2), cy - 4);
-        }
-      }
-    }
-
-    // ── Draw constant-reactance arcs ──
-    ctx.strokeStyle = dark ? 'rgba(148,163,184,0.2)' : 'rgba(156,163,175,0.3)';
-    ctx.lineWidth = 0.8;
-    ctx.setLineDash([4, 4]);
-
-    for (const x of X_ARCS) {
-      for (const sign of [1, -1]) {
-        const arcCenterX = cx + chartRadius; // Always at (1, 1/x) in Gamma coords
-        const arcCenterY = cy - (sign / x) * chartRadius; // sign flips for ±x
-        const arcRadius = (1 / x) * chartRadius;
-
-        // Clip to unit circle: find intersection angles
-        ctx.save();
+      for (const r of R_CIRCLES) {
+        const centerX = cx + (r / (r + 1)) * chartRadius;
+        const radius = (1 / (r + 1)) * chartRadius;
         ctx.beginPath();
-        ctx.arc(cx, cy, chartRadius, 0, 2 * Math.PI);
-        ctx.clip();
-
-        ctx.beginPath();
-        ctx.arc(arcCenterX, arcCenterY, arcRadius, 0, 2 * Math.PI);
+        ctx.arc(centerX, cy, radius, 0, 2 * Math.PI);
         ctx.stroke();
-        ctx.restore();
 
-        // Label at the unit circle boundary
-        // The arc intersects the unit circle; label near that point
-        const labelAngle = sign > 0 ? -Math.PI / 2 : Math.PI / 2;
-        const lx = arcCenterX + arcRadius * Math.cos(labelAngle);
-        const ly = arcCenterY + arcRadius * Math.sin(labelAngle);
-        const dist = Math.sqrt((lx - cx) * (lx - cx) + (ly - cy) * (ly - cy));
-        if (dist <= chartRadius + 15) {
-          ctx.font = '9px ui-sans-serif, system-ui, sans-serif';
-          ctx.fillStyle = dark ? 'rgba(148,163,184,0.5)' : 'rgba(107,114,128,0.6)';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = sign > 0 ? 'top' : 'bottom';
-          // Place label at the boundary of the unit circle along the arc direction
-          const boundaryAngle = Math.atan2(ly - cy, lx - cx);
-          const bx = cx + (chartRadius + 10) * Math.cos(boundaryAngle);
-          const by = cy + (chartRadius + 10) * Math.sin(boundaryAngle);
-          if (bx > 10 && bx < w - 10 && by > 10 && by < h - 10) {
-            ctx.fillText(`${sign > 0 ? '+' : '-'}j${x}`, bx, by);
+        ctx.font = '10px ui-sans-serif, system-ui, sans-serif';
+        ctx.fillStyle = dark ? 'rgba(148,163,184,0.6)' : 'rgba(107,114,128,0.7)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        if (r === 0) {
+          ctx.fillText('0', cx - chartRadius, cy - 4);
+        } else {
+          const labelX = cx + (r / (r + 1)) * chartRadius + radius;
+          if (labelX <= cx + chartRadius + 5) {
+            ctx.fillText(String(r), Math.min(labelX, cx + chartRadius - 2), cy - 4);
           }
         }
       }
-    }
 
-    ctx.setLineDash([]);
+      // ── Constant-reactance arcs ──
+      ctx.strokeStyle = dark ? 'rgba(148,163,184,0.2)' : 'rgba(156,163,175,0.3)';
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([4, 4]);
 
-    // ── Unit circle (Smith chart boundary) ──
-    ctx.strokeStyle = dark ? '#94a3b8' : '#374151';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(cx, cy, chartRadius, 0, 2 * Math.PI);
-    ctx.stroke();
+      for (const x of X_ARCS) {
+        for (const sign of [1, -1]) {
+          const arcCenterX = cx + chartRadius;
+          const arcCenterY = cy - (sign / x) * chartRadius;
+          const arcRadius = (1 / x) * chartRadius;
 
-    // ── Real axis ──
-    ctx.strokeStyle = dark ? 'rgba(148,163,184,0.4)' : 'rgba(107,114,128,0.4)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(cx - chartRadius, cy);
-    ctx.lineTo(cx + chartRadius, cy);
-    ctx.stroke();
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(cx, cy, chartRadius, 0, 2 * Math.PI);
+          ctx.clip();
+          ctx.beginPath();
+          ctx.arc(arcCenterX, arcCenterY, arcRadius, 0, 2 * Math.PI);
+          ctx.stroke();
+          ctx.restore();
 
-    // Axis labels
-    ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
-    ctx.fillStyle = dark ? '#94a3b8' : '#6b7280';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'top';
-    ctx.fillText('Short (Γ=-1)', cx - chartRadius, cy + 8);
-    ctx.fillText('Open (Γ=+1)', cx + chartRadius, cy + 8);
-    ctx.fillText('Matched', cx, cy + 8);
+          const labelAngle = sign > 0 ? -Math.PI / 2 : Math.PI / 2;
+          const lx = arcCenterX + arcRadius * Math.cos(labelAngle);
+          const ly = arcCenterY + arcRadius * Math.sin(labelAngle);
+          const dist = Math.sqrt((lx - cx) ** 2 + (ly - cy) ** 2);
+          if (dist <= chartRadius + 15) {
+            ctx.font = '9px ui-sans-serif, system-ui, sans-serif';
+            ctx.fillStyle = dark ? 'rgba(148,163,184,0.5)' : 'rgba(107,114,128,0.6)';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = sign > 0 ? 'top' : 'bottom';
+            const boundaryAngle = Math.atan2(ly - cy, lx - cx);
+            const bx = cx + (chartRadius + 10) * Math.cos(boundaryAngle);
+            const by = cy + (chartRadius + 10) * Math.sin(boundaryAngle);
+            if (bx > 10 && bx < w - 10 && by > 10 && by < h - 10) {
+              ctx.fillText(`${sign > 0 ? '+' : '-'}j${x}`, bx, by);
+            }
+          }
+        }
+      }
 
-    // ── VSWR circle ──
-    if (gamma.magnitude > 0.01 && gamma.magnitude < 1) {
-      ctx.strokeStyle = dark ? 'rgba(96,165,250,0.5)' : 'rgba(59,130,246,0.4)';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([6, 4]);
-      ctx.beginPath();
-      ctx.arc(cx, cy, gamma.magnitude * chartRadius, 0, 2 * Math.PI);
-      ctx.stroke();
       ctx.setLineDash([]);
-    }
 
-    // ── Gamma vector (line from origin to impedance point) ──
-    const pt = gammaToPixel(gamma.real, gamma.imag, cx, cy, chartRadius);
-    ctx.strokeStyle = dark ? '#60a5fa' : '#2563eb';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(cx, cy);
-    ctx.lineTo(pt.x, pt.y);
-    ctx.stroke();
+      // ── Unit circle ──
+      ctx.strokeStyle = dark ? '#94a3b8' : '#374151';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, chartRadius, 0, 2 * Math.PI);
+      ctx.stroke();
 
-    // Arrowhead
-    ctx.fillStyle = dark ? '#60a5fa' : '#2563eb';
-    if (gamma.magnitude > 0.05) {
-      drawArrowhead(ctx, cx, cy, pt.x, pt.y, 10);
-    }
+      // ── Real axis ──
+      ctx.strokeStyle = dark ? 'rgba(148,163,184,0.4)' : 'rgba(107,114,128,0.4)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx - chartRadius, cy);
+      ctx.lineTo(cx + chartRadius, cy);
+      ctx.stroke();
 
-    // ── Impedance point ──
-    ctx.fillStyle = dark ? '#3b82f6' : '#2563eb';
-    ctx.beginPath();
-    ctx.arc(pt.x, pt.y, 6, 0, 2 * Math.PI);
-    ctx.fill();
+      ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
+      ctx.fillStyle = dark ? '#94a3b8' : '#6b7280';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('Short (\u0393=-1)', cx - chartRadius, cy + 8);
+      ctx.fillText('Open (\u0393=+1)', cx + chartRadius, cy + 8);
+      ctx.fillText('Matched', cx, cy + 8);
 
-    // White inner dot
-    ctx.fillStyle = dark ? '#1e293b' : '#ffffff';
-    ctx.beginPath();
-    ctx.arc(pt.x, pt.y, 2.5, 0, 2 * Math.PI);
-    ctx.fill();
+      // ── VSWR circle ──
+      if (g.magnitude > 0.01 && g.magnitude < 1) {
+        ctx.strokeStyle = dark ? 'rgba(96,165,250,0.5)' : 'rgba(59,130,246,0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.arc(cx, cy, g.magnitude * chartRadius, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
 
-    // Label the impedance point
-    ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
-    ctx.fillStyle = dark ? '#60a5fa' : '#2563eb';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'bottom';
-    const labelOffX = pt.x + 10 > w - 60 ? -70 : 10;
-    const labelOffY = pt.y - 10 < 15 ? 18 : -8;
-    ctx.fillText(
-      `z = ${zr.toFixed(2)}${zi >= 0 ? '+' : ''}j${zi.toFixed(2)}`,
-      pt.x + labelOffX,
-      pt.y + labelOffY,
-    );
+      // ── Gamma vector ──
+      const pt = _gammaToPixel(g.real, g.imag, cx, cy, chartRadius);
+      ctx.strokeStyle = dark ? '#60a5fa' : '#2563eb';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(pt.x, pt.y);
+      ctx.stroke();
 
-    animFrameRef.current = requestAnimationFrame(render);
-  }, [ZLr, ZLi, Z0, gamma, zr, zi, gammaToPixel, drawArrowhead]);
+      ctx.fillStyle = dark ? '#60a5fa' : '#2563eb';
+      if (g.magnitude > 0.05) {
+        _drawArrowhead(ctx, cx, cy, pt.x, pt.y, 10);
+      }
 
-  /** Start / restart the render loop whenever render changes. */
-  useEffect(() => {
-    animFrameRef.current = requestAnimationFrame(render);
+      // ── Impedance point ──
+      ctx.fillStyle = dark ? '#3b82f6' : '#2563eb';
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, 6, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.fillStyle = dark ? '#1e293b' : '#ffffff';
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, 2.5, 0, 2 * Math.PI);
+      ctx.fill();
+
+      ctx.font = '11px ui-sans-serif, system-ui, sans-serif';
+      ctx.fillStyle = dark ? '#60a5fa' : '#2563eb';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'bottom';
+      const labelOffX = pt.x + 10 > w - 60 ? -70 : 10;
+      const labelOffY = pt.y - 10 < 15 ? 18 : -8;
+      ctx.fillText(
+        `z = ${znr.toFixed(2)}${zni >= 0 ? '+' : ''}j${zni.toFixed(2)}`,
+        pt.x + labelOffX,
+        pt.y + labelOffY,
+      );
+
+      animFrameRef.current = requestAnimationFrame(loop);
+    };
+    animFrameRef.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animFrameRef.current);
-  }, [render]);
+  }, []);
 
   /* ── Click-to-place and drag interaction ──────────────────────── */
 
-  const getChartCoords = useCallback(() => {
+  const handleCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
-    if (!canvas) return null;
+    if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
     const cx = rect.width / 2;
     const cy = rect.height / 2;
     const chartRadius = Math.min(rect.width, rect.height) * 0.4;
-    return { cx, cy, chartRadius, rect };
-  }, []);
+    const px = e.clientX - rect.left;
+    const py = e.clientY - rect.top;
+    const g = _pixelToGamma(px, py, cx, cy, chartRadius);
+    const gMag = Math.sqrt(g.real * g.real + g.imag * g.imag);
 
-  const handleCanvasPointerDown = useCallback(
-    (e: React.PointerEvent<HTMLCanvasElement>) => {
-      const coords = getChartCoords();
-      if (!coords) return;
-      const { cx, cy, chartRadius, rect } = coords;
-      const px = e.clientX - rect.left;
-      const py = e.clientY - rect.top;
-      const g = pixelToGamma(px, py, cx, cy, chartRadius);
-      const gMag = Math.sqrt(g.real * g.real + g.imag * g.imag);
+    if (gMag > 1.05) return;
 
-      if (gMag > 1.05) return; // Outside chart
+    if (Math.abs(gMag - gamma.magnitude) < 0.08 && gamma.magnitude > 0.03) {
+      isDraggingRef.current = true;
+      dragGammaMagRef.current = gamma.magnitude;
+      (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
+    }
 
-      // Check if near the VSWR circle (within tolerance) to start drag
-      if (Math.abs(gMag - gamma.magnitude) < 0.08 && gamma.magnitude > 0.03) {
-        isDraggingRef.current = true;
-        dragGammaMagRef.current = gamma.magnitude;
-        (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
-      }
+    const clampedMag = Math.min(gMag, 0.999);
+    const angle = Math.atan2(g.imag, g.real);
+    const gr = clampedMag * Math.cos(angle);
+    const gi = clampedMag * Math.sin(angle);
+    const zl = _gammaToZL(gr, gi, Z0);
+    setZLr(Math.max(0, Math.min(500, Math.round(zl.real))));
+    setZLi(Math.max(-500, Math.min(500, Math.round(zl.imag))));
+  };
 
-      // Place impedance point
-      const clampedMag = Math.min(gMag, 0.999);
-      const angle = Math.atan2(g.imag, g.real);
-      const gr = clampedMag * Math.cos(angle);
-      const gi = clampedMag * Math.sin(angle);
-      const zl = gammaToZL(gr, gi, Z0);
-      setZLr(Math.max(0, Math.min(500, Math.round(zl.real))));
-      setZLi(Math.max(-500, Math.min(500, Math.round(zl.imag))));
-    },
-    [getChartCoords, pixelToGamma, gammaToZL, Z0, gamma.magnitude],
-  );
+  const handleCanvasPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDraggingRef.current) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const chartRadius = Math.min(rect.width, rect.height) * 0.4;
+    const px = e.clientX - rect.left;
+    const py = e.clientY - rect.top;
+    const g = _pixelToGamma(px, py, cx, cy, chartRadius);
 
-  const handleCanvasPointerMove = useCallback(
-    (e: React.PointerEvent<HTMLCanvasElement>) => {
-      if (!isDraggingRef.current) return;
-      const coords = getChartCoords();
-      if (!coords) return;
-      const { cx, cy, chartRadius, rect } = coords;
-      const px = e.clientX - rect.left;
-      const py = e.clientY - rect.top;
-      const g = pixelToGamma(px, py, cx, cy, chartRadius);
+    const angle = Math.atan2(g.imag, g.real);
+    const constrainedMag = dragGammaMagRef.current;
+    const gr = constrainedMag * Math.cos(angle);
+    const gi = constrainedMag * Math.sin(angle);
+    const zl = _gammaToZL(gr, gi, Z0);
+    setZLr(Math.max(0, Math.min(500, Math.round(zl.real))));
+    setZLi(Math.max(-500, Math.min(500, Math.round(zl.imag))));
+  };
 
-      // Constrain to VSWR circle
-      const angle = Math.atan2(g.imag, g.real);
-      const constrainedMag = dragGammaMagRef.current;
-      const gr = constrainedMag * Math.cos(angle);
-      const gi = constrainedMag * Math.sin(angle);
-      const zl = gammaToZL(gr, gi, Z0);
-      setZLr(Math.max(0, Math.min(500, Math.round(zl.real))));
-      setZLi(Math.max(-500, Math.min(500, Math.round(zl.imag))));
-    },
-    [getChartCoords, pixelToGamma, gammaToZL, Z0],
-  );
-
-  const handleCanvasPointerUp = useCallback(() => {
+  const handleCanvasPointerUp = () => {
     isDraggingRef.current = false;
-  }, []);
+  };
 
   /* ── UI ───────────────────────────────────────────────────────── */
 
@@ -404,8 +356,8 @@ export function SmithChartSim({ className }: SmithChartSimProps) {
           {/* Sliders */}
           <div className="grid gap-4 sm:grid-cols-3">
             {/* ZLr slider */}
-            <label className="block space-y-1">
-              <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <div className="block space-y-1">
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-300" id="zlr-label">
                 R<sub>L</sub> (real) = {ZLr} &Omega;
               </span>
               <input
@@ -416,12 +368,13 @@ export function SmithChartSim({ className }: SmithChartSimProps) {
                 value={ZLr}
                 onChange={(e) => setZLr(parseInt(e.target.value, 10))}
                 className="w-full accent-engineering-blue-600"
+                aria-labelledby="zlr-label"
               />
-            </label>
+            </div>
 
             {/* ZLi slider */}
-            <label className="block space-y-1">
-              <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <div className="block space-y-1">
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-300" id="zli-label">
                 X<sub>L</sub> (imag) = {ZLi} &Omega;
               </span>
               <input
@@ -432,12 +385,13 @@ export function SmithChartSim({ className }: SmithChartSimProps) {
                 value={ZLi}
                 onChange={(e) => setZLi(parseInt(e.target.value, 10))}
                 className="w-full accent-engineering-blue-600"
+                aria-labelledby="zli-label"
               />
-            </label>
+            </div>
 
             {/* Z0 slider */}
-            <label className="block space-y-1">
-              <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <div className="block space-y-1">
+              <span className="text-xs font-semibold text-slate-600 dark:text-slate-300" id="z0-label">
                 Z<sub>0</sub> = {Z0} &Omega;
               </span>
               <input
@@ -448,8 +402,9 @@ export function SmithChartSim({ className }: SmithChartSimProps) {
                 value={Z0}
                 onChange={(e) => setZ0(parseInt(e.target.value, 10))}
                 className="w-full accent-engineering-blue-600"
+                aria-labelledby="z0-label"
               />
-            </label>
+            </div>
           </div>
 
           {/* Computed values */}
