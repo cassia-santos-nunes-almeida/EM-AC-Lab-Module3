@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { MathWrapper } from '../common/MathWrapper';
 import { PredictionGate } from '../common/PredictionGate';
+import { ConceptCheck } from '../common/ConceptCheck';
 import { YourTurnPanel } from '../common/YourTurnPanel';
 import { ModuleNavigation } from '../common/ModuleNavigation';
 import { SectionHook } from '../common/SectionHook';
@@ -46,9 +47,16 @@ export function Transformers() {
         </h2>
 
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          When two coils are placed near each other, a fraction of the magnetic flux produced by
-          one links the other. The <strong>coupling coefficient</strong>{' '}
-          <MathWrapper formula="k" /> quantifies that fraction:
+          Imagine holding two coils side by side. When current flows through the first coil, it
+          creates a magnetic field. Some of those field lines pass through the second coil —
+          and by Faraday's law (Module 1), that changing flux induces a voltage. Move the coils
+          closer together, and more flux links — the induced voltage increases. Pull them apart,
+          and it decreases. Wrap them on the same iron core, and nearly all the flux links.
+        </p>
+
+        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          The <strong>coupling coefficient</strong> <MathWrapper formula="k" /> quantifies
+          what fraction of one coil's flux links the other:
         </p>
 
         <MathWrapper
@@ -158,6 +166,22 @@ export function Transformers() {
             </p>
           </div>
         </div>
+
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'Current enters the undotted terminal of the primary coil. What is the polarity of the induced voltage at the dotted terminal of the secondary?',
+            options: [
+              { text: 'Positive (aiding flux)', correct: false, explanation: 'Aiding flux occurs when current enters the dotted terminal. Here it enters the undotted terminal, so the flux opposes.' },
+              { text: 'Negative (opposing flux)', correct: true, explanation: 'Correct. When current enters the undotted terminal, the mutual flux opposes, making the voltage negative at the secondary dot.' },
+              { text: 'Zero — polarity depends only on k', correct: false, explanation: 'The coupling coefficient k determines the magnitude of mutual inductance, but the dot convention determines the sign.' },
+            ],
+            hints: [
+              'Look at the opposing flux diagram above. Which terminal does the current enter?',
+              'The dot convention rule: current into a dot creates positive voltage at the other dot. What happens when current enters the opposite terminal?',
+            ],
+          }}
+        />
       </section>
 
       {/* ────────────────────────────────────────────────────────── */}
@@ -374,9 +398,10 @@ export function Transformers() {
               Looking Ahead
             </p>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              A transformer is two coupled inductors. When those inductors are distributed
-              continuously along a conductor instead of concentrated in a coil, you get a
-              transmission line. That's exactly where we're going next.
+              A transformer is two coupled inductors analyzed with Kirchhoff's laws. In the next
+              section, we'll apply the same Kirchhoff's laws to an infinitesimal segment of a
+              conductor pair — with distributed self-inductance and self-capacitance along its
+              length — and the wave equation will appear. That's the transmission line.
             </p>
           </div>
         </div>

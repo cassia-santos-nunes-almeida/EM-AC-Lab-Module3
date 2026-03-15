@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { MathWrapper } from '../common/MathWrapper';
 import { PredictionGate } from '../common/PredictionGate';
+import { ConceptCheck } from '../common/ConceptCheck';
+import { YourTurnPanel } from '../common/YourTurnPanel';
 import { SectionHook } from '../common/SectionHook';
 import { ModuleNavigation } from '../common/ModuleNavigation';
 import { useProgressStore } from '../../store/progressStore';
@@ -221,7 +223,64 @@ export function LumpedDistributed() {
             you already know.
           </p>
         </div>
+
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'Which Kirchhoff law gives the first telegrapher\'s equation (\u2202V/\u2202x = \u2212L\u2032 \u2202I/\u2202t)?',
+            options: [
+              { text: 'KVL (Kirchhoff\u2019s Voltage Law)', correct: true, explanation: 'Correct. The voltage drop across the series inductor in the loop gives \u2202V/\u2202x = \u2212L\u2032 \u2202I/\u2202t.' },
+              { text: 'KCL (Kirchhoff\u2019s Current Law)', correct: false, explanation: 'KCL gives the second telegrapher\u2019s equation (\u2202I/\u2202x = \u2212C\u2032 \u2202V/\u2202t), which describes current diverted through the shunt capacitor.' },
+            ],
+            hints: [
+              'The first equation relates a voltage change (\u2202V/\u2202x) to current change. Which Kirchhoff law involves summing voltages around a loop?',
+            ],
+          }}
+        />
       </section>
+
+      {/* ── Your Turn: compute v and Z₀ ──────────────────────────── */}
+      <YourTurnPanel
+        scenario="A coaxial cable has per-unit-length inductance L\u2032 = 0.25 \u00B5H/m and per-unit-length capacitance C\u2032 = 100 pF/m."
+        question="What is the wave speed v and characteristic impedance Z\u2080?"
+        options={[
+          {
+            text: 'v = 2 \u00D7 10\u2078 m/s, Z\u2080 = 50 \u03A9',
+            correct: true,
+            explanation: 'v = 1/\u221A(L\u2032C\u2032) = 1/\u221A(0.25\u00D710\u207B\u2076 \u00D7 100\u00D710\u207B\u00B9\u00B2) = 2\u00D710\u2078 m/s. Z\u2080 = \u221A(L\u2032/C\u2032) = \u221A(0.25\u00D710\u207B\u2076 / 100\u00D710\u207B\u00B9\u00B2) = 50 \u03A9.',
+          },
+          {
+            text: 'v = 3 \u00D7 10\u2078 m/s, Z\u2080 = 50 \u03A9',
+            correct: false,
+            explanation: '3\u00D710\u2078 m/s is the speed of light in vacuum. The wave speed on this cable is slower due to the dielectric.',
+          },
+          {
+            text: 'v = 2 \u00D7 10\u2078 m/s, Z\u2080 = 25 \u03A9',
+            correct: false,
+            explanation: 'The wave speed is correct, but Z\u2080 = \u221A(L\u2032/C\u2032), not L\u2032/C\u2032.',
+          },
+          {
+            text: 'v = 1 \u00D7 10\u2078 m/s, Z\u2080 = 100 \u03A9',
+            correct: false,
+            explanation: 'Check the arithmetic: v = 1/\u221A(2.5\u00D710\u207B\u00B9\u2077) = 2\u00D710\u2078 m/s.',
+          },
+        ]}
+        correctReveal={
+          <div className="space-y-1">
+            <MathWrapper
+              formula="v = \frac{1}{\sqrt{L' C'}} = \frac{1}{\sqrt{0.25 \times 10^{-6} \times 100 \times 10^{-12}}} = 2 \times 10^8\,\text{m/s}"
+              block
+            />
+            <MathWrapper
+              formula="Z_0 = \sqrt{\frac{L'}{C'}} = \sqrt{\frac{0.25 \times 10^{-6}}{100 \times 10^{-12}}} = 50\,\Omega"
+              block
+            />
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              The velocity factor is v/c = 2/3 — typical for polyethylene-filled coax.
+            </p>
+          </div>
+        }
+      />
 
       {/* ── Module navigation ─────────────────────────────────────── */}
       <ModuleNavigation />

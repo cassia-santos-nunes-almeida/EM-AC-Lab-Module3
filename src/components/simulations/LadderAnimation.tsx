@@ -137,6 +137,8 @@ export function LadderAnimation({
 
   /** Animation time reference (seconds). */
   const timeRef = useRef(0);
+  /** RAF timestamp of the previous frame for delta time calculation. */
+  const lastTimeRef = useRef<number>(0);
   /** Timestamp of the last stage advance while auto-playing. */
   const lastAdvanceRef = useRef(0);
   /** requestAnimationFrame handle. */
@@ -165,7 +167,7 @@ export function LadderAnimation({
 
   /* ── Render loop ───────────────────────────────────────────────── */
 
-  const render = useCallback(() => {
+  const render = useCallback((timestamp: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -401,7 +403,10 @@ export function LadderAnimation({
     }
 
     // Advance time
-    timeRef.current += 1 / 60;
+    if (!lastTimeRef.current) lastTimeRef.current = timestamp;
+    const dt = (timestamp - lastTimeRef.current) / 1000;
+    lastTimeRef.current = timestamp;
+    timeRef.current += dt;
 
     // Auto-advance stage while playing (every 2 seconds)
     if (playing) {

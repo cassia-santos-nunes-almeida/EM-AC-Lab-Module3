@@ -108,10 +108,11 @@ export function StandingWaveQuiz({ className }: StandingWaveQuizProps) {
 
         {/* Quiz cards */}
         <div className="grid gap-5 sm:grid-cols-2">
-          {CASES.map((quizCase) => (
+          {CASES.map((quizCase, index) => (
             <QuizCard
               key={quizCase.id}
               quizCase={quizCase}
+              caseIndex={index}
               selectedAnswer={answers[quizCase.id]}
               onAnswer={(choiceId) => handleAnswer(quizCase.id, choiceId)}
             />
@@ -140,6 +141,8 @@ export function StandingWaveQuiz({ className }: StandingWaveQuizProps) {
 interface QuizCardProps {
   /** The quiz case data. */
   quizCase: QuizCase;
+  /** Zero-based index of this case in the list. */
+  caseIndex: number;
   /** The student's selected answer, or null if unanswered. */
   selectedAnswer: string | null;
   /** Callback when the student clicks an answer. */
@@ -147,7 +150,7 @@ interface QuizCardProps {
 }
 
 /** A single standing wave pattern with answer buttons. */
-function QuizCard({ quizCase, selectedAnswer, onAnswer }: QuizCardProps) {
+function QuizCard({ quizCase, caseIndex, selectedAnswer, onAnswer }: QuizCardProps) {
   const hasAnswered = selectedAnswer !== null;
   const isCorrect = selectedAnswer === quizCase.answer;
 
@@ -163,7 +166,7 @@ function QuizCard({ quizCase, selectedAnswer, onAnswer }: QuizCardProps) {
     >
       {/* Canvas plot */}
       <div className="bg-white dark:bg-slate-800 p-2">
-        <StandingWaveCanvas gamma={quizCase.gamma} />
+        <StandingWaveCanvas gamma={quizCase.gamma} index={caseIndex} />
       </div>
 
       {/* Answer buttons */}
@@ -174,7 +177,7 @@ function QuizCard({ quizCase, selectedAnswer, onAnswer }: QuizCardProps) {
             const isCorrectChoice = choice.id === quizCase.answer;
 
             let btnClass =
-              'px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors border ';
+              'px-2 py-2.5 rounded-md text-xs font-medium transition-colors border ';
 
             if (!hasAnswered) {
               btnClass +=
@@ -232,13 +235,15 @@ function QuizCard({ quizCase, selectedAnswer, onAnswer }: QuizCardProps) {
 interface StandingWaveCanvasProps {
   /** Reflection coefficient for this pattern (-1, 0, 0.5, or 1). */
   gamma: number;
+  /** Zero-based index of this pattern in the quiz. */
+  index: number;
 }
 
 /**
  * Small canvas that renders the voltage standing wave pattern for a given
  * reflection coefficient. The load end is at the right side of the canvas.
  */
-function StandingWaveCanvas({ gamma }: StandingWaveCanvasProps) {
+function StandingWaveCanvas({ gamma, index }: StandingWaveCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -370,7 +375,7 @@ function StandingWaveCanvas({ gamma }: StandingWaveCanvasProps) {
     <div ref={containerRef} className="w-full">
       <canvas
         ref={canvasRef}
-        aria-label={`Standing wave pattern for reflection coefficient ${gamma}`}
+        aria-label={`Standing wave pattern ${index + 1} of 4`}
       />
     </div>
   );

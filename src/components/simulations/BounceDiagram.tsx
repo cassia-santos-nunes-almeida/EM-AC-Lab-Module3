@@ -175,6 +175,23 @@ function steadyStateVoltage(gammaLoad: number, gammaSource: number): number {
  * number of bounces, and step through the diagram one bounce at a time.
  */
 export function BounceDiagram({ className = '' }: BounceDiagramProps) {
+  /** Whether dark mode is active. */
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => document.documentElement.classList.contains('dark'),
+  );
+
+  // Listen for dark mode class changes on documentElement
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   /** Reflection coefficient at the load end (-1 to +1). */
   const [gammaLoad, setGammaLoad] = useState(0.5);
   /** Reflection coefficient at the source end (-1 to +1). */
@@ -190,6 +207,7 @@ export function BounceDiagram({ className = '' }: BounceDiagramProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<number>(0);
   const animTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelledRef = useRef(false);
 
   // Compute segments for currently visible bounces
   const visibleSegments = useMemo(
@@ -212,12 +230,14 @@ export function BounceDiagram({ className = '' }: BounceDiagramProps) {
   // Stop animation on unmount
   useEffect(() => {
     return () => {
+      cancelledRef.current = true;
       if (animTimerRef.current) clearTimeout(animTimerRef.current);
     };
   }, []);
 
   /** Reset the diagram to show all bounces immediately. */
   const handleReset = () => {
+    cancelledRef.current = true;
     if (animTimerRef.current) clearTimeout(animTimerRef.current);
     setIsAnimating(false);
     setVisibleBounces(maxBounces);
@@ -236,11 +256,13 @@ export function BounceDiagram({ className = '' }: BounceDiagramProps) {
   /** Animate bounces appearing one by one. */
   const handlePlayAll = () => {
     if (isAnimating) return;
+    cancelledRef.current = false;
     setIsAnimating(true);
     setVisibleBounces(0);
 
     let count = 0;
     const tick = () => {
+      if (cancelledRef.current) return;
       count += 1;
       if (count <= maxBounces) {
         setVisibleBounces(count);
@@ -437,21 +459,7 @@ export function BounceDiagram({ className = '' }: BounceDiagramProps) {
     ctx.fillText('Backward', legendX + 98, legendY);
   }, [visibleSegments, maxBounces]);
 
-  // Redraw when segments or window size changes
-  useEffect(() => {
-    const draw = () => {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = requestAnimationFrame(drawDiagram);
-    };
-    draw();
-    window.addEventListener('resize', draw);
-    return () => {
-      window.removeEventListener('resize', draw);
-      cancelAnimationFrame(animationRef.current);
-    };
-  }, [drawDiagram]);
-
-  // Observe container resize
+  // Observe container resize (also fires on initial mount, covering window resize)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -460,7 +468,10 @@ export function BounceDiagram({ className = '' }: BounceDiagramProps) {
       animationRef.current = requestAnimationFrame(drawDiagram);
     });
     observer.observe(container);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(animationRef.current);
+    };
   }, [drawDiagram]);
 
   // Watch for dark mode changes
@@ -594,7 +605,7 @@ export function BounceDiagram({ className = '' }: BounceDiagramProps) {
         ref={containerRef}
         className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-center justify-center"
       >
-        <canvas ref={canvasRef} />
+        <canvas ref={canvasRef} aria-label="Bounce diagram showing voltage reflections on a transmission line" />
       </div>
 
       {/* ── Voltage vs Time Charts ───────────────────────────────── */}
@@ -605,6 +616,7 @@ export function BounceDiagram({ className = '' }: BounceDiagramProps) {
           maxTime={maxTime}
           yDomain={[vMin - vPad, vMax + vPad]}
           steadyState={vSS}
+          isDarkMode={isDarkMode}
         />
         <VoltageChart
           title="Voltage at Load End"
@@ -612,6 +624,7 @@ export function BounceDiagram({ className = '' }: BounceDiagramProps) {
           maxTime={maxTime}
           yDomain={[vMin - vPad, vMax + vPad]}
           steadyState={vSS}
+          isDarkMode={isDarkMode}
         />
       </div>
     </div>
@@ -677,10 +690,12 @@ interface VoltageChartProps {
   yDomain: [number, number];
   /** Steady-state voltage value for reference line display. */
   steadyState: number;
+  /** Whether dark mode is active. */
+  isDarkMode: boolean;
 }
 
 /** Line chart showing voltage vs time at one end of the transmission line. */
-function VoltageChart({ title, data, maxTime, yDomain, steadyState }: VoltageChartProps) {
+function VoltageChart({ title, data, maxTime, yDomain, steadyState, isDarkMode }: VoltageChartProps) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4">
       <div className="flex items-center justify-between mb-2">
@@ -708,11 +723,11 @@ function VoltageChart({ title, data, maxTime, yDomain, steadyState }: VoltageCha
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: 'rgba(30, 41, 59, 0.95)',
-              border: 'none',
+              backgroundColor: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+              border: isDarkMode ? 'none' : '1px solid #e2e8f0',
               borderRadius: '8px',
               fontSize: '11px',
-              color: '#e2e8f0',
+              color: isDarkMode ? '#e2e8f0' : '#1e293b',
             }}
             formatter={(value: unknown) => [`${Number(value).toFixed(3)} V`, 'Voltage']}
             labelFormatter={(label: unknown) => `t = ${Number(label).toFixed(1)} T_D`}

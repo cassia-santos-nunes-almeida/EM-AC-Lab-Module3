@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Radio, Wifi, Satellite, Smartphone, Tv } from 'lucide-react';
 import { MathWrapper } from '../common/MathWrapper';
 import { PredictionGate } from '../common/PredictionGate';
+import { YourTurnPanel } from '../common/YourTurnPanel';
 import { SectionHook } from '../common/SectionHook';
 import { ModuleNavigation } from '../common/ModuleNavigation';
 import { useProgressStore } from '../../store/progressStore';
@@ -108,7 +109,7 @@ export function Antennas() {
             />
           </div>
 
-          <div className="bg-engineering-blue-50 dark:bg-engineering-blue-900/10 rounded-lg p-4 border-l-4 border-engineering-blue-500">
+          <div className="bg-engineering-blue-50 dark:bg-engineering-blue-900/10 rounded-lg p-4 border-l-4 border-engineering-blue-500 space-y-3">
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               <strong>Key insight:</strong> The feed-point impedance of a{' '}
               <MathWrapper formula="\lambda/2" /> dipole is approximately{' '}
@@ -121,6 +122,14 @@ export function Antennas() {
               formula="Z_{\text{in}}(\lambda/2 \text{ dipole}) \approx 73 + j42.5\,\Omega \approx 73\,\Omega \text{ (at resonance)}"
               block
             />
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              <strong>Impedance matching for antennas</strong> follows the same reflection
+              coefficient logic from Section 3: matching the antenna's radiation resistance to{' '}
+              <MathWrapper formula="Z_0" /> of the feed line maximizes power transfer. When{' '}
+              <MathWrapper formula="R_{\text{rad}} = Z_0" />, then{' '}
+              <MathWrapper formula="\Gamma = 0" /> and all power is radiated — none is
+              reflected back along the transmission line.
+            </p>
           </div>
         </div>
       </section>
@@ -155,10 +164,11 @@ export function Antennas() {
           getCorrectAnswer={() => 'increases'}
           explanation={
             <p>
-              A longer dipole is more directional. The {'\u03BB'}/2 dipole has a narrower beam
-              and higher directivity than the {'\u03BB'}/4 monopole equivalent. As the antenna
-              becomes longer relative to the wavelength, it concentrates energy into a narrower
-              angular range.
+              A longer dipole has more current elements, each radiating individually. Their
+              fields add constructively in the broadside direction but destructively at other
+              angles — the same wave interference principle from Module 1. The {'\u03BB'}/2
+              dipole therefore has a narrower beam and higher directivity (D {'\u2248'} 1.64
+              = 2.15 dBi) compared to a short dipole (D = 1.5 = 1.76 dBi).
             </p>
           }
         >
@@ -251,6 +261,40 @@ export function Antennas() {
           </div>
         </div>
       </section>
+
+      {/* ── Your Turn: far-field boundary ──────────────────────────── */}
+      <YourTurnPanel
+        scenario="A parabolic dish antenna has a diameter D = 1 m and operates at f = 10 GHz (\u03BB = 3 cm = 0.03 m)."
+        question="How far away is the far-field boundary?"
+        options={[
+          {
+            text: 'r = 66.7 m',
+            correct: true,
+            explanation: 'r = 2D\u00B2/\u03BB = 2 \u00D7 1\u00B2 / 0.03 = 66.7 m. The radiation pattern is only valid beyond this distance.',
+          },
+          {
+            text: 'r = 33.3 m',
+            correct: false,
+            explanation: 'That would be D\u00B2/\u03BB. The Fraunhofer distance uses 2D\u00B2/\u03BB.',
+          },
+          {
+            text: 'r = 2 m',
+            correct: false,
+            explanation: 'That would be 2D, not 2D\u00B2/\u03BB. For high-frequency antennas the far-field boundary can be surprisingly far.',
+          },
+        ]}
+        correctReveal={
+          <div className="space-y-1">
+            <MathWrapper
+              formula="r_{\text{far}} = \frac{2D^2}{\lambda} = \frac{2 \times 1^2}{0.03} = 66.7\,\text{m}"
+              block
+            />
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              At 10 GHz, even a modest 1 m dish requires measurements 67 m away for a valid pattern.
+            </p>
+          </div>
+        }
+      />
 
       {/* ═══════════════════════════════════════════════════════════════
           Section 5.4 — Practical antennas (concept cards)

@@ -167,21 +167,7 @@ export function RadiationPatternSim({ className = '' }: RadiationPatternSimProps
     ctx.fillText('Broadside', displaySize - 6, cy + 4);
   }, [dipoleFraction]);
 
-  // Redraw on param change or window resize
-  useEffect(() => {
-    const draw = () => {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = requestAnimationFrame(drawPattern);
-    };
-    draw();
-    window.addEventListener('resize', draw);
-    return () => {
-      window.removeEventListener('resize', draw);
-      cancelAnimationFrame(animationRef.current);
-    };
-  }, [drawPattern]);
-
-  // Also observe container resize
+  // Observe container resize (also fires on initial mount, covering window resize)
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -191,7 +177,10 @@ export function RadiationPatternSim({ className = '' }: RadiationPatternSimProps
       animationRef.current = requestAnimationFrame(drawPattern);
     });
     observer.observe(container);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(animationRef.current);
+    };
   }, [drawPattern]);
 
   // Watch for dark mode changes
@@ -244,7 +233,7 @@ export function RadiationPatternSim({ className = '' }: RadiationPatternSimProps
           ref={containerRef}
           className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-4 flex items-center justify-center"
         >
-          <canvas ref={canvasRef} />
+          <canvas ref={canvasRef} aria-label="Polar radiation pattern plot for a dipole antenna" />
         </div>
 
         {/* Numerical readouts */}

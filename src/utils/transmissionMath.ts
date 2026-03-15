@@ -57,7 +57,7 @@ export function calculatePropagationDelay(length: number, v: number): number {
   return length / v;
 }
 
-/** Calculate wavelength from frequency: lambda = c / f. */
+/** Calculate free-space wavelength from frequency: lambda_0 = c / f. */
 export function calculateWavelength(frequency: number): number {
   if (frequency === 0) return Infinity;
   return C / frequency;
@@ -84,7 +84,7 @@ export function calculateBounceVoltages(
   let vSourceAccum = V0; // Voltage at source end
   let vLoadAccum = 0; // Voltage at load end
 
-  // Initial forward wave
+  // Bounce 0: initial forward wave (source → load)
   vLoadAccum += currentAmplitude * (1 + gammaLoad);
   events.push({
     index: 0,
@@ -95,11 +95,9 @@ export function calculateBounceVoltages(
   });
 
   for (let i = 1; i <= numBounces; i++) {
-    // Reflected from load
-    currentAmplitude *= gammaLoad;
-
     if (i % 2 === 1) {
-      // Backward wave (load → source)
+      // Odd bounce: reflect at load, wave travels backward (load → source)
+      currentAmplitude *= gammaLoad;
       vSourceAccum += currentAmplitude * (1 + gammaSource);
       events.push({
         index: i,
@@ -108,10 +106,9 @@ export function calculateBounceVoltages(
         vSource: vSourceAccum,
         vLoad: vLoadAccum,
       });
-      // Reflect at source
-      currentAmplitude *= gammaSource;
     } else {
-      // Forward wave (source → load)
+      // Even bounce: reflect at source, wave travels forward (source → load)
+      currentAmplitude *= gammaSource;
       vLoadAccum += currentAmplitude * (1 + gammaLoad);
       events.push({
         index: i,
@@ -120,7 +117,6 @@ export function calculateBounceVoltages(
         vSource: vSourceAccum,
         vLoad: vLoadAccum,
       });
-      // Reflect at load for next iteration handled by gammaLoad multiply at top
     }
   }
 

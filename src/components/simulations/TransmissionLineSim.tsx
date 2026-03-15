@@ -52,6 +52,7 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
   const timeRef = useRef(0);
+  const lastTimeRef = useRef<number>(0);
 
   /** Detect dark mode from root element class list. */
   const isDark = (): boolean =>
@@ -75,7 +76,7 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
 
   /* -- Main render loop ------------------------------------------------- */
 
-  const render = useCallback(() => {
+  const render = useCallback((timestamp: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -151,7 +152,6 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
     // -- Compute and draw voltage waves --
     const t = timeRef.current;
     const k = (2 * Math.PI) / wavelength; // wave number
-    const omega = 2 * Math.PI * frequency;
     const numPoints = Math.max(200, Math.round(lineW));
 
     // Phase velocity normalized so animation is visible
@@ -170,10 +170,10 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
 
       if (signalType === 'sinusoidal') {
         // Incident wave: travels source -> load (positive x direction)
-        const inc = Math.sin(k * pos - omega * t * 1e-10 + animOmega * t);
+        const inc = Math.sin(k * pos + animOmega * t);
 
         // Reflected wave: travels load -> source, reflected at load with coefficient gamma
-        const ref = gamma * Math.sin(k * (2 * lineLength - pos) - omega * t * 1e-10 + animOmega * t);
+        const ref = gamma * Math.sin(k * (2 * lineLength - pos) + animOmega * t);
 
         incidentY.push(inc);
         reflectedY.push(ref);
@@ -266,9 +266,12 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
     }
 
     // Advance time
-    timeRef.current += 0.016;
+    if (!lastTimeRef.current) lastTimeRef.current = timestamp;
+    const dt = (timestamp - lastTimeRef.current) / 1000;
+    lastTimeRef.current = timestamp;
+    timeRef.current += dt;
     animFrameRef.current = requestAnimationFrame(render);
-  }, [lineLength, Z0, ZLValue, isOpen, Zs, frequency, signalType, gamma, wavelength]);
+  }, [lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength]);
 
   /* -- Lifecycle: animation loop ---------------------------------------- */
 
@@ -494,13 +497,13 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
             {/* Wavelength display (read-only) */}
             <div className="flex flex-col justify-center space-y-1">
               <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-                Wavelength &lambda;
+                Free-space wavelength &lambda;&#x2080;
               </span>
               <span className="text-sm font-mono font-bold text-engineering-blue-600 dark:text-engineering-blue-400">
                 {formatWavelength(wavelength)}
               </span>
               <span className="text-[10px] text-slate-400 dark:text-slate-500">
-                Line = {(lineLength / wavelength).toFixed(2)}&lambda;
+                Line = {(lineLength / wavelength).toFixed(2)}&lambda;&#x2080;
               </span>
             </div>
           </div>

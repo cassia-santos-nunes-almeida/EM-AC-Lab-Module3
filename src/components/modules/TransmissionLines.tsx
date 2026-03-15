@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { MathWrapper } from '../common/MathWrapper';
 import { PredictionGate } from '../common/PredictionGate';
+import { ConceptCheck } from '../common/ConceptCheck';
+import { CollapsibleSection } from '../common/CollapsibleSection';
 import { SectionHook } from '../common/SectionHook';
 import { ModuleNavigation } from '../common/ModuleNavigation';
 import { useProgressStore } from '../../store/progressStore';
@@ -41,34 +43,21 @@ export function TransmissionLines() {
         </h2>
 
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          The characteristic impedance of a transmission line is determined by its distributed
-          per-unit-length parameters. In the general (lossy) case:
-        </p>
-
-        <MathWrapper
-          block
-          formula="Z_0 = \\sqrt{\\frac{R' + j\\omega L'}{G' + j\\omega C'}}"
-        />
-
-        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          where <MathWrapper formula="R'" /> is series resistance,{' '}
-          <MathWrapper formula="L'" /> is series inductance,{' '}
-          <MathWrapper formula="G'" /> is shunt conductance, and{' '}
-          <MathWrapper formula="C'" /> is shunt capacitance &mdash; all per unit length.
+          When a wave travels down a transmission line, the ratio of voltage to current is
+          fixed by the line&rsquo;s geometry &mdash; not by the source or load. That ratio is
+          the <strong>characteristic impedance</strong> <MathWrapper formula="Z_0" />.
         </p>
 
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          For a <strong>lossless</strong> line (<MathWrapper formula="R' = 0" />,{' '}
-          <MathWrapper formula="G' = 0" />), this simplifies to the real-valued expression:
+          For a <strong>lossless</strong> line, it depends only on the per-unit-length
+          inductance and capacitance:
         </p>
 
         <MathWrapper block formula="Z_0 = \\sqrt{\\frac{L'}{C'}}" />
 
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          Physically, <MathWrapper formula="Z_0" /> is the ratio of the forward-travelling
-          voltage wave to the forward-travelling current wave. It depends only on the
-          line&rsquo;s geometry and the surrounding dielectric &mdash; not on the line&rsquo;s
-          length or what is connected at either end.
+          This is a real number, independent of frequency, line length, or what is connected
+          at either end. It is a property of the line&rsquo;s cross-section and dielectric.
         </p>
 
         <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4">
@@ -87,6 +76,25 @@ export function TransmissionLines() {
             </li>
           </ul>
         </div>
+
+        <CollapsibleSection title="General case: lossy line" variant="inline">
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              When the line has series resistance <MathWrapper formula="R'" /> and shunt
+              conductance <MathWrapper formula="G'" /> per unit length, the characteristic
+              impedance becomes complex and frequency-dependent:
+            </p>
+            <MathWrapper
+              block
+              formula="Z_0 = \\sqrt{\\frac{R' + j\\omega L'}{G' + j\\omega C'}}"
+            />
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              At high frequencies where <MathWrapper formula="\\omega L' \\gg R'" /> and{' '}
+              <MathWrapper formula="\\omega C' \\gg G'" />, the lossy formula reduces to the
+              lossless case above.
+            </p>
+          </div>
+        </CollapsibleSection>
       </section>
 
       {/* ================================================================
@@ -236,6 +244,38 @@ export function TransmissionLines() {
         </p>
 
         <StandingWaveQuiz />
+
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 space-y-3">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white">
+            Voltage Standing Wave Ratio (VSWR)
+          </h3>
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            The VSWR quantifies how much the voltage varies along the line:
+          </p>
+          <MathWrapper
+            block
+            formula="\\text{VSWR} = \\frac{1 + |\\Gamma|}{1 - |\\Gamma|}"
+          />
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            A matched load gives VSWR = 1 (no standing wave). An open or short circuit gives
+            VSWR = {'\u221E'}.
+          </p>
+        </div>
+
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'If VSWR = 3, what is |\u0393|?',
+            options: [
+              { text: '|\u0393| = 0.5', correct: true, explanation: 'Correct. Rearranging: |\u0393| = (VSWR \u2212 1)/(VSWR + 1) = (3 \u2212 1)/(3 + 1) = 0.5.' },
+              { text: '|\u0393| = 0.33', correct: false, explanation: 'That would be |\u0393| = 1/VSWR. The correct formula is |\u0393| = (VSWR \u2212 1)/(VSWR + 1).' },
+              { text: '|\u0393| = 3', correct: false, explanation: '|\u0393| must be between 0 and 1 for a passive load. VSWR = 3 corresponds to |\u0393| = 0.5.' },
+            ],
+            hints: [
+              'Rearrange the VSWR formula to solve for |\u0393|: multiply both sides by (1 \u2212 |\u0393|).',
+            ],
+          }}
+        />
       </section>
 
       <ModuleNavigation />

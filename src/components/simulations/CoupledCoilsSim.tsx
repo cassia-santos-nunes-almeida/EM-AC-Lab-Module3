@@ -52,6 +52,7 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
   const timeRef = useRef(0);
+  const lastTimeRef = useRef<number>(0);
 
   /** Detect dark mode by checking the root element class list. */
   const isDark = (): boolean =>
@@ -169,7 +170,7 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
   );
 
   /** Main render loop. */
-  const render = useCallback(() => {
+  const render = useCallback((timestamp: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -233,7 +234,10 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
     }
 
     // Advance animation time
-    timeRef.current += 0.016;
+    if (!lastTimeRef.current) lastTimeRef.current = timestamp;
+    const dt = (timestamp - lastTimeRef.current) / 1000;
+    lastTimeRef.current = timestamp;
+    timeRef.current += dt;
     animFrameRef.current = requestAnimationFrame(render);
   }, [k, N1, N2, drawCoil, drawFieldLines]);
 
@@ -361,7 +365,8 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
 
           {/* Fixed parameter note */}
           <p className="text-[11px] text-slate-400 dark:text-slate-500">
-            Fixed: L₁ = 10 mH, L₂ = 10 mH, V<sub>s</sub> = 120 V
+            Fixed: L₁ = 10 mH, L₂ = 10 mH, V<sub>s</sub> = 120 V.
+            V₂, I₂, and Z<sub>ref</sub> assume ideal coupling (k&nbsp;=&nbsp;1). The field-line visualization reflects the actual k value.
           </p>
         </div>
       </div>
