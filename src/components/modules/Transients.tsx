@@ -6,6 +6,7 @@ import { CollapsibleSection } from '@/components/common/CollapsibleSection';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { FigureImage } from '@/components/common/FigureImage';
 import { useProgressStore } from '@/store/progressStore';
 import { BounceDiagram } from '@/components/simulations/BounceDiagram';
 
@@ -40,6 +41,24 @@ export function Transients() {
           cause signal integrity problems — ringing, overshoot, and bit errors. This section
           gives you the tools to predict and prevent that."
       />
+
+      {/* Real-world signal integrity images */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FigureImage
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Ringing_on_unterminated_transmission_line.jpg/640px-Ringing_on_unterminated_transmission_line.jpg"
+          alt="Oscilloscope trace showing signal ringing caused by impedance mismatch on an unterminated transmission line"
+          caption="Signal ringing on an unterminated transmission line: the voltage overshoots and oscillates before settling — exactly the bounce behavior predicted by the lattice diagram."
+          attribution="Cqdx, CC BY-SA 3.0 — Wikimedia Commons"
+          sourceUrl="https://commons.wikimedia.org/wiki/File:Ringing_on_unterminated_transmission_line.jpg"
+        />
+        <FigureImage
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Eye_diagram_of_a_4-level_signal.png/640px-Eye_diagram_of_a_4-level_signal.png"
+          alt="Eye diagram showing a multi-level high-speed digital signal with open eyes indicating good signal integrity"
+          caption="An eye diagram: overlapping many bit transitions reveals whether the signal has clean 'eyes' (good integrity) or closed eyes (excessive ringing and jitter from reflections)."
+          attribution="Jmameren, CC BY-SA 3.0 — Wikimedia Commons"
+          sourceUrl="https://commons.wikimedia.org/wiki/File:Eye_diagram_of_a_4-level_signal.png"
+        />
+      </div>
 
       {/* ── 4.1 Step Response ────────────────────────────────────── */}
       <section className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 space-y-4">
