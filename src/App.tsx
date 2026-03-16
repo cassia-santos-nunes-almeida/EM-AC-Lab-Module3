@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { ErrorBoundary } from './components/layout/ErrorBoundary';
 import { Layout } from './components/layout/Layout';
+import { beforeSendFilter, useAnalytics } from './hooks/useAnalytics';
 
 // Retry dynamic imports once on failure (handles stale service worker cache)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,6 +38,8 @@ function PageLoader() {
 }
 
 function App() {
+  useAnalytics();
+
   return (
     <Router basename={import.meta.env.BASE_URL}>
       <Layout>
@@ -49,7 +52,7 @@ function App() {
           <Route path="/antennas" element={<ErrorBoundary><Suspense fallback={<PageLoader />}><Antennas /></Suspense></ErrorBoundary>} />
         </Routes>
       </Layout>
-      <Analytics />
+      <Analytics beforeSend={beforeSendFilter} />
     </Router>
   );
 }
