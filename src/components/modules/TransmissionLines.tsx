@@ -89,14 +89,14 @@ export function TransmissionLines() {
         {/* Real-world connector and cable images */}
         <div className="grid gap-4 sm:grid-cols-2">
           <FigureImage
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Electronic_connectors._SMA%2C_SSMA%2C_U.FL.jpg/640px-Electronic_connectors._SMA%2C_SSMA%2C_U.FL.jpg"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Electronic_connectors._SMA%2C_SSMA%2C_U.FL.jpg/500px-Electronic_connectors._SMA%2C_SSMA%2C_U.FL.jpg"
             alt="Various RF coaxial connectors including SMA and SSMA types"
             caption="RF coaxial connectors (SMA, SSMA, U.FL): precision 50 Ω connectors designed to maintain characteristic impedance through the connection point."
             attribution="Megapixie, CC BY-SA 4.0 — Wikimedia Commons"
             sourceUrl="https://commons.wikimedia.org/wiki/File:Electronic_connectors._SMA,_SSMA,_U.FL.jpg"
           />
           <FigureImage
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/RG-59.jpg/640px-RG-59.jpg"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/RG-59.jpg/500px-RG-59.jpg"
             alt="Cross-section of RG-59 75-ohm coaxial cable showing inner conductor and braided shield"
             caption="RG-59 coaxial cable (75 Ω): used for television and video. Compare its dimensions to a 50 Ω cable — the different Z₀ comes from the ratio of conductor diameters."
             attribution="FDominec, CC BY-SA 3.0 — Wikimedia Commons"
@@ -287,7 +287,7 @@ export function TransmissionLines() {
         </h2>
 
         <FigureImage
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Network_Analyzer_Agilent_8714ET.jpg/640px-Network_Analyzer_Agilent_8714ET.jpg"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Network_Analyzer_Agilent_8714ET.jpg/500px-Network_Analyzer_Agilent_8714ET.jpg"
           alt="Agilent vector network analyzer displaying S-parameter measurements on a Smith chart"
           caption="A Vector Network Analyzer (VNA) measuring impedance and displaying results on a Smith chart. This is the primary instrument for characterizing transmission line and antenna impedance in the lab."
           attribution="Binarysequence, CC BY-SA 4.0 — Wikimedia Commons"

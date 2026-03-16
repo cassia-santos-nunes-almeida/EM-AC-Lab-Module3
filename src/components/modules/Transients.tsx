@@ -54,14 +54,14 @@ export function Transients() {
       {/* Real-world signal integrity images */}
       <div className="grid gap-4 sm:grid-cols-2">
         <FigureImage
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Ringing_on_unterminated_transmission_line.jpg/640px-Ringing_on_unterminated_transmission_line.jpg"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Ringing_on_unterminated_transmission_line.jpg/500px-Ringing_on_unterminated_transmission_line.jpg"
           alt="Oscilloscope trace showing signal ringing caused by impedance mismatch on an unterminated transmission line"
           caption="Signal ringing on an unterminated transmission line: the voltage overshoots and oscillates before settling — exactly the bounce behavior predicted by the lattice diagram."
           attribution="Cqdx, CC BY-SA 3.0 — Wikimedia Commons"
           sourceUrl="https://commons.wikimedia.org/wiki/File:Ringing_on_unterminated_transmission_line.jpg"
         />
         <FigureImage
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Eye_diagram_of_a_4-level_signal.png/640px-Eye_diagram_of_a_4-level_signal.png"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Eye_diagram_of_a_4-level_signal.png/500px-Eye_diagram_of_a_4-level_signal.png"
           alt="Eye diagram showing a multi-level high-speed digital signal with open eyes indicating good signal integrity"
           caption="An eye diagram: overlapping many bit transitions reveals whether the signal has clean 'eyes' (good integrity) or closed eyes (excessive ringing and jitter from reflections)."
           attribution="Jmameren, CC BY-SA 3.0 — Wikimedia Commons"
