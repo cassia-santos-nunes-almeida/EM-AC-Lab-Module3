@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, BookOpen, Activity, GraduationCap } from 'lucide-react';
 import { MathWrapper } from '@/components/common/MathWrapper';
 import { PredictionGate } from '@/components/common/PredictionGate';
 import { ConceptCheck } from '@/components/common/ConceptCheck';
@@ -7,6 +7,7 @@ import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { SectionHook } from '@/components/common/SectionHook';
 import { FigureImage } from '@/components/common/FigureImage';
+import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
 import { CoupledCoilsSim } from '@/components/simulations/CoupledCoilsSim';
 
@@ -39,6 +40,12 @@ export function Transformers() {
 
       <SectionHook text="Every phone charger, laptop adapter, and power substation depends on transformers. Understanding how energy couples magnetically from one coil to another is the first step toward understanding how signals propagate along transmission lines." />
 
+      <Tabs tabs={[
+        {
+          label: 'Theory',
+          icon: <BookOpen className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
       {/* Real-world transformer images */}
       <div className="grid gap-4 sm:grid-cols-2">
         <FigureImage
@@ -212,6 +219,7 @@ export function Transformers() {
         />
       </section>
 
+
       {/* ────────────────────────────────────────────────────────── */}
       {/* 1.2 Ideal Transformer                                    */}
       {/* ────────────────────────────────────────────────────────── */}
@@ -335,6 +343,15 @@ export function Transformers() {
         </div>
       </section>
 
+            </div>
+          ),
+        },
+        {
+          label: 'Simulations',
+          icon: <Activity className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
+
       {/* ────────────────────────────────────────────────────────── */}
       {/* 1.3 Coupled Coils Simulation                             */}
       {/* ────────────────────────────────────────────────────────── */}
@@ -369,6 +386,15 @@ export function Transformers() {
           <CoupledCoilsSim className="mt-4" />
         </PredictionGate>
       </section>
+
+            </div>
+          ),
+        },
+        {
+          label: 'Practice',
+          icon: <GraduationCap className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
 
       {/* ────────────────────────────────────────────────────────── */}
       {/* Your Turn                                                 */}
@@ -434,6 +460,12 @@ export function Transformers() {
           </div>
         </div>
       </div>
+
+            </div>
+          ),
+        },
+      ]} />
+
 
       <ModuleNavigation />
     </div>

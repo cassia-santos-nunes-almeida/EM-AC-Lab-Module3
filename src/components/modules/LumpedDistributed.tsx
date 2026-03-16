@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { BookOpen, Activity, GraduationCap } from 'lucide-react';
 import { MathWrapper } from '@/components/common/MathWrapper';
 import { PredictionGate } from '@/components/common/PredictionGate';
 import { ConceptCheck } from '@/components/common/ConceptCheck';
@@ -6,6 +7,7 @@ import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { FigureImage } from '@/components/common/FigureImage';
+import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
 import { LadderAnimation } from '@/components/simulations/LadderAnimation';
 
@@ -37,6 +39,12 @@ export function LumpedDistributed() {
         </p>
       </div>
 
+      <Tabs tabs={[
+        {
+          label: 'Theory',
+          icon: <BookOpen className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
       {/* ── 2.1 — The ladder network ──────────────────────────────── */}
       <section className="space-y-5">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -131,45 +139,6 @@ export function LumpedDistributed() {
         </div>
       </section>
 
-      {/* ── 2.2 — The ladder animation ────────────────────────────── */}
-      <section className="space-y-5">
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-          2.2 &mdash; The Ladder Animation
-        </h2>
-
-        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-          Before watching the animation, make a prediction. This will help you pay
-          attention to the right quantity as the ladder subdivides.
-        </p>
-
-        <PredictionGate
-          question="If we split the LC ladder into 10x more sections (same total L and C), does the wave speed increase, decrease, or stay the same?"
-          options={[
-            { id: 'increases', label: 'Increases' },
-            { id: 'decreases', label: 'Decreases' },
-            { id: 'same', label: 'Stays the same' },
-          ]}
-          getCorrectAnswer={() => 'same'}
-          explanation={
-            <p>
-              The wave speed{' '}
-              <MathWrapper formula="v = 1/\sqrt{L' C'}" /> depends on the{' '}
-              <em>per-unit-length</em> values <MathWrapper formula="L'" /> and{' '}
-              <MathWrapper formula="C'" />. When you subdivide, the per-unit-length
-              values stay the same because both total{' '}
-              <MathWrapper formula="L" /> and total <MathWrapper formula="C" />{' '}
-              are unchanged for the same physical length. More sections means
-              smaller components, but the product{' '}
-              <MathWrapper formula="L' \cdot C'" /> is invariant.
-            </p>
-          }
-        >
-          <div className="mt-6">
-            <LadderAnimation />
-          </div>
-        </PredictionGate>
-      </section>
-
       {/* ── 2.3 — Telegrapher's equations ─────────────────────────── */}
       <section className="space-y-5">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">
@@ -242,7 +211,61 @@ export function LumpedDistributed() {
             you already know.
           </p>
         </div>
+      </section>
+            </div>
+          ),
+        },
+        {
+          label: 'Simulations',
+          icon: <Activity className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
+      {/* ── 2.2 — The ladder animation ────────────────────────────── */}
+      <section className="space-y-5">
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          2.2 &mdash; The Ladder Animation
+        </h2>
 
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Before watching the animation, make a prediction. This will help you pay
+          attention to the right quantity as the ladder subdivides.
+        </p>
+
+        <PredictionGate
+          question="If we split the LC ladder into 10x more sections (same total L and C), does the wave speed increase, decrease, or stay the same?"
+          options={[
+            { id: 'increases', label: 'Increases' },
+            { id: 'decreases', label: 'Decreases' },
+            { id: 'same', label: 'Stays the same' },
+          ]}
+          getCorrectAnswer={() => 'same'}
+          explanation={
+            <p>
+              The wave speed{' '}
+              <MathWrapper formula="v = 1/\sqrt{L' C'}" /> depends on the{' '}
+              <em>per-unit-length</em> values <MathWrapper formula="L'" /> and{' '}
+              <MathWrapper formula="C'" />. When you subdivide, the per-unit-length
+              values stay the same because both total{' '}
+              <MathWrapper formula="L" /> and total <MathWrapper formula="C" />{' '}
+              are unchanged for the same physical length. More sections means
+              smaller components, but the product{' '}
+              <MathWrapper formula="L' \cdot C'" /> is invariant.
+            </p>
+          }
+        >
+          <div className="mt-6">
+            <LadderAnimation />
+          </div>
+        </PredictionGate>
+      </section>
+            </div>
+          ),
+        },
+        {
+          label: 'Practice',
+          icon: <GraduationCap className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
         <ConceptCheck
           data={{
             mode: 'multiple-choice',
@@ -256,7 +279,6 @@ export function LumpedDistributed() {
             ],
           }}
         />
-      </section>
 
       {/* ── Your Turn: compute v and Z₀ ──────────────────────────── */}
       <YourTurnPanel
@@ -300,6 +322,11 @@ export function LumpedDistributed() {
           </div>
         }
       />
+
+            </div>
+          ),
+        },
+      ]} />
 
       {/* ── Module navigation ─────────────────────────────────────── */}
       <ModuleNavigation />
