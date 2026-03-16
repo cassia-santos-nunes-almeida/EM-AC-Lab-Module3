@@ -87,11 +87,11 @@ export function Antennas() {
           content: (
             <div className="space-y-10">
         <FigureImage
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Dipole_antenna_drawing.svg/500px-Dipole_antenna_drawing.svg.png"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Dipole_antenna_ft_en.svg/500px-Dipole_antenna_ft_en.svg.png"
           alt="Diagram of a half-wave dipole antenna showing the two conductor elements and feed point"
           caption="A half-wave dipole antenna: the simplest practical antenna. Two conductor elements, each λ/4 long, are fed at the center — directly derived from 'opening up' a transmission line."
-          attribution="Chetvorno, Public Domain — Wikimedia Commons"
-          sourceUrl="https://commons.wikimedia.org/wiki/File:Dipole_antenna_drawing.svg"
+          attribution="Wikimedia Commons"
+          sourceUrl="https://commons.wikimedia.org/wiki/File:Dipole_antenna_ft_en.svg"
           className="sm:max-w-md"
         />
 
@@ -278,11 +278,11 @@ export function Antennas() {
         {/* Real-world antenna photos */}
         <div className="grid gap-4 sm:grid-cols-2">
           <FigureImage
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/GSM_base_station_4.jpg/500px-GSM_base_station_4.jpg"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/GSM_base_station_4.JPG/500px-GSM_base_station_4.JPG"
             alt="Cellular base station tower with multiple panel antenna arrays"
             caption="Cellular base station with panel antenna arrays: each panel contains multiple patch antennas arranged to cover a specific sector, using the same impedance matching principles from Section 3."
             attribution="Korax1214, CC BY-SA 4.0 — Wikimedia Commons"
-            sourceUrl="https://commons.wikimedia.org/wiki/File:GSM_base_station_4.jpg"
+            sourceUrl="https://commons.wikimedia.org/wiki/File:GSM_base_station_4.JPG"
           />
           <FigureImage
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Erdfunkstelle_Raisting_2.jpg/500px-Erdfunkstelle_Raisting_2.jpg"
