@@ -86,7 +86,7 @@ export function Transformers() {
         </p>
 
         <MathWrapper
-          formula="k = \frac{M}{\sqrt{L_1 L_2}}, \qquad 0 \le k \le 1"
+          formula="k = \\frac{M}{\\sqrt{L_1 L_2}}, \\qquad 0 \\le k \\le 1"
           block
         />
 
@@ -94,8 +94,8 @@ export function Transformers() {
           <MathWrapper formula="k = 0" /> means no shared flux (completely decoupled);{' '}
           <MathWrapper formula="k = 1" /> means every flux line produced by one coil passes
           through the other (perfect coupling). In practice, iron-core power transformers
-          achieve <MathWrapper formula="k \approx 0.95{-}0.99" />, while air-core RF
-          transformers may have <MathWrapper formula="k \approx 0.1{-}0.5" />.
+          achieve <MathWrapper formula="k \\approx 0.95{-}0.99" />, while air-core RF
+          transformers may have <MathWrapper formula="k \\approx 0.1{-}0.5" />.
         </p>
 
         <FigureImage
@@ -241,7 +241,7 @@ export function Transformers() {
             Voltage Ratio
           </p>
           <MathWrapper
-            formula="\frac{V_2}{V_1} = \frac{N_2}{N_1}"
+            formula="\\frac{V_2}{V_1} = \\frac{N_2}{N_1}"
             block
           />
           <p className="text-xs text-slate-600 dark:text-slate-400">
@@ -255,7 +255,7 @@ export function Transformers() {
             Current Ratio
           </p>
           <MathWrapper
-            formula="\frac{I_2}{I_1} = \frac{N_1}{N_2}"
+            formula="\\frac{I_2}{I_1} = \\frac{N_1}{N_2}"
             block
           />
           <p className="text-xs text-slate-600 dark:text-slate-400">
@@ -269,7 +269,7 @@ export function Transformers() {
             Reflected Impedance
           </p>
           <MathWrapper
-            formula="Z_{\text{reflected}} = \left(\frac{N_1}{N_2}\right)^2 Z_L"
+            formula="Z_{\\text{reflected}} = \\left(\\frac{N_1}{N_2}\\right)^2 Z_L"
             block
           />
           <p className="text-xs text-slate-600 dark:text-slate-400">
@@ -287,8 +287,8 @@ export function Transformers() {
           <p className="text-sm text-slate-700 dark:text-slate-300">
             A transformer has <MathWrapper formula="N_1 = 100" /> turns,{' '}
             <MathWrapper formula="N_2 = 50" /> turns, and a load{' '}
-            <MathWrapper formula="Z_L = 200\,\Omega" />. The source voltage is{' '}
-            <MathWrapper formula="V_1 = 120\,\text{V}" />.
+            <MathWrapper formula="Z_L = 200\\,\\Omega" />. The source voltage is{' '}
+            <MathWrapper formula="V_1 = 120\\,\\text{V}" />.
           </p>
 
           <div className="space-y-2 pl-4 border-l-2 border-engineering-blue-300 dark:border-engineering-blue-700">
@@ -296,7 +296,7 @@ export function Transformers() {
               Step 1: Turns ratio
             </p>
             <MathWrapper
-              formula="\frac{N_1}{N_2} = \frac{100}{50} = 2"
+              formula="\\frac{N_1}{N_2} = \\frac{100}{50} = 2"
               block
             />
 
@@ -304,7 +304,7 @@ export function Transformers() {
               Step 2: Secondary voltage
             </p>
             <MathWrapper
-              formula="V_2 = V_1 \cdot \frac{N_2}{N_1} = 120 \cdot \frac{50}{100} = 60\,\text{V}"
+              formula="V_2 = V_1 \\cdot \\frac{N_2}{N_1} = 120 \\cdot \\frac{50}{100} = 60\\,\\text{V}"
               block
             />
 
@@ -312,7 +312,7 @@ export function Transformers() {
               Step 3: Reflected impedance
             </p>
             <MathWrapper
-              formula="Z_{\text{reflected}} = \left(\frac{N_1}{N_2}\right)^2 Z_L = (2)^2 \times 200 = 800\,\Omega"
+              formula="Z_{\\text{reflected}} = \\left(\\frac{N_1}{N_2}\\right)^2 Z_L = (2)^2 \\times 200 = 800\\,\\Omega"
               block
             />
 
@@ -320,7 +320,7 @@ export function Transformers() {
               Step 4: Primary current
             </p>
             <MathWrapper
-              formula="I_1 = \frac{V_1}{Z_{\text{reflected}}} = \frac{120}{800} = 0.15\,\text{A}"
+              formula="I_1 = \\frac{V_1}{Z_{\\text{reflected}}} = \\frac{120}{800} = 0.15\\,\\text{A}"
               block
             />
 
@@ -328,7 +328,7 @@ export function Transformers() {
               Step 5: Secondary current
             </p>
             <MathWrapper
-              formula="I_2 = I_1 \cdot \frac{N_1}{N_2} = 0.15 \times 2 = 0.30\,\text{A}"
+              formula="I_2 = I_1 \\cdot \\frac{N_1}{N_2} = 0.15 \\times 2 = 0.30\\,\\text{A}"
               block
             />
 
@@ -336,7 +336,7 @@ export function Transformers() {
               Verify: Power balance
             </p>
             <MathWrapper
-              formula="P_1 = V_1 I_1 = 120 \times 0.15 = 18\,\text{W} = V_2 I_2 = 60 \times 0.30 = 18\,\text{W} \;\checkmark"
+              formula="P_1 = V_1 I_1 = 120 \\times 0.15 = 18\\,\\text{W} = V_2 I_2 = 60 \\times 0.30 = 18\\,\\text{W} \\;\\checkmark"
               block
             />
           </div>
@@ -431,7 +431,7 @@ export function Transformers() {
         correctReveal={
           <div className="space-y-1">
             <MathWrapper
-              formula="Z_{\text{reflected}} = \left(\frac{200}{50}\right)^2 \times 200 = 16 \times 200 = 3200\,\Omega"
+              formula="Z_{\\text{reflected}} = \\left(\\frac{200}{50}\\right)^2 \\times 200 = 16 \\times 200 = 3200\\,\\Omega"
               block
             />
             <p className="text-xs text-slate-600 dark:text-slate-400">

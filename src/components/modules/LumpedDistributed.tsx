@@ -92,7 +92,7 @@ export function LumpedDistributed() {
           </p>
 
           <MathWrapper
-            formula="L_1 = L_2 = \frac{L_{\text{total}}}{2}, \qquad C_1 = C_2 = \frac{C_{\text{total}}}{2}"
+            formula="L_1 = L_2 = \\frac{L_{\\text{total}}}{2}, \\qquad C_1 = C_2 = \\frac{C_{\\text{total}}}{2}"
             block
           />
 
@@ -103,7 +103,7 @@ export function LumpedDistributed() {
           </p>
 
           <MathWrapper
-            formula="L_n = \frac{L_{\text{total}}}{N}, \qquad C_n = \frac{C_{\text{total}}}{N}"
+            formula="L_n = \\frac{L_{\\text{total}}}{N}, \\qquad C_n = \\frac{C_{\\text{total}}}{N}"
             block
           />
 
@@ -111,7 +111,7 @@ export function LumpedDistributed() {
             At each stage, the individual components shrink, but the overall ladder
             stores the same total energy and presents the same impedance to the source.
             Something remarkable happens in the limit{' '}
-            <MathWrapper formula="N \to \infty" />: the discrete ladder becomes a
+            <MathWrapper formula="N \\to \\infty" />: the discrete ladder becomes a
             <strong> continuous transmission line</strong>.
           </p>
 
@@ -121,13 +121,13 @@ export function LumpedDistributed() {
 
           <p>
             The wave speed on the ladder is determined by the per-unit-length inductance{' '}
-            <MathWrapper formula="L' = L_{\text{total}} / \ell" /> and per-unit-length
-            capacitance <MathWrapper formula="C' = C_{\text{total}} / \ell" />, where{' '}
-            <MathWrapper formula="\ell" /> is the physical length:
+            <MathWrapper formula="L' = L_{\\text{total}} / \\ell" /> and per-unit-length
+            capacitance <MathWrapper formula="C' = C_{\\text{total}} / \\ell" />, where{' '}
+            <MathWrapper formula="\\ell" /> is the physical length:
           </p>
 
           <MathWrapper
-            formula="v = \frac{1}{\sqrt{L' \cdot C'}}"
+            formula="v = \\frac{1}{\\sqrt{L' \\cdot C'}}"
             block
           />
 
@@ -148,9 +148,9 @@ export function LumpedDistributed() {
         <div className="prose prose-slate dark:prose-invert max-w-none text-sm leading-relaxed space-y-4">
           <p>
             Take one infinitesimal segment of the ladder&mdash;a tiny length{' '}
-            <MathWrapper formula="\Delta x" /> containing series inductance{' '}
-            <MathWrapper formula="L' \Delta x" /> and shunt capacitance{' '}
-            <MathWrapper formula="C' \Delta x" />. Apply Kirchhoff&rsquo;s voltage
+            <MathWrapper formula="\\Delta x" /> containing series inductance{' '}
+            <MathWrapper formula="L' \\Delta x" /> and shunt capacitance{' '}
+            <MathWrapper formula="C' \\Delta x" />. Apply Kirchhoff&rsquo;s voltage
             law (KVL) around the loop and Kirchhoff&rsquo;s current law (KCL) at
             the node.
           </p>
@@ -160,7 +160,7 @@ export function LumpedDistributed() {
           </p>
 
           <MathWrapper
-            formula="\frac{\partial V}{\partial x} = -L' \frac{\partial I}{\partial t}"
+            formula="\\frac{\\partial V}{\\partial x} = -L' \\frac{\\partial I}{\\partial t}"
             block
           />
 
@@ -169,18 +169,18 @@ export function LumpedDistributed() {
           </p>
 
           <MathWrapper
-            formula="\frac{\partial I}{\partial x} = -C' \frac{\partial V}{\partial t}"
+            formula="\\frac{\\partial I}{\\partial x} = -C' \\frac{\\partial V}{\\partial t}"
             block
           />
 
           <p>
             These are the <strong>telegrapher&rsquo;s equations</strong>. Taking{' '}
-            <MathWrapper formula="\partial / \partial x" /> of the first and
+            <MathWrapper formula="\\partial / \\partial x" /> of the first and
             substituting the second yields the wave equation:
           </p>
 
           <MathWrapper
-            formula="\frac{\partial^2 V}{\partial x^2} = L' C' \frac{\partial^2 V}{\partial t^2}"
+            formula="\\frac{\\partial^2 V}{\\partial x^2} = L' C' \\frac{\\partial^2 V}{\\partial t^2}"
             block
           />
 
@@ -190,12 +190,12 @@ export function LumpedDistributed() {
           </p>
 
           <MathWrapper
-            formula="V(x,t) = V^{+} f\!\left(t - \frac{x}{v}\right) + V^{-} g\!\left(t + \frac{x}{v}\right)"
+            formula="V(x,t) = V^{+} f\\!\\left(t - \\frac{x}{v}\\right) + V^{-} g\\!\\left(t + \\frac{x}{v}\\right)"
             block
           />
 
           <p>
-            where <MathWrapper formula="v = 1/\sqrt{L' C'}" /> is the propagation
+            where <MathWrapper formula="v = 1/\\sqrt{L' C'}" /> is the propagation
             speed&mdash;the same quantity we saw remain constant during subdivision.
           </p>
         </div>
@@ -242,14 +242,14 @@ export function LumpedDistributed() {
           explanation={
             <p>
               The wave speed{' '}
-              <MathWrapper formula="v = 1/\sqrt{L' C'}" /> depends on the{' '}
+              <MathWrapper formula="v = 1/\\sqrt{L' C'}" /> depends on the{' '}
               <em>per-unit-length</em> values <MathWrapper formula="L'" /> and{' '}
               <MathWrapper formula="C'" />. When you subdivide, the per-unit-length
               values stay the same because both total{' '}
               <MathWrapper formula="L" /> and total <MathWrapper formula="C" />{' '}
               are unchanged for the same physical length. More sections means
               smaller components, but the product{' '}
-              <MathWrapper formula="L' \cdot C'" /> is invariant.
+              <MathWrapper formula="L' \\cdot C'" /> is invariant.
             </p>
           }
         >
@@ -309,11 +309,11 @@ export function LumpedDistributed() {
         correctReveal={
           <div className="space-y-1">
             <MathWrapper
-              formula="v = \frac{1}{\sqrt{L' C'}} = \frac{1}{\sqrt{0.25 \times 10^{-6} \times 100 \times 10^{-12}}} = 2 \times 10^8\,\text{m/s}"
+              formula="v = \\frac{1}{\\sqrt{L' C'}} = \\frac{1}{\\sqrt{0.25 \\times 10^{-6} \\times 100 \\times 10^{-12}}} = 2 \\times 10^8\\,\\text{m/s}"
               block
             />
             <MathWrapper
-              formula="Z_0 = \sqrt{\frac{L'}{C'}} = \sqrt{\frac{0.25 \times 10^{-6}}{100 \times 10^{-12}}} = 50\,\Omega"
+              formula="Z_0 = \\sqrt{\\frac{L'}{C'}} = \\sqrt{\\frac{0.25 \\times 10^{-6}}{100 \\times 10^{-12}}} = 50\\,\\Omega"
               block
             />
             <p className="text-xs text-slate-600 dark:text-slate-400">

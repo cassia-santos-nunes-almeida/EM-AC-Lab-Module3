@@ -104,7 +104,7 @@ export function Antennas() {
 
           <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             On a terminated transmission line, an open circuit produces a reflection coefficient{' '}
-            <MathWrapper formula="\Gamma = +1" />. But when the line is flared into an antenna,
+            <MathWrapper formula="\\Gamma = +1" />. But when the line is flared into an antenna,
             the energy that would have been reflected is instead <em>radiated</em>. The antenna
             converts guided-wave energy into free-space radiation.
           </p>
@@ -117,10 +117,10 @@ export function Antennas() {
               From the transmission line's perspective, the antenna looks like a resistor. The
               power "consumed" by this resistor is actually the power radiated into space. This
               equivalent resistance is called the <strong>radiation resistance</strong>{' '}
-              <MathWrapper formula="R_{\text{rad}}" />.
+              <MathWrapper formula="R_{\\text{rad}}" />.
             </p>
             <MathWrapper
-              formula="P_{\text{rad}} = \frac{1}{2} |I_0|^2 R_{\text{rad}}"
+              formula="P_{\\text{rad}} = \\frac{1}{2} |I_0|^2 R_{\\text{rad}}"
               block
             />
           </div>
@@ -128,22 +128,22 @@ export function Antennas() {
           <div className="bg-engineering-blue-50 dark:bg-engineering-blue-900/10 rounded-lg p-4 border-l-4 border-engineering-blue-500 space-y-3">
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               <strong>Key insight:</strong> The feed-point impedance of a{' '}
-              <MathWrapper formula="\lambda/2" /> dipole is approximately{' '}
-              <MathWrapper formula="73\,\Omega" />. This is remarkably close to the{' '}
-              <MathWrapper formula="75\,\Omega" /> standard for coaxial cable — and that is
+              <MathWrapper formula="\\lambda/2" /> dipole is approximately{' '}
+              <MathWrapper formula="73\\,\\Omega" />. This is remarkably close to the{' '}
+              <MathWrapper formula="75\\,\\Omega" /> standard for coaxial cable — and that is
               not a coincidence. The 75{'\u2009'}{'\u03A9'} coaxial standard was chosen specifically
               because it provides a near-perfect impedance match to a half-wave dipole.
             </p>
             <MathWrapper
-              formula="Z_{\text{in}}(\lambda/2 \text{ dipole}) \approx 73 + j42.5\,\Omega \approx 73\,\Omega \text{ (at resonance)}"
+              formula="Z_{\\text{in}}(\\lambda/2 \\text{ dipole}) \\approx 73 + j42.5\\,\\Omega \\approx 73\\,\\Omega \\text{ (at resonance)}"
               block
             />
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               <strong>Impedance matching for antennas</strong> follows the same reflection
               coefficient logic from Section 3: matching the antenna's radiation resistance to{' '}
               <MathWrapper formula="Z_0" /> of the feed line maximizes power transfer. When{' '}
-              <MathWrapper formula="R_{\text{rad}} = Z_0" />, then{' '}
-              <MathWrapper formula="\Gamma = 0" /> and all power is radiated — none is
+              <MathWrapper formula="R_{\\text{rad}} = Z_0" />, then{' '}
+              <MathWrapper formula="\\Gamma = 0" /> and all power is radiated — none is
               reflected back along the transmission line.
             </p>
           </div>
@@ -152,16 +152,16 @@ export function Antennas() {
             <div className="space-y-3 py-2">
               <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                 The radiation resistance is found by integrating the radiated power over all
-                directions and equating it to <MathWrapper formula="\frac{1}{2}|I_0|^2 R_{\text{rad}}" />:
+                directions and equating it to <MathWrapper formula="\\frac{1}{2}|I_0|^2 R_{\\text{rad}}" />:
               </p>
               <MathWrapper
-                formula="R_{\text{rad}} = \frac{2\pi}{\eta_0 |I_0|^2} \int_0^\pi |E_\theta(r,\theta)|^2 r^2 \sin\theta \, d\theta"
+                formula="R_{\\text{rad}} = \\frac{2\\pi}{\\eta_0 |I_0|^2} \\int_0^\\pi |E_\\theta(r,\\theta)|^2 r^2 \\sin\\theta \\, d\\theta"
                 block
               />
               <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                For a <MathWrapper formula="\lambda/2" /> dipole, evaluating this integral
-                gives <MathWrapper formula="R_{\text{rad}} \approx 73.1\,\Omega" />. For a short
-                dipole (<MathWrapper formula="L \ll \lambda" />), <MathWrapper formula="R_{\text{rad}} = 20\pi^2(L/\lambda)^2 \approx 2\,\Omega" />,
+                For a <MathWrapper formula="\\lambda/2" /> dipole, evaluating this integral
+                gives <MathWrapper formula="R_{\\text{rad}} \\approx 73.1\\,\\Omega" />. For a short
+                dipole (<MathWrapper formula="L \\ll \\lambda" />), <MathWrapper formula="R_{\\text{rad}} = 20\\pi^2(L/\\lambda)^2 \\approx 2\\,\\Omega" />,
                 which makes matching difficult.
               </p>
             </div>
@@ -217,12 +217,12 @@ export function Antennas() {
               <strong>Fraunhofer distance</strong>:
             </p>
             <MathWrapper
-              formula="r_{\text{far}} = \frac{2D^2}{\lambda}"
+              formula="r_{\\text{far}} = \\frac{2D^2}{\\lambda}"
               block
             />
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
               where <MathWrapper formula="D" /> is the largest dimension of the antenna and{' '}
-              <MathWrapper formula="\lambda" /> is the operating wavelength.
+              <MathWrapper formula="\\lambda" /> is the operating wavelength.
             </p>
           </div>
 
@@ -445,7 +445,7 @@ export function Antennas() {
         correctReveal={
           <div className="space-y-1">
             <MathWrapper
-              formula="r_{\text{far}} = \frac{2D^2}{\lambda} = \frac{2 \times 1^2}{0.03} = 66.7\,\text{m}"
+              formula="r_{\\text{far}} = \\frac{2D^2}{\\lambda} = \\frac{2 \\times 1^2}{0.03} = 66.7\\,\\text{m}"
               block
             />
             <p className="text-xs text-slate-600 dark:text-slate-400">
@@ -464,8 +464,8 @@ export function Antennas() {
         </p>
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
           A {'\u03BB'}/2 dipole has{' '}
-          <MathWrapper formula="R_{\text{rad}} \approx 73\,\Omega" /> and a coaxial feed
-          line has <MathWrapper formula="Z_0 = 75\,\Omega" />. Is this a coincidence, or was
+          <MathWrapper formula="R_{\\text{rad}} \\approx 73\\,\\Omega" /> and a coaxial feed
+          line has <MathWrapper formula="Z_0 = 75\\,\\Omega" />. Is this a coincidence, or was
           the coaxial standard chosen with dipole antennas in mind?
         </p>
       </div>

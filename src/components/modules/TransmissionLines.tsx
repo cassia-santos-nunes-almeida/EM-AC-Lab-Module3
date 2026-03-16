@@ -222,7 +222,7 @@ export function TransmissionLines() {
           explanation={
             <span>
               When <MathWrapper formula="Z_L = Z_0" />, the reflection coefficient{' '}
-              <MathWrapper formula="\Gamma = 0" />. All power is absorbed by the matched
+              <MathWrapper formula="\\Gamma = 0" />. All power is absorbed by the matched
               load &mdash; no reflection.
             </span>
           }
@@ -239,7 +239,7 @@ export function TransmissionLines() {
             getCorrectAnswer={() => 'double'}
             explanation={
               <span>
-                At an open circuit, <MathWrapper formula="\Gamma = +1" />. The reflected wave
+                At an open circuit, <MathWrapper formula="\\Gamma = +1" />. The reflected wave
                 has the same amplitude and sign as the incident. Total voltage = incident +
                 reflected = 2 &times; incident.
               </span>
@@ -256,7 +256,7 @@ export function TransmissionLines() {
                     Does this make sense?
                   </p>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                    For a short circuit, <MathWrapper formula="\Gamma = -1" />. The voltage at
+                    For a short circuit, <MathWrapper formula="\\Gamma = -1" />. The voltage at
                     the load is zero. Is that consistent with what a short circuit means?
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export function TransmissionLines() {
                     Does this make sense?
                   </p>
                   <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-                    A 50 &Omega; coaxial cable has <MathWrapper formula="Z_0 = 50\,\Omega" />{' '}
+                    A 50 &Omega; coaxial cable has <MathWrapper formula="Z_0 = 50\\,\\Omega" />{' '}
                     regardless of its length. Why does length not appear in the{' '}
                     <MathWrapper formula="Z_0" /> formula?
                   </p>
@@ -306,14 +306,14 @@ export function TransmissionLines() {
         <CollapsibleSection title="Matching Network Design" variant="inline">
           <div className="space-y-3 py-2">
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-              When <MathWrapper formula="Z_L \neq Z_0" />, a matching network can be inserted to
+              When <MathWrapper formula="Z_L \\neq Z_0" />, a matching network can be inserted to
               eliminate reflections. On the Smith chart, matching means transforming the load
-              impedance to the center of the chart (<MathWrapper formula="\Gamma = 0" />).
+              impedance to the center of the chart (<MathWrapper formula="\\Gamma = 0" />).
             </p>
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               Common techniques include <strong>quarter-wave transformers</strong> (a{' '}
-              <MathWrapper formula="\lambda/4" /> section with{' '}
-              <MathWrapper formula="Z_T = \sqrt{Z_0 Z_L}" />) and <strong>stub matching</strong>{' '}
+              <MathWrapper formula="\\lambda/4" /> section with{' '}
+              <MathWrapper formula="Z_T = \\sqrt{Z_0 Z_L}" />) and <strong>stub matching</strong>{' '}
               (adding a short- or open-circuited transmission line stub at the right point to cancel
               the reactive part of the impedance).
             </p>
@@ -358,15 +358,15 @@ export function TransmissionLines() {
           correctReveal={
             <div className="space-y-2">
               <MathWrapper
-                formula="\Gamma = \frac{75 + j50 - 50}{75 + j50 + 50} = \frac{25 + j50}{125 + j50}"
+                formula="\\Gamma = \\frac{75 + j50 - 50}{75 + j50 + 50} = \\frac{25 + j50}{125 + j50}"
                 block
               />
               <MathWrapper
-                formula="|\Gamma| = \frac{\sqrt{25^2 + 50^2}}{\sqrt{125^2 + 50^2}} = \frac{55.9}{134.6} \approx 0.415"
+                formula="|\\Gamma| = \\frac{\\sqrt{25^2 + 50^2}}{\\sqrt{125^2 + 50^2}} = \\frac{55.9}{134.6} \\approx 0.415"
                 block
               />
               <MathWrapper
-                formula="\text{VSWR} = \frac{1 + 0.415}{1 - 0.415} \approx 2.42"
+                formula="\\text{VSWR} = \\frac{1 + 0.415}{1 - 0.415} \\approx 2.42"
                 block
               />
               <p className="text-xs text-slate-600 dark:text-slate-400">
