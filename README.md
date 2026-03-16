@@ -1,6 +1,10 @@
 # EM&AC Lab — Module 3: Transmission Lines & Antennas
 
+> *Click on the Smith chart, watch bounce diagrams converge & spin radiation patterns — hands-on transmission line and antenna fundamentals.*
+
 An interactive simulation suite for transmission line theory, coupled coils, Smith chart analysis, and antenna fundamentals. Built for engineering students at LUT University. This is the third and final module in the **EM&AC Lab** three-module course.
+
+**Live Demo:** https://em-ac-lab-module3.vercel.app/
 
 ## Course Structure
 
@@ -14,6 +18,21 @@ This app is part of a three-module progressive learning sequence:
 
 **Module 2 → Module 3:** Laplace transforms, impedance concepts, and transformer theory from Module 2 provide the foundation for coupled coils and transmission line impedance analysis here. **Module 1 → Module 3:** EM wave propagation and phasor concepts from Module 1 connect directly to standing waves and antenna radiation patterns.
 
+## Features
+
+- **6 Interactive Simulations** — HTML5 Canvas animations with real-time parameter control
+- **Interactive Smith Chart** — Click-to-place impedance, VSWR circles, constant-r/x contours, matching network calculator
+- **Coupled Coils Simulator** — Animated magnetic field lines, dual V2 readouts with flux leakage warning
+- **Bounce Diagram** — Multi-bounce transient voltage visualization with steady-state convergence
+- **Radiation Pattern Viewer** — Polar and Cartesian dipole radiation patterns with adjustable antenna length
+- **"Think it Through" Socratic Tutor** — AI chat (Google Gemini) that guides via questions, never gives direct answers
+- **PredictionGate** — Students predict outcomes before accessing simulations
+- **ConceptCheck** — Multiple-choice knowledge checks embedded throughout modules
+- **Dark Mode** — Persisted theme toggle (shared `emac-theme` key across all three modules)
+- **Progress Tracking** — Section visits, prediction gates, concept checks tracked in localStorage
+- **PWA** — Installable as a Progressive Web App with offline support
+- **Accessible** — WAI-ARIA tabs, roving tabIndex, skip-to-content, aria-live regions
+
 ## Modules
 
 | Route | Module | Description |
@@ -24,20 +43,6 @@ This app is part of a three-module progressive learning sequence:
 | `/transmission-lines` | **Transmission Lines** | Characteristic impedance, reflection coefficient, VSWR, interactive Smith chart |
 | `/transients` | **Transients & Bounce Diagrams** | Bounce diagram simulation for step-input transient analysis on transmission lines |
 | `/antennas` | **Antennas** | Radiation pattern simulation, directivity, radiation resistance, HPBW for dipole antennas |
-
-## Features
-
-- **6 Interactive Simulations** — HTML5 Canvas animations with real-time parameter control
-- **Interactive Smith Chart** — Click-to-place impedance, VSWR circles, constant-r/x contours, matching network calculator
-- **Coupled Coils Simulator** — Animated magnetic field lines, dual V2 readouts with flux leakage warning
-- **Bounce Diagram** — Multi-bounce transient voltage visualization with steady-state convergence
-- **Radiation Pattern Viewer** — Polar and Cartesian dipole radiation patterns with adjustable antenna length
-- **"Think it Through" Socratic Tutor** — AI chat (Google Gemini) that guides via questions
-- **PredictionGate** — Students predict outcomes before accessing simulations
-- **ConceptCheck** — Multiple-choice knowledge checks embedded throughout modules
-- **Dark Mode** — Persisted theme toggle (shared `emac-theme` key across all three modules)
-- **Progress Tracking** — Section visits, prediction gates, concept checks tracked in localStorage
-- **PWA** — Installable with offline support
 
 ## Tech Stack
 
@@ -114,13 +119,6 @@ src/
 └── utils/             — transmissionMath.ts (all physics calculations), cn.ts
 ```
 
-## Cross-Module Features
-
-- **Unified dark mode** — Theme preference syncs across all three modules via shared `emac-theme` localStorage key
-- **Cross-module navigation** — Links between modules via configurable environment variables
-- **Consistent pedagogy** — All modules use PredictionGate, ConceptCheck, CollapsibleSection, and Socratic tutor
-- **Progress persistence** — Section visits, prediction gates, concept checks tracked in localStorage (`emac-m3-progress`)
-
 ## Scripts
 
 | Command | Description |
@@ -130,6 +128,13 @@ src/
 | `npm run lint` | ESLint with jsx-a11y accessibility rules |
 | `npm test` | Run Vitest test suite (52 tests) |
 | `npm run preview` | Serve production build locally |
+
+## Cross-Module Features
+
+- **Unified dark mode** — Theme preference syncs across all three modules via shared `emac-theme` localStorage key
+- **Cross-module navigation** — Links between modules via configurable environment variables
+- **Consistent pedagogy** — All modules use PredictionGate, ConceptCheck, CollapsibleSection, and "Think it Through" Socratic tutor
+- **Progress persistence** — Section visits, prediction gates, concept checks tracked in localStorage (`emac-m3-progress`)
 
 ## Disclaimer
 
