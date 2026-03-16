@@ -32,7 +32,7 @@ export function Overview() {
 
       {/* Real-world context image */}
       <FigureImage
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/PCB_design_NASA.jpg/640px-PCB_design_NASA.jpg"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/PCB_design_NASA.jpg/500px-PCB_design_NASA.jpg"
         alt="High-frequency printed circuit board with impedance-controlled traces and ground planes"
         caption="At GHz frequencies, PCB traces behave as transmission lines. Controlled-impedance routing (visible as precise trace widths and spacing) prevents signal reflections."
         attribution="NASA, Public Domain — Wikimedia Commons"
@@ -64,11 +64,11 @@ export function Overview() {
 
       {/* RF test equipment context */}
       <FigureImage
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Optoelectronics_lab.jpg/640px-Optoelectronics_lab.jpg"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Laser_lab.jpg/500px-Laser_lab.jpg"
         alt="Electronics laboratory bench with oscilloscope, signal generator, and test equipment"
         caption="An electronics lab bench equipped with test instruments for measuring transmission line parameters — the tools engineers use to verify impedance matching, standing wave ratios, and signal integrity."
         attribution="Berserkerus, CC BY-SA 3.0 — Wikimedia Commons"
-        sourceUrl="https://commons.wikimedia.org/wiki/File:Optoelectronics_lab.jpg"
+        sourceUrl="https://commons.wikimedia.org/wiki/File:Laser_lab.jpg"
       />
 
       {/* Section Overview */}

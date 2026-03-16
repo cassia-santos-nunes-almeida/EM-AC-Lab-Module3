@@ -49,14 +49,14 @@ export function Transformers() {
       {/* Real-world transformer images */}
       <div className="grid gap-4 sm:grid-cols-2">
         <FigureImage
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Transformer3d_col3.svg/640px-Transformer3d_col3.svg.png"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Transformer3d_col3.svg/500px-Transformer3d_col3.svg.png"
           alt="Cutaway diagram of an iron-core power transformer showing primary and secondary windings around a laminated core"
           caption="Iron-core power transformer: primary (red) and secondary (blue) windings share nearly all magnetic flux through the core, achieving k ≈ 0.95–0.99."
           attribution="BillC, CC BY-SA 3.0 — Wikimedia Commons"
           sourceUrl="https://commons.wikimedia.org/wiki/File:Transformer3d_col3.svg"
         />
         <FigureImage
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Transformer_au_poste_%C3%A9lectrique_de_Bondy.jpg/640px-Transformer_au_poste_%C3%A9lectrique_de_Bondy.jpg"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Transformer_au_poste_%C3%A9lectrique_de_Bondy.jpg/500px-Transformer_au_poste_%C3%A9lectrique_de_Bondy.jpg"
           alt="Large power transformer at an electrical substation with high-voltage bushings"
           caption="A utility-scale power transformer at an electrical substation. These transformers step voltage up or down for efficient long-distance power transmission."
           attribution="Lionel Allorge, CC BY-SA 3.0 — Wikimedia Commons"
@@ -99,7 +99,7 @@ export function Transformers() {
         </p>
 
         <FigureImage
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Toroidal_inductor.jpg/640px-Toroidal_inductor.jpg"
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Toroidal_inductor.jpg/500px-Toroidal_inductor.jpg"
           alt="Toroidal air-core inductor coil used in RF circuits"
           caption="An air-core toroidal coil typical of RF applications. Without a ferromagnetic core, coupling between adjacent coils is much lower (k ≈ 0.1–0.5)."
           attribution="Eliashossain01, CC BY-SA 4.0 — Wikimedia Commons"
