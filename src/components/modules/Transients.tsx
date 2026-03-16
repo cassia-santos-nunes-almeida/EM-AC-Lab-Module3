@@ -266,8 +266,8 @@ export function Transients() {
             <p className="text-xs text-slate-500 dark:text-slate-400">
               Check: <MathWrapper formula="V_s \\times Z_L / (Z_s + Z_L)" />.
               With <MathWrapper formula="\\Gamma_L = 0.5" />,{' '}
-              <MathWrapper formula="Z_L = Z_0 \\\1rac{1+\\\1amma_L}{1-\\\1amma_L} = 50 \\\1imes \\\1rac{1.5}{0.5} = 150\\\1\\\1mega" />.
-              So <MathWrapper formula="V_{ss} = 10 \\\1imes 150 / (50 + 150) = 7.5\\\1ext{V}" />. Confirmed.
+              <MathWrapper formula="Z_L = Z_0 \\frac{1+\\Gamma_L}{1-\\Gamma_L} = 50 \\times \\frac{1.5}{0.5} = 150\\,\\Omega" />.
+              So <MathWrapper formula="V_{ss} = 10 \\times 150 / (50 + 150) = 7.5\\text{V}" />. Confirmed.
             </p>
           </div>
 
@@ -329,14 +329,14 @@ export function Transients() {
             correctReveal={
               <div className="text-sm text-slate-700 dark:text-slate-300 space-y-2">
                 <p>
-                  With <MathWrapper formula="\\\1amma_L = -0.5" /> and <MathWrapper formula="\\\1amma_s = 0" />:
+                  With <MathWrapper formula="\\Gamma_L = -0.5" /> and <MathWrapper formula="\\Gamma_s = 0" />:
                 </p>
                 <MathWrapper
-                  formula="V_{ss} = 5 \\\1imes \\\1rac{1 + (-0.5)}{1 - 0} = 5 \\\1imes 0.5 = 2.5\\\1ext{V}"
+                  formula="V_{ss} = 5 \\times \\frac{1 + (-0.5)}{1 - 0} = 5 \\times 0.5 = 2.5\\text{V}"
                   block
                 />
                 <p>
-                  Compare to 7.5V with <MathWrapper formula="\\\1amma_L = +0.5" />. The negative
+                  Compare to 7.5V with <MathWrapper formula="\\Gamma_L = +0.5" />. The negative
                   reflection coefficient significantly reduces the steady-state voltage.
                 </p>
               </div>
