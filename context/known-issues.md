@@ -8,7 +8,7 @@ Active bugs, limitations, and technical debt. Remove items when resolved.
 
 1. **API key in localStorage** — Gemini API key stored in plain text. Acceptable for student tool, not for broader deployment.
 
-2. **No component-level tests** — Only `transmissionMath.ts` has tests (52 tests). Canvas simulations and React components have no test coverage.
+2. **~~No component-level tests~~** ✅ (2026-03-16) — 81 tests total: `transmissionMath.ts` (52), ConceptCheck (11), CollapsibleSection (5), Tabs (5), page smoke tests (6), plus useChartExport hook (2). Canvas simulations still lack test coverage.
 
 ## Physics Simplifications
 
