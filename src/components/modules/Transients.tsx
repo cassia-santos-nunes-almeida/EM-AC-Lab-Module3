@@ -1,11 +1,13 @@
 import { useEffect } from 'react';
-import { MathWrapper } from '../common/MathWrapper';
-import { PredictionGate } from '../common/PredictionGate';
-import { YourTurnPanel } from '../common/YourTurnPanel';
-import { SectionHook } from '../common/SectionHook';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { useProgressStore } from '../../store/progressStore';
-import { BounceDiagram } from '../simulations/BounceDiagram';
+import { MathWrapper } from '@/components/common/MathWrapper';
+import { PredictionGate } from '@/components/common/PredictionGate';
+import { ConceptCheck } from '@/components/common/ConceptCheck';
+import { CollapsibleSection } from '@/components/common/CollapsibleSection';
+import { YourTurnPanel } from '@/components/common/YourTurnPanel';
+import { SectionHook } from '@/components/common/SectionHook';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { useProgressStore } from '@/store/progressStore';
+import { BounceDiagram } from '@/components/simulations/BounceDiagram';
 
 /**
  * Section 4: Transients on Transmission Lines.
@@ -101,6 +103,42 @@ export function Transients() {
           This is exactly the voltage-divider result you'd expect from DC circuit analysis &mdash;
           the transmission line just adds a transient settling process.
         </p>
+
+        <CollapsibleSection title="Derivation: Lattice Diagram Method" variant="inline">
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              The lattice (or bounce) diagram is a systematic way to track every reflection on the
+              line. Each bounce multiplies by the appropriate reflection coefficient:
+            </p>
+            <MathWrapper
+              formula="V_n = V_0^+ \cdot \Gamma_L^{\lceil n/2 \rceil} \cdot \Gamma_s^{\lfloor n/2 \rfloor}"
+              block
+            />
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              The total voltage at the load after <MathWrapper formula="N" /> bounces is the
+              geometric series sum of all arriving waves. As{' '}
+              <MathWrapper formula="N \to \infty" />, this converges to{' '}
+              <MathWrapper formula="V_{ss}" /> provided{' '}
+              <MathWrapper formula="|\Gamma_L \Gamma_s| < 1" />.
+            </p>
+          </div>
+        </CollapsibleSection>
+
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'After 3 round trips with \u0393_L = 0.5 and \u0393_S = \u22120.3, does V_load converge above or below V_ss?',
+            options: [
+              { text: 'Above V_ss \u2014 it overshoots then settles down', correct: true, explanation: 'Correct. With \u0393_L > 0, the first reflection adds to the initial wave, causing an overshoot. The product \u0393_L\u0393_S < 0 means successive corrections alternate in sign, oscillating around V_ss.' },
+              { text: 'Below V_ss \u2014 it climbs monotonically', correct: false, explanation: 'With a positive \u0393_L the first reflection adds voltage, pushing above V_ss. The negative \u0393_S then causes the next correction to subtract.' },
+              { text: 'Exactly at V_ss after 3 bounces', correct: false, explanation: 'Convergence to V_ss requires infinitely many bounces (or \u0393_S = 0). After 3 round trips there is still a residual error.' },
+            ],
+            hints: [
+              'Think about the sign of each successive bounce. \u0393_L > 0 adds voltage; \u0393_S < 0 subtracts on the return.',
+              'The product \u0393_L\u0393_S is negative, so the corrections alternate in sign \u2014 an oscillatory convergence.',
+            ],
+          }}
+        />
       </section>
 
       {/* ── 4.2 Bounce Diagram Builder ───────────────────────────── */}
@@ -235,6 +273,21 @@ export function Transients() {
           />
         </div>
       </section>
+
+      <ConceptCheck
+        data={{
+          mode: 'multiple-choice',
+          question: 'What determines the final steady-state voltage on a transmission line?',
+          options: [
+            { text: 'Only the source voltage and the voltage divider Z_S, Z_L', correct: true, explanation: 'Correct. At DC steady state, the transmission line is transparent \u2014 V_ss = V_S \u00D7 Z_L / (Z_S + Z_L). The line only affects the transient settling, not the final value.' },
+            { text: 'The characteristic impedance Z\u2080 and the line length', correct: false, explanation: 'Z\u2080 and length affect the transient (how many bounces, how fast), but the steady-state is set by the DC voltage divider.' },
+            { text: 'The number of bounces before convergence', correct: false, explanation: 'The number of bounces affects how quickly the line settles, but V_ss is independent of the convergence rate.' },
+          ],
+          hints: [
+            'Think about what happens at t = \u221E. The transmission line is lossless, so at DC it looks like a short piece of wire.',
+          ],
+        }}
+      />
 
       {/* ── 4.3 Bridge to Antennas ───────────────────────────────── */}
       <section className="bg-gradient-to-r from-engineering-blue-50 to-blue-50 dark:from-engineering-blue-900/20 dark:to-blue-900/20 border border-engineering-blue-200 dark:border-engineering-blue-800 rounded-xl p-6">

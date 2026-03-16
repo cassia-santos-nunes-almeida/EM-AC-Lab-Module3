@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
 import { Radio, Wifi, Satellite, Smartphone, Tv } from 'lucide-react';
-import { MathWrapper } from '../common/MathWrapper';
-import { PredictionGate } from '../common/PredictionGate';
-import { YourTurnPanel } from '../common/YourTurnPanel';
-import { SectionHook } from '../common/SectionHook';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { useProgressStore } from '../../store/progressStore';
-import { RadiationPatternSim } from '../simulations/RadiationPatternSim';
-import { MODULE_URLS } from '../../constants/modules';
+import { MathWrapper } from '@/components/common/MathWrapper';
+import { PredictionGate } from '@/components/common/PredictionGate';
+import { ConceptCheck } from '@/components/common/ConceptCheck';
+import { CollapsibleSection } from '@/components/common/CollapsibleSection';
+import { YourTurnPanel } from '@/components/common/YourTurnPanel';
+import { SectionHook } from '@/components/common/SectionHook';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { useProgressStore } from '@/store/progressStore';
+import { RadiationPatternSim } from '@/components/simulations/RadiationPatternSim';
+import { MODULE_URLS } from '@/constants/modules';
 
 /** Antenna type card data. */
 interface AntennaCard {
@@ -132,7 +134,42 @@ export function Antennas() {
               reflected back along the transmission line.
             </p>
           </div>
+
+          <CollapsibleSection title="Derivation: Radiation Resistance" variant="inline">
+            <div className="space-y-3 py-2">
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                The radiation resistance is found by integrating the radiated power over all
+                directions and equating it to <MathWrapper formula="\frac{1}{2}|I_0|^2 R_{\text{rad}}" />:
+              </p>
+              <MathWrapper
+                formula="R_{\text{rad}} = \frac{2\pi}{\eta_0 |I_0|^2} \int_0^\pi |E_\theta(r,\theta)|^2 r^2 \sin\theta \, d\theta"
+                block
+              />
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                For a <MathWrapper formula="\lambda/2" /> dipole, evaluating this integral
+                gives <MathWrapper formula="R_{\text{rad}} \approx 73.1\,\Omega" />. For a short
+                dipole (<MathWrapper formula="L \ll \lambda" />), <MathWrapper formula="R_{\text{rad}} = 20\pi^2(L/\lambda)^2 \approx 2\,\Omega" />,
+                which makes matching difficult.
+              </p>
+            </div>
+          </CollapsibleSection>
         </div>
+
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'A half-wave dipole has nulls at \u03B8 = 0\u00B0 and \u03B8 = 180\u00B0 (along the antenna axis). Why?',
+            options: [
+              { text: 'The current elements along the dipole radiate in opposite directions that cancel on-axis', correct: true, explanation: 'Correct. Along the dipole axis, radiation from each infinitesimal current element arrives at the observation point at different phases. For a half-wave dipole, these contributions cancel perfectly along the axis, producing nulls at \u03B8 = 0\u00B0 and 180\u00B0.' },
+              { text: 'There is no current at the tips of the dipole', correct: false, explanation: 'While the current is indeed zero at the tips, the null along the axis is caused by destructive interference of radiation from all current elements, not just the tip current.' },
+              { text: 'The ground plane reflects and cancels the signal', correct: false, explanation: 'The nulls exist even without a ground plane. They are inherent to the dipole\u2019s radiation pattern due to current distribution along the antenna.' },
+            ],
+            hints: [
+              'Think about how radiation from different parts of the dipole adds up. Along the axis, do the path lengths differ?',
+              'Each infinitesimal segment of the dipole acts as a Hertzian dipole. Along the axis (\u03B8 = 0), each segment\u2019s contribution has sin(\u03B8) = 0.',
+            ],
+          }}
+        />
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
@@ -176,6 +213,21 @@ export function Antennas() {
           <RadiationPatternSim className="mt-4" />
         </PredictionGate>
       </section>
+
+      <ConceptCheck
+        data={{
+          mode: 'multiple-choice',
+          question: 'If an antenna has directivity D = 1.64, what does this mean physically?',
+          options: [
+            { text: 'It radiates 1.64\u00D7 more power in its peak direction than an isotropic radiator', correct: true, explanation: 'Correct. Directivity D = 1.64 (= 2.15 dBi) means the antenna concentrates power so that its peak radiation intensity is 1.64 times that of an isotropic antenna radiating the same total power. This is the directivity of a \u03BB/2 dipole.' },
+            { text: 'It is 64% efficient', correct: false, explanation: 'Efficiency and directivity are different concepts. Efficiency measures how much input power becomes radiated power. Directivity measures how concentrated the radiation pattern is.' },
+            { text: 'It has a gain of 1.64 dB', correct: false, explanation: 'D = 1.64 is a linear ratio, not in dB. In decibels, D = 10\u00B7log\u2081\u2080(1.64) = 2.15 dBi.' },
+          ],
+          hints: [
+            'Directivity compares the antenna to an isotropic (uniform) radiator. What does "1.64 times" mean in that comparison?',
+          ],
+        }}
+      />
 
       {/* ═══════════════════════════════════════════════════════════════
           Section 5.3 — Near field vs far field

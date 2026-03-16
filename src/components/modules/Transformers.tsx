@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { MathWrapper } from '../common/MathWrapper';
-import { PredictionGate } from '../common/PredictionGate';
-import { ConceptCheck } from '../common/ConceptCheck';
-import { YourTurnPanel } from '../common/YourTurnPanel';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { SectionHook } from '../common/SectionHook';
-import { useProgressStore } from '../../store/progressStore';
-import { CoupledCoilsSim } from '../simulations/CoupledCoilsSim';
+import { MathWrapper } from '@/components/common/MathWrapper';
+import { PredictionGate } from '@/components/common/PredictionGate';
+import { ConceptCheck } from '@/components/common/ConceptCheck';
+import { YourTurnPanel } from '@/components/common/YourTurnPanel';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { SectionHook } from '@/components/common/SectionHook';
+import { useProgressStore } from '@/store/progressStore';
+import { CoupledCoilsSim } from '@/components/simulations/CoupledCoilsSim';
 
 /**
  * Section 1 page component: Transformers.

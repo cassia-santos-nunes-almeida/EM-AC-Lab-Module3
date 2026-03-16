@@ -663,6 +663,7 @@ function SliderControl({ label, value, min, max, step, onChange, format }: Slide
       </div>
       <input
         type="range"
+        aria-label={label}
         min={min}
         max={max}
         step={step}

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   calculateComplexReflectionCoefficient,
   calculateVSWR,
-} from '../../utils/transmissionMath';
+} from '@/utils/transmissionMath';
 
 /** Props for the SmithChartSim component. */
 interface SmithChartSimProps {

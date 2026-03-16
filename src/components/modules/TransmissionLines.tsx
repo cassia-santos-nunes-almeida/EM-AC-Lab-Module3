@@ -1,14 +1,16 @@
 import { useEffect } from 'react';
-import { MathWrapper } from '../common/MathWrapper';
-import { PredictionGate } from '../common/PredictionGate';
-import { ConceptCheck } from '../common/ConceptCheck';
-import { CollapsibleSection } from '../common/CollapsibleSection';
-import { SectionHook } from '../common/SectionHook';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { useProgressStore } from '../../store/progressStore';
-import { TransmissionLineSim } from '../simulations/TransmissionLineSim';
-import { StandingWaveQuiz } from '../simulations/StandingWaveQuiz';
-import { SmithChartSim } from '../simulations/SmithChartSim';
+import { MathWrapper } from '@/components/common/MathWrapper';
+import { PredictionGate } from '@/components/common/PredictionGate';
+import { ConceptCheck } from '@/components/common/ConceptCheck';
+import { CollapsibleSection } from '@/components/common/CollapsibleSection';
+import { YourTurnPanel } from '@/components/common/YourTurnPanel';
+import { SectionHook } from '@/components/common/SectionHook';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { Tabs } from '@/components/common/Tabs';
+import { useProgressStore } from '@/store/progressStore';
+import { TransmissionLineSim } from '@/components/simulations/TransmissionLineSim';
+import { StandingWaveQuiz } from '@/components/simulations/StandingWaveQuiz';
+import { SmithChartSim } from '@/components/simulations/SmithChartSim';
 
 /**
  * Section 3 page: Transmission Lines.
@@ -35,6 +37,11 @@ export function TransmissionLines() {
 
       <SectionHook text="Every high-speed digital bus, every RF cable, and every PCB trace longer than a few centimetres behaves as a transmission line. Understanding impedance matching and reflections is the difference between a clean signal and a corrupted one." />
 
+      <Tabs tabs={[
+        {
+          label: 'Theory',
+          content: (
+            <div className="space-y-10">
       {/* ================================================================
           3.1 — Characteristic impedance
           ================================================================ */}
@@ -147,8 +154,29 @@ export function TransmissionLines() {
             </p>
           </div>
         </div>
-      </section>
 
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'What \u0393 and VSWR indicate a perfectly matched load?',
+            options: [
+              { text: '\u0393 = 0, VSWR = 1', correct: true, explanation: 'Correct. When Z_L = Z\u2080, the reflection coefficient is zero and the standing wave ratio is 1 (no standing wave). All power is delivered to the load.' },
+              { text: '\u0393 = 1, VSWR = \u221E', correct: false, explanation: 'These values correspond to a total reflection (open or short circuit), the opposite of a match.' },
+              { text: '\u0393 = 0.5, VSWR = 3', correct: false, explanation: 'A non-zero \u0393 means there are reflections. A perfect match requires \u0393 = 0.' },
+            ],
+            hints: [
+              'A "matched" load means Z_L = Z\u2080. Substitute into the \u0393 formula.',
+            ],
+          }}
+        />
+      </section>
+            </div>
+          ),
+        },
+        {
+          label: 'Simulations',
+          content: (
+            <div className="space-y-10">
       {/* ================================================================
           3.3 — Transmission line simulation (gated)
           ================================================================ */}
@@ -245,8 +273,88 @@ export function TransmissionLines() {
           arcs form the grid. Click anywhere on the chart to place an impedance point.
         </p>
         <SmithChartSim />
-      </section>
 
+        <CollapsibleSection title="Matching Network Design" variant="inline">
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              When <MathWrapper formula="Z_L \neq Z_0" />, a matching network can be inserted to
+              eliminate reflections. On the Smith chart, matching means transforming the load
+              impedance to the center of the chart (<MathWrapper formula="\Gamma = 0" />).
+            </p>
+            <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+              Common techniques include <strong>quarter-wave transformers</strong> (a{' '}
+              <MathWrapper formula="\lambda/4" /> section with{' '}
+              <MathWrapper formula="Z_T = \sqrt{Z_0 Z_L}" />) and <strong>stub matching</strong>{' '}
+              (adding a short- or open-circuited transmission line stub at the right point to cancel
+              the reactive part of the impedance).
+            </p>
+          </div>
+        </CollapsibleSection>
+
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'On the Smith chart, where is the short circuit located?',
+            options: [
+              { text: 'At the leftmost point (\u0393 = \u22121)', correct: true, explanation: 'Correct. A short circuit has Z_L = 0, giving \u0393 = (0 \u2212 Z\u2080)/(0 + Z\u2080) = \u22121. This maps to the far left of the Smith chart on the real axis.' },
+              { text: 'At the center (\u0393 = 0)', correct: false, explanation: 'The center is the matched point (Z_L = Z\u2080). A short circuit is at the edge of the chart.' },
+              { text: 'At the rightmost point (\u0393 = +1)', correct: false, explanation: 'The rightmost point is the open circuit (Z_L = \u221E, \u0393 = +1). The short circuit is at the opposite side.' },
+            ],
+            hints: [
+              'Calculate \u0393 for Z_L = 0 and find where that maps on the chart.',
+            ],
+          }}
+        />
+
+        <YourTurnPanel
+          scenario="Given Z_L = 75 + j50 \u03A9 and Z\u2080 = 50 \u03A9, calculate the reflection coefficient and VSWR, then locate the point on the Smith chart above."
+          question="What is the VSWR for this load?"
+          options={[
+            {
+              text: 'VSWR \u2248 2.0',
+              correct: false,
+              explanation: 'Close, but not quite. Calculate |\u0393| first from the complex Z_L and Z\u2080.',
+            },
+            {
+              text: 'VSWR \u2248 2.6',
+              correct: true,
+              explanation: 'Correct! \u0393 = (75 + j50 \u2212 50)/(75 + j50 + 50) = (25 + j50)/(125 + j50). |\u0393| \u2248 0.45, so VSWR = (1 + 0.45)/(1 \u2212 0.45) \u2248 2.6.',
+            },
+            {
+              text: 'VSWR \u2248 1.5',
+              correct: false,
+              explanation: 'That would correspond to |\u0393| \u2248 0.2. The reactive component j50 \u03A9 increases the mismatch significantly.',
+            },
+          ]}
+          correctReveal={
+            <div className="space-y-2">
+              <MathWrapper
+                formula="\Gamma = \frac{75 + j50 - 50}{75 + j50 + 50} = \frac{25 + j50}{125 + j50}"
+                block
+              />
+              <MathWrapper
+                formula="|\Gamma| = \frac{\sqrt{25^2 + 50^2}}{\sqrt{125^2 + 50^2}} = \frac{55.9}{134.6} \approx 0.415"
+                block
+              />
+              <MathWrapper
+                formula="\text{VSWR} = \frac{1 + 0.415}{1 - 0.415} \approx 2.42"
+                block
+              />
+              <p className="text-xs text-slate-600 dark:text-slate-400">
+                Try clicking on the Smith chart above at the normalized impedance z = 1.5 + j1.0 to verify.
+              </p>
+            </div>
+          }
+          hints={['Normalize: z_L = Z_L/Z\u2080 = 1.5 + j1.0. Then \u0393 = (z_L \u2212 1)/(z_L + 1).']}
+        />
+      </section>
+            </div>
+          ),
+        },
+        {
+          label: 'Practice',
+          content: (
+            <div className="space-y-10">
       {/* ================================================================
           3.5 — Inverse problem: standing wave quiz
           ================================================================ */}
@@ -295,6 +403,10 @@ export function TransmissionLines() {
           }}
         />
       </section>
+            </div>
+          ),
+        },
+      ]} />
 
       <ModuleNavigation />
     </div>

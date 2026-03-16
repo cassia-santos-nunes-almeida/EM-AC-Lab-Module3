@@ -11,9 +11,9 @@ import {
   CheckCircle,
   ExternalLink,
 } from 'lucide-react';
-import { cn } from '../../utils/cn';
-import { useThemeStore, useProgressStore } from '../../store/progressStore';
-import { MODULE_URLS } from '../../constants/modules';
+import { cn } from '@/utils/cn';
+import { useThemeStore, useProgressStore } from '@/store/progressStore';
+import { MODULE_URLS } from '@/constants/modules';
 
 const navigationLinks = [
   { to: '/', icon: Home, label: 'Overview', sectionId: 'overview' },

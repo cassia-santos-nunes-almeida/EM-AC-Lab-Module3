@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Cable, Radio, Activity, Layers, Magnet, BookOpen, Target, GraduationCap } from 'lucide-react';
-import { ModuleNavigation } from '../common/ModuleNavigation';
-import { useProgressStore } from '../../store/progressStore';
+import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { useProgressStore } from '@/store/progressStore';
 
 export function Overview() {
   const markVisited = useProgressStore((s) => s.markVisited);

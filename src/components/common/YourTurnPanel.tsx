@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { Pencil, CheckCircle, XCircle } from 'lucide-react';
-import { cn } from '../../utils/cn';
+import { cn } from '@/utils/cn';
 
 /** A single answer option for the YourTurnPanel. */
 interface YourTurnOption {
