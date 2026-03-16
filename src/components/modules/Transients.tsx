@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { BookOpen, Activity, GraduationCap } from 'lucide-react';
 import { MathWrapper } from '@/components/common/MathWrapper';
 import { PredictionGate } from '@/components/common/PredictionGate';
 import { ConceptCheck } from '@/components/common/ConceptCheck';
@@ -7,6 +8,7 @@ import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { FigureImage } from '@/components/common/FigureImage';
+import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
 import { BounceDiagram } from '@/components/simulations/BounceDiagram';
 
@@ -42,6 +44,13 @@ export function Transients() {
           gives you the tools to predict and prevent that."
       />
 
+
+      <Tabs tabs={[
+        {
+          label: 'Theory',
+          icon: <BookOpen className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
       {/* Real-world signal integrity images */}
       <div className="grid gap-4 sm:grid-cols-2">
         <FigureImage
@@ -61,6 +70,7 @@ export function Transients() {
       </div>
 
       {/* ── 4.1 Step Response ────────────────────────────────────── */}
+
       <section className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 space-y-4">
         <h2 className="text-lg font-bold text-slate-900 dark:text-white">
           4.1 &mdash; Step Response on a Transmission Line
@@ -143,23 +153,40 @@ export function Transients() {
           </div>
         </CollapsibleSection>
 
-        <ConceptCheck
-          data={{
-            mode: 'multiple-choice',
-            question: 'After 3 round trips with \u0393_L = 0.5 and \u0393_S = \u22120.3, does V_load converge above or below V_ss?',
-            options: [
-              { text: 'Above V_ss \u2014 it overshoots then settles down', correct: true, explanation: 'Correct. With \u0393_L > 0, the first reflection adds to the initial wave, causing an overshoot. The product \u0393_L\u0393_S < 0 means successive corrections alternate in sign, oscillating around V_ss.' },
-              { text: 'Below V_ss \u2014 it climbs monotonically', correct: false, explanation: 'With a positive \u0393_L the first reflection adds voltage, pushing above V_ss. The negative \u0393_S then causes the next correction to subtract.' },
-              { text: 'Exactly at V_ss after 3 bounces', correct: false, explanation: 'Convergence to V_ss requires infinitely many bounces (or \u0393_S = 0). After 3 round trips there is still a residual error.' },
-            ],
-            hints: [
-              'Think about the sign of each successive bounce. \u0393_L > 0 adds voltage; \u0393_S < 0 subtracts on the return.',
-              'The product \u0393_L\u0393_S is negative, so the corrections alternate in sign \u2014 an oscillatory convergence.',
-            ],
-          }}
-        />
       </section>
 
+      {/* ── 4.3 Bridge to Antennas ───────────────────────────────── */}
+      <section className="bg-gradient-to-r from-engineering-blue-50 to-blue-50 dark:from-engineering-blue-900/20 dark:to-blue-900/20 border border-engineering-blue-200 dark:border-engineering-blue-800 rounded-xl p-6">
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
+          4.3 &mdash; Bridge to Antennas
+        </h2>
+        <div className="flex gap-3">
+          <div className="shrink-0 mt-1">
+            <svg className="w-6 h-6 text-engineering-blue-600 dark:text-engineering-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </div>
+          <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+            <p>
+              A matched transmission line (<MathWrapper formula="\Gamma = 0" />) delivers all power
+              to the load. An antenna is a load designed to "absorb" power by <em>radiating</em> it
+              into space rather than dissipating it as heat.
+            </p>
+            <p className="font-semibold text-engineering-blue-700 dark:text-engineering-blue-300">
+              What does <MathWrapper formula="Z_0" /> matching mean for an antenna? That's the next
+              section.
+            </p>
+          </div>
+        </div>
+      </section>
+            </div>
+          ),
+        },
+        {
+          label: 'Simulations',
+          icon: <Activity className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
       {/* ── 4.2 Bounce Diagram Builder ───────────────────────────── */}
       <section className="space-y-6">
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6">
@@ -244,7 +271,32 @@ export function Transients() {
             </p>
           </div>
 
-          {/* Your Turn */}
+        </div>
+      </section>
+            </div>
+          ),
+        },
+        {
+          label: 'Practice',
+          icon: <GraduationCap className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'After 3 round trips with \u0393_L = 0.5 and \u0393_S = \u22120.3, does V_load converge above or below V_ss?',
+            options: [
+              { text: 'Above V_ss \u2014 it overshoots then settles down', correct: true, explanation: 'Correct. With \u0393_L > 0, the first reflection adds to the initial wave, causing an overshoot. The product \u0393_L\u0393_S < 0 means successive corrections alternate in sign, oscillating around V_ss.' },
+              { text: 'Below V_ss \u2014 it climbs monotonically', correct: false, explanation: 'With a positive \u0393_L the first reflection adds voltage, pushing above V_ss. The negative \u0393_S then causes the next correction to subtract.' },
+              { text: 'Exactly at V_ss after 3 bounces', correct: false, explanation: 'Convergence to V_ss requires infinitely many bounces (or \u0393_S = 0). After 3 round trips there is still a residual error.' },
+            ],
+            hints: [
+              'Think about the sign of each successive bounce. \u0393_L > 0 adds voltage; \u0393_S < 0 subtracts on the return.',
+              'The product \u0393_L\u0393_S is negative, so the corrections alternate in sign \u2014 an oscillatory convergence.',
+            ],
+          }}
+        />
+
           <YourTurnPanel
             scenario={'Change \u0393_L to \u22120.5 (keeping \u0393_s = 0). Use the bounce diagram above to verify.'}
             question="How does the steady-state voltage change compared to \u0393_L = +0.5?"
@@ -290,8 +342,6 @@ export function Transients() {
               </div>
             }
           />
-        </div>
-      </section>
 
       <ConceptCheck
         data={{
@@ -307,31 +357,10 @@ export function Transients() {
           ],
         }}
       />
-
-      {/* ── 4.3 Bridge to Antennas ───────────────────────────────── */}
-      <section className="bg-gradient-to-r from-engineering-blue-50 to-blue-50 dark:from-engineering-blue-900/20 dark:to-blue-900/20 border border-engineering-blue-200 dark:border-engineering-blue-800 rounded-xl p-6">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
-          4.3 &mdash; Bridge to Antennas
-        </h2>
-        <div className="flex gap-3">
-          <div className="shrink-0 mt-1">
-            <svg className="w-6 h-6 text-engineering-blue-600 dark:text-engineering-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </div>
-          <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-            <p>
-              A matched transmission line (<MathWrapper formula="\Gamma = 0" />) delivers all power
-              to the load. An antenna is a load designed to "absorb" power by <em>radiating</em> it
-              into space rather than dissipating it as heat.
-            </p>
-            <p className="font-semibold text-engineering-blue-700 dark:text-engineering-blue-300">
-              What does <MathWrapper formula="Z_0" /> matching mean for an antenna? That's the next
-              section.
-            </p>
-          </div>
-        </div>
-      </section>
+            </div>
+          ),
+        },
+      ]} />
 
       <ModuleNavigation />
     </div>

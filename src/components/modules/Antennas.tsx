@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Radio, Wifi, Satellite, Smartphone, Tv } from 'lucide-react';
+import { Radio, Wifi, Satellite, Smartphone, Tv, BookOpen, Activity, GraduationCap } from 'lucide-react';
 import { MathWrapper } from '@/components/common/MathWrapper';
 import { PredictionGate } from '@/components/common/PredictionGate';
 import { ConceptCheck } from '@/components/common/ConceptCheck';
@@ -8,6 +8,7 @@ import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { FigureImage } from '@/components/common/FigureImage';
+import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
 import { RadiationPatternSim } from '@/components/simulations/RadiationPatternSim';
 import { MODULE_URLS } from '@/constants/modules';
@@ -63,26 +64,28 @@ export function Antennas() {
 
   return (
     <div className="space-y-10">
-      {/* ═══════════════════════════════════════════════════════════════
-          Section 5.1 — From transmission line to antenna
-          ═══════════════════════════════════════════════════════════════ */}
-      <section className="space-y-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-engineering-blue-100 dark:bg-engineering-blue-900/30 rounded-lg flex items-center justify-center">
-            <Radio className="w-5 h-5 text-engineering-blue-600 dark:text-engineering-blue-400" />
-          </div>
-          <div>
-            <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
-              Section 5.1
-            </p>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-              From Transmission Line to Antenna
-            </h2>
-          </div>
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-engineering-blue-100 dark:bg-engineering-blue-900/30 rounded-lg flex items-center justify-center">
+          <Radio className="w-5 h-5 text-engineering-blue-600 dark:text-engineering-blue-400" />
         </div>
+        <div>
+          <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
+            Section 5.1
+          </p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            From Transmission Line to Antenna
+          </h2>
+        </div>
+      </div>
 
-        <SectionHook text="Every wireless device you use — phone, WiFi router, satellite dish — relies on antennas. An antenna is simply a transmission line that has been opened up to let energy escape into free space." />
+      <SectionHook text="Every wireless device you use — phone, WiFi router, satellite dish — relies on antennas. An antenna is simply a transmission line that has been opened up to let energy escape into free space." />
 
+      <Tabs tabs={[
+        {
+          label: 'Theory',
+          icon: <BookOpen className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
         <FigureImage
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Dipole_antenna_drawing.svg/640px-Dipole_antenna_drawing.svg.png"
           alt="Diagram of a half-wave dipole antenna showing the two conductor elements and feed point"
@@ -165,87 +168,6 @@ export function Antennas() {
           </CollapsibleSection>
         </div>
 
-        <ConceptCheck
-          data={{
-            mode: 'multiple-choice',
-            question: 'A half-wave dipole has nulls at \u03B8 = 0\u00B0 and \u03B8 = 180\u00B0 (along the antenna axis). Why?',
-            options: [
-              { text: 'The current elements along the dipole radiate in opposite directions that cancel on-axis', correct: true, explanation: 'Correct. Along the dipole axis, radiation from each infinitesimal current element arrives at the observation point at different phases. For a half-wave dipole, these contributions cancel perfectly along the axis, producing nulls at \u03B8 = 0\u00B0 and 180\u00B0.' },
-              { text: 'There is no current at the tips of the dipole', correct: false, explanation: 'While the current is indeed zero at the tips, the null along the axis is caused by destructive interference of radiation from all current elements, not just the tip current.' },
-              { text: 'The ground plane reflects and cancels the signal', correct: false, explanation: 'The nulls exist even without a ground plane. They are inherent to the dipole\u2019s radiation pattern due to current distribution along the antenna.' },
-            ],
-            hints: [
-              'Think about how radiation from different parts of the dipole adds up. Along the axis, do the path lengths differ?',
-              'Each infinitesimal segment of the dipole acts as a Hertzian dipole. Along the axis (\u03B8 = 0), each segment\u2019s contribution has sin(\u03B8) = 0.',
-            ],
-          }}
-        />
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          Section 5.2 — Radiation pattern simulation
-          ═══════════════════════════════════════════════════════════════ */}
-      <section className="space-y-5">
-        <div>
-          <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
-            Section 5.2
-          </p>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
-            Radiation Pattern Simulation
-          </h2>
-        </div>
-
-        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          The <strong>radiation pattern</strong> describes how an antenna distributes energy
-          as a function of direction. For a dipole aligned along the z-axis, the pattern depends
-          on the dipole length relative to the wavelength. Use the simulation below to explore
-          how the pattern changes.
-        </p>
-
-        <FigureImage
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Anechoic_chamber.jpg/640px-Anechoic_chamber.jpg"
-          alt="Interior of an anechoic chamber with RF absorbing foam pyramids on walls, ceiling, and floor, used for antenna radiation pattern measurements"
-          caption="An anechoic chamber: the walls are covered with RF-absorbing foam pyramids to eliminate reflections, allowing precise measurement of antenna radiation patterns in a controlled environment."
-          attribution="Eton College, CC BY-SA 3.0 — Wikimedia Commons"
-          sourceUrl="https://commons.wikimedia.org/wiki/File:Anechoic_chamber.jpg"
-        />
-
-        <PredictionGate
-          question="If you double the dipole length from \u03BB/4 to \u03BB/2, does the directivity increase, decrease, or stay the same?"
-          options={[
-            { id: 'increases', label: 'Increases' },
-            { id: 'decreases', label: 'Decreases' },
-            { id: 'same', label: 'Stays the same' },
-          ]}
-          getCorrectAnswer={() => 'increases'}
-          explanation={
-            <p>
-              A longer dipole has more current elements, each radiating individually. Their
-              fields add constructively in the broadside direction but destructively at other
-              angles — the same wave interference principle from Module 1. The {'\u03BB'}/2
-              dipole therefore has a narrower beam and higher directivity (D {'\u2248'} 1.64
-              = 2.15 dBi) compared to a short dipole (D = 1.5 = 1.76 dBi).
-            </p>
-          }
-        >
-          <RadiationPatternSim className="mt-4" />
-        </PredictionGate>
-      </section>
-
-      <ConceptCheck
-        data={{
-          mode: 'multiple-choice',
-          question: 'If an antenna has directivity D = 1.64, what does this mean physically?',
-          options: [
-            { text: 'It radiates 1.64\u00D7 more power in its peak direction than an isotropic radiator', correct: true, explanation: 'Correct. Directivity D = 1.64 (= 2.15 dBi) means the antenna concentrates power so that its peak radiation intensity is 1.64 times that of an isotropic antenna radiating the same total power. This is the directivity of a \u03BB/2 dipole.' },
-            { text: 'It is 64% efficient', correct: false, explanation: 'Efficiency and directivity are different concepts. Efficiency measures how much input power becomes radiated power. Directivity measures how concentrated the radiation pattern is.' },
-            { text: 'It has a gain of 1.64 dB', correct: false, explanation: 'D = 1.64 is a linear ratio, not in dB. In decibels, D = 10\u00B7log\u2081\u2080(1.64) = 2.15 dBi.' },
-          ],
-          hints: [
-            'Directivity compares the antenna to an isotropic (uniform) radiator. What does "1.64 times" mean in that comparison?',
-          ],
-        }}
-      />
 
       {/* ═══════════════════════════════════════════════════════════════
           Section 5.3 — Near field vs far field
@@ -333,39 +255,6 @@ export function Antennas() {
         </div>
       </section>
 
-      {/* ── Your Turn: far-field boundary ──────────────────────────── */}
-      <YourTurnPanel
-        scenario="A parabolic dish antenna has a diameter D = 1 m and operates at f = 10 GHz (\u03BB = 3 cm = 0.03 m)."
-        question="How far away is the far-field boundary?"
-        options={[
-          {
-            text: 'r = 66.7 m',
-            correct: true,
-            explanation: 'r = 2D\u00B2/\u03BB = 2 \u00D7 1\u00B2 / 0.03 = 66.7 m. The radiation pattern is only valid beyond this distance.',
-          },
-          {
-            text: 'r = 33.3 m',
-            correct: false,
-            explanation: 'That would be D\u00B2/\u03BB. The Fraunhofer distance uses 2D\u00B2/\u03BB.',
-          },
-          {
-            text: 'r = 2 m',
-            correct: false,
-            explanation: 'That would be 2D, not 2D\u00B2/\u03BB. For high-frequency antennas the far-field boundary can be surprisingly far.',
-          },
-        ]}
-        correctReveal={
-          <div className="space-y-1">
-            <MathWrapper
-              formula="r_{\text{far}} = \frac{2D^2}{\lambda} = \frac{2 \times 1^2}{0.03} = 66.7\,\text{m}"
-              block
-            />
-            <p className="text-xs text-slate-600 dark:text-slate-400">
-              At 10 GHz, even a modest 1 m dish requires measurements 67 m away for a valid pattern.
-            </p>
-          </div>
-        }
-      />
 
       {/* ═══════════════════════════════════════════════════════════════
           Section 5.4 — Practical antennas (concept cards)
@@ -435,6 +324,137 @@ export function Antennas() {
         </div>
       </section>
 
+            </div>
+          ),
+        },
+        {
+          label: 'Simulations',
+          icon: <Activity className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
+      {/* ═══════════════════════════════════════════════════════════════
+          Section 5.2 — Radiation pattern simulation
+          ═══════════════════════════════════════════════════════════════ */}
+      <section className="space-y-5">
+        <div>
+          <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
+            Section 5.2
+          </p>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+            Radiation Pattern Simulation
+          </h2>
+        </div>
+
+        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+          The <strong>radiation pattern</strong> describes how an antenna distributes energy
+          as a function of direction. For a dipole aligned along the z-axis, the pattern depends
+          on the dipole length relative to the wavelength. Use the simulation below to explore
+          how the pattern changes.
+        </p>
+
+        <FigureImage
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Anechoic_chamber.jpg/640px-Anechoic_chamber.jpg"
+          alt="Interior of an anechoic chamber with RF absorbing foam pyramids on walls, ceiling, and floor, used for antenna radiation pattern measurements"
+          caption="An anechoic chamber: the walls are covered with RF-absorbing foam pyramids to eliminate reflections, allowing precise measurement of antenna radiation patterns in a controlled environment."
+          attribution="Eton College, CC BY-SA 3.0 — Wikimedia Commons"
+          sourceUrl="https://commons.wikimedia.org/wiki/File:Anechoic_chamber.jpg"
+        />
+
+        <PredictionGate
+          question="If you double the dipole length from \u03BB/4 to \u03BB/2, does the directivity increase, decrease, or stay the same?"
+          options={[
+            { id: 'increases', label: 'Increases' },
+            { id: 'decreases', label: 'Decreases' },
+            { id: 'same', label: 'Stays the same' },
+          ]}
+          getCorrectAnswer={() => 'increases'}
+          explanation={
+            <p>
+              A longer dipole has more current elements, each radiating individually. Their
+              fields add constructively in the broadside direction but destructively at other
+              angles — the same wave interference principle from Module 1. The {'\u03BB'}/2
+              dipole therefore has a narrower beam and higher directivity (D {'\u2248'} 1.64
+              = 2.15 dBi) compared to a short dipole (D = 1.5 = 1.76 dBi).
+            </p>
+          }
+        >
+          <RadiationPatternSim className="mt-4" />
+        </PredictionGate>
+      </section>
+
+            </div>
+          ),
+        },
+        {
+          label: 'Practice',
+          icon: <GraduationCap className="w-4 h-4" />,
+          content: (
+            <div className="space-y-10">
+        <ConceptCheck
+          data={{
+            mode: 'multiple-choice',
+            question: 'A half-wave dipole has nulls at \u03B8 = 0\u00B0 and \u03B8 = 180\u00B0 (along the antenna axis). Why?',
+            options: [
+              { text: 'The current elements along the dipole radiate in opposite directions that cancel on-axis', correct: true, explanation: 'Correct. Along the dipole axis, radiation from each infinitesimal current element arrives at the observation point at different phases. For a half-wave dipole, these contributions cancel perfectly along the axis, producing nulls at \u03B8 = 0\u00B0 and 180\u00B0.' },
+              { text: 'There is no current at the tips of the dipole', correct: false, explanation: 'While the current is indeed zero at the tips, the null along the axis is caused by destructive interference of radiation from all current elements, not just the tip current.' },
+              { text: 'The ground plane reflects and cancels the signal', correct: false, explanation: 'The nulls exist even without a ground plane. They are inherent to the dipole\u2019s radiation pattern due to current distribution along the antenna.' },
+            ],
+            hints: [
+              'Think about how radiation from different parts of the dipole adds up. Along the axis, do the path lengths differ?',
+              'Each infinitesimal segment of the dipole acts as a Hertzian dipole. Along the axis (\u03B8 = 0), each segment\u2019s contribution has sin(\u03B8) = 0.',
+            ],
+          }}
+        />
+
+      <ConceptCheck
+        data={{
+          mode: 'multiple-choice',
+          question: 'If an antenna has directivity D = 1.64, what does this mean physically?',
+          options: [
+            { text: 'It radiates 1.64\u00D7 more power in its peak direction than an isotropic radiator', correct: true, explanation: 'Correct. Directivity D = 1.64 (= 2.15 dBi) means the antenna concentrates power so that its peak radiation intensity is 1.64 times that of an isotropic antenna radiating the same total power. This is the directivity of a \u03BB/2 dipole.' },
+            { text: 'It is 64% efficient', correct: false, explanation: 'Efficiency and directivity are different concepts. Efficiency measures how much input power becomes radiated power. Directivity measures how concentrated the radiation pattern is.' },
+            { text: 'It has a gain of 1.64 dB', correct: false, explanation: 'D = 1.64 is a linear ratio, not in dB. In decibels, D = 10\u00B7log\u2081\u2080(1.64) = 2.15 dBi.' },
+          ],
+          hints: [
+            'Directivity compares the antenna to an isotropic (uniform) radiator. What does "1.64 times" mean in that comparison?',
+          ],
+        }}
+      />
+
+      {/* ── Your Turn: far-field boundary ──────────────────────────── */}
+      <YourTurnPanel
+        scenario="A parabolic dish antenna has a diameter D = 1 m and operates at f = 10 GHz (\u03BB = 3 cm = 0.03 m)."
+        question="How far away is the far-field boundary?"
+        options={[
+          {
+            text: 'r = 66.7 m',
+            correct: true,
+            explanation: 'r = 2D\u00B2/\u03BB = 2 \u00D7 1\u00B2 / 0.03 = 66.7 m. The radiation pattern is only valid beyond this distance.',
+          },
+          {
+            text: 'r = 33.3 m',
+            correct: false,
+            explanation: 'That would be D\u00B2/\u03BB. The Fraunhofer distance uses 2D\u00B2/\u03BB.',
+          },
+          {
+            text: 'r = 2 m',
+            correct: false,
+            explanation: 'That would be 2D, not 2D\u00B2/\u03BB. For high-frequency antennas the far-field boundary can be surprisingly far.',
+          },
+        ]}
+        correctReveal={
+          <div className="space-y-1">
+            <MathWrapper
+              formula="r_{\text{far}} = \frac{2D^2}{\lambda} = \frac{2 \times 1^2}{0.03} = 66.7\,\text{m}"
+              block
+            />
+            <p className="text-xs text-slate-600 dark:text-slate-400">
+              At 10 GHz, even a modest 1 m dish requires measurements 67 m away for a valid pattern.
+            </p>
+          </div>
+        }
+      />
+
       {/* ═══════════════════════════════════════════════════════════════
           "Does this make sense?" callout
           ═══════════════════════════════════════════════════════════════ */}
@@ -449,11 +469,6 @@ export function Antennas() {
           the coaxial standard chosen with dipole antennas in mind?
         </p>
       </div>
-
-      {/* ═══════════════════════════════════════════════════════════════
-          Module Navigation
-          ═══════════════════════════════════════════════════════════════ */}
-      <ModuleNavigation />
 
       {/* ═══════════════════════════════════════════════════════════════
           Section 6 — Module Close: "The loop closes"
@@ -498,6 +513,12 @@ export function Antennas() {
           </div>
         </div>
       </section>
+            </div>
+          ),
+        },
+      ]} />
+
+      <ModuleNavigation />
     </div>
   );
 }
