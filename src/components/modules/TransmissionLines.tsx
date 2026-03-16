@@ -89,11 +89,11 @@ export function TransmissionLines() {
         {/* Real-world connector and cable images */}
         <div className="grid gap-4 sm:grid-cols-2">
           <FigureImage
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Electronic_connectors._SMA%2C_SSMA%2C_U.FL.jpg/500px-Electronic_connectors._SMA%2C_SSMA%2C_U.FL.jpg"
-            alt="Various RF coaxial connectors including SMA and SSMA types"
-            caption="RF coaxial connectors (SMA, SSMA, U.FL): precision 50 Ω connectors designed to maintain characteristic impedance through the connection point."
-            attribution="Megapixie, CC BY-SA 4.0 — Wikimedia Commons"
-            sourceUrl="https://commons.wikimedia.org/wiki/File:Electronic_connectors._SMA,_SSMA,_U.FL.jpg"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/SMA_connector.jpg/500px-SMA_connector.jpg"
+            alt="SMA coaxial RF connector used in precision 50 Ω systems"
+            caption="An SMA coaxial connector: a precision 50 Ω connector widely used in RF instrumentation to maintain characteristic impedance through the connection point."
+            attribution="Wikimedia Commons"
+            sourceUrl="https://commons.wikimedia.org/wiki/File:SMA_connector.jpg"
           />
           <FigureImage
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/RG-59.jpg/500px-RG-59.jpg"
