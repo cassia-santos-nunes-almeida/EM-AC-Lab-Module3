@@ -1,6 +1,17 @@
-# Current Sprint: Cross-Module Audit Implementation
+# Current Sprint: Image & LaTeX Fixes + Deployment
 
-## Status: Complete
+## Status: Needs PR merge
+
+### Completed (Image & LaTeX Fix Sprint — 2026-03-16)
+Branch: `claude/audit-react-educational-apps-mqaVf` — 5 commits ahead of main
+
+- [x] Added GitHub Actions workflow for GitHub Pages deployment (`.github/workflows/deploy.yml`)
+- [x] Fixed LaTeX backslash escaping across all 6 module pages (~200+ formulas)
+  - All `\frac`, `\alpha`, `\times` etc. changed to `\\frac`, `\\alpha`, `\\times` in JSX string attributes
+- [x] Replaced 3 confirmed-broken Wikimedia image URLs (SMA connectors, PCB NASA, Laser lab)
+- [x] Replaced non-existent `Dipole_antenna_drawing.svg` with verified `Dipole_antenna_ft_en.svg`
+- [x] Fixed `GSM_base_station_4.jpg` → `.JPG` (case-sensitive on Wikimedia)
+- [x] Repaired linter-corrupted LaTeX in Transients.tsx (`\\\1rac` → `\\frac` etc.)
 
 ### Completed (Audit Implementation — 2026-03-15)
 - [x] Created CoupledCoilsSim with animated magnetic field lines, k/N1/N2/ZL sliders
@@ -29,11 +40,18 @@
 - [x] PWA configuration with offline support
 - [x] Error boundary with fallback UI
 
-### Upcoming / Not Yet Done
+## Pending / Next Session
+- [ ] **Create PR** for `claude/audit-react-educational-apps-mqaVf` → `main` (5 commits)
+- [ ] **Verify deployments** after merge (both Vercel and GitHub Pages)
+- [ ] **Manually test unverified images** — 6 Wikimedia images could not be verified via web search:
+  - `Network_Analyzer_Agilent_8714ET.jpg` (TransmissionLines.tsx)
+  - `Transformer_au_poste_electrique_de_Bondy.jpg` (Transformers.tsx)
+  - `Toroidal_inductor.jpg` (Transformers.tsx — possibly missing)
+  - `Ringing_on_unterminated_transmission_line.jpg` (Transients.tsx)
+  - `Eye_diagram_of_a_4-level_signal.png` (TransmissionLines.tsx)
 - [ ] Add component-level tests (only math utils tested so far)
 - [ ] Add page-level integration tests
 - [ ] Generate PWA icons (pwa-192x192.png, pwa-512x512.png)
-- [ ] Production deployment verification
 
 ## Test Status
 - 52/52 tests passing (transmissionMath edge cases)
