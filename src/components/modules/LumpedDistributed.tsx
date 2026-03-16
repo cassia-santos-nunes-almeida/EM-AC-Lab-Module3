@@ -5,6 +5,7 @@ import { ConceptCheck } from '@/components/common/ConceptCheck';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { FigureImage } from '@/components/common/FigureImage';
 import { useProgressStore } from '@/store/progressStore';
 import { LadderAnimation } from '@/components/simulations/LadderAnimation';
 
@@ -48,6 +49,24 @@ export function LumpedDistributed() {
                 The ladder model lets us build intuition for how voltage and current propagate
                 through such structures."
         />
+
+        {/* Real-world distributed structures */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FigureImage
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Coaxial_cable_cutaway_new.svg/640px-Coaxial_cable_cutaway_new.svg.png"
+            alt="Cutaway diagram of a coaxial cable showing center conductor, dielectric insulator, shield, and outer jacket"
+            caption="Coaxial cable cross-section: the center conductor and outer shield form a distributed inductance and capacitance per unit length — exactly the L' and C' in the ladder model."
+            attribution="Tkgd2007, CC BY-SA 3.0 — Wikimedia Commons"
+            sourceUrl="https://commons.wikimedia.org/wiki/File:Coaxial_cable_cutaway_new.svg"
+          />
+          <FigureImage
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Microstrip_geometry.svg/640px-Microstrip_geometry.svg.png"
+            alt="Cross-section diagram of a microstrip transmission line showing trace, substrate, and ground plane"
+            caption="Microstrip geometry: a PCB trace over a ground plane. The trace width, substrate thickness, and dielectric constant determine L' and C', and therefore Z₀."
+            attribution="Dassault Systèmes, CC BY-SA 3.0 — Wikimedia Commons"
+            sourceUrl="https://commons.wikimedia.org/wiki/File:Microstrip_geometry.svg"
+          />
+        </div>
 
         <div className="prose prose-slate dark:prose-invert max-w-none text-sm leading-relaxed space-y-4">
           <p>

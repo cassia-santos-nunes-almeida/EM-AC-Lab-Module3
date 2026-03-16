@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Cable, Radio, Activity, Layers, Magnet, BookOpen, Target, GraduationCap } from 'lucide-react';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { FigureImage } from '@/components/common/FigureImage';
 import { useProgressStore } from '@/store/progressStore';
 
 export function Overview() {
@@ -29,6 +30,15 @@ export function Overview() {
         </p>
       </div>
 
+      {/* Real-world context image */}
+      <FigureImage
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/PCB_design_NASA.jpg/640px-PCB_design_NASA.jpg"
+        alt="High-frequency printed circuit board with impedance-controlled traces and ground planes"
+        caption="At GHz frequencies, PCB traces behave as transmission lines. Controlled-impedance routing (visible as precise trace widths and spacing) prevents signal reflections."
+        attribution="NASA, Public Domain — Wikimedia Commons"
+        sourceUrl="https://commons.wikimedia.org/wiki/File:PCB_design_NASA.jpg"
+      />
+
       {/* Learning Outcomes */}
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6">
         <div className="flex items-center gap-2 mb-4">
@@ -51,6 +61,15 @@ export function Overview() {
           ))}
         </ul>
       </div>
+
+      {/* RF test equipment context */}
+      <FigureImage
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Optoelectronics_lab.jpg/640px-Optoelectronics_lab.jpg"
+        alt="Electronics laboratory bench with oscilloscope, signal generator, and test equipment"
+        caption="An electronics lab bench equipped with test instruments for measuring transmission line parameters — the tools engineers use to verify impedance matching, standing wave ratios, and signal integrity."
+        attribution="Berserkerus, CC BY-SA 3.0 — Wikimedia Commons"
+        sourceUrl="https://commons.wikimedia.org/wiki/File:Optoelectronics_lab.jpg"
+      />
 
       {/* Section Overview */}
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6">

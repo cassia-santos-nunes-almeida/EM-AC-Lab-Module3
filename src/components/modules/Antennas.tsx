@@ -7,6 +7,7 @@ import { CollapsibleSection } from '@/components/common/CollapsibleSection';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { FigureImage } from '@/components/common/FigureImage';
 import { useProgressStore } from '@/store/progressStore';
 import { RadiationPatternSim } from '@/components/simulations/RadiationPatternSim';
 import { MODULE_URLS } from '@/constants/modules';
@@ -81,6 +82,15 @@ export function Antennas() {
         </div>
 
         <SectionHook text="Every wireless device you use — phone, WiFi router, satellite dish — relies on antennas. An antenna is simply a transmission line that has been opened up to let energy escape into free space." />
+
+        <FigureImage
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Dipole_antenna_drawing.svg/640px-Dipole_antenna_drawing.svg.png"
+          alt="Diagram of a half-wave dipole antenna showing the two conductor elements and feed point"
+          caption="A half-wave dipole antenna: the simplest practical antenna. Two conductor elements, each λ/4 long, are fed at the center — directly derived from 'opening up' a transmission line."
+          attribution="Chetvorno, Public Domain — Wikimedia Commons"
+          sourceUrl="https://commons.wikimedia.org/wiki/File:Dipole_antenna_drawing.svg"
+          className="sm:max-w-md"
+        />
 
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 space-y-4">
           <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
@@ -191,6 +201,14 @@ export function Antennas() {
           on the dipole length relative to the wavelength. Use the simulation below to explore
           how the pattern changes.
         </p>
+
+        <FigureImage
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Anechoic_chamber.jpg/640px-Anechoic_chamber.jpg"
+          alt="Interior of an anechoic chamber with RF absorbing foam pyramids on walls, ceiling, and floor, used for antenna radiation pattern measurements"
+          caption="An anechoic chamber: the walls are covered with RF-absorbing foam pyramids to eliminate reflections, allowing precise measurement of antenna radiation patterns in a controlled environment."
+          attribution="Eton College, CC BY-SA 3.0 — Wikimedia Commons"
+          sourceUrl="https://commons.wikimedia.org/wiki/File:Anechoic_chamber.jpg"
+        />
 
         <PredictionGate
           question="If you double the dipole length from \u03BB/4 to \u03BB/2, does the directivity increase, decrease, or stay the same?"
@@ -367,6 +385,24 @@ export function Antennas() {
           antenna designs optimized for specific frequency ranges, gain requirements, and physical
           constraints.
         </p>
+
+        {/* Real-world antenna photos */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FigureImage
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/GSM_base_station_4.jpg/640px-GSM_base_station_4.jpg"
+            alt="Cellular base station tower with multiple panel antenna arrays"
+            caption="Cellular base station with panel antenna arrays: each panel contains multiple patch antennas arranged to cover a specific sector, using the same impedance matching principles from Section 3."
+            attribution="Korax1214, CC BY-SA 4.0 — Wikimedia Commons"
+            sourceUrl="https://commons.wikimedia.org/wiki/File:GSM_base_station_4.jpg"
+          />
+          <FigureImage
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Erdfunkstelle_Raisting_2.jpg/640px-Erdfunkstelle_Raisting_2.jpg"
+            alt="Large parabolic satellite dish antenna at Raisting earth station"
+            caption="A parabolic dish antenna at the Raisting earth station: the parabolic reflector focuses incoming radio waves onto a feed horn at the focal point, achieving very high directivity (narrow beam)."
+            attribution="Richard Bartz, CC BY-SA 2.5 — Wikimedia Commons"
+            sourceUrl="https://commons.wikimedia.org/wiki/File:Erdfunkstelle_Raisting_2.jpg"
+          />
+        </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
           {antennaCards.map((card) => (

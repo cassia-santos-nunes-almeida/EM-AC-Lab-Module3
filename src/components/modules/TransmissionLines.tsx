@@ -6,6 +6,7 @@ import { CollapsibleSection } from '@/components/common/CollapsibleSection';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { FigureImage } from '@/components/common/FigureImage';
 import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
 import { TransmissionLineSim } from '@/components/simulations/TransmissionLineSim';
@@ -83,6 +84,24 @@ export function TransmissionLines() {
               <strong>100 &Omega;</strong> &mdash; differential pair (Ethernet, USB)
             </li>
           </ul>
+        </div>
+
+        {/* Real-world connector and cable images */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FigureImage
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Electronic_connectors._SMA%2C_SSMA%2C_U.FL.jpg/640px-Electronic_connectors._SMA%2C_SSMA%2C_U.FL.jpg"
+            alt="Various RF coaxial connectors including SMA and SSMA types"
+            caption="RF coaxial connectors (SMA, SSMA, U.FL): precision 50 Ω connectors designed to maintain characteristic impedance through the connection point."
+            attribution="Megapixie, CC BY-SA 4.0 — Wikimedia Commons"
+            sourceUrl="https://commons.wikimedia.org/wiki/File:Electronic_connectors._SMA,_SSMA,_U.FL.jpg"
+          />
+          <FigureImage
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/RG-59.jpg/640px-RG-59.jpg"
+            alt="Cross-section of RG-59 75-ohm coaxial cable showing inner conductor and braided shield"
+            caption="RG-59 coaxial cable (75 Ω): used for television and video. Compare its dimensions to a 50 Ω cable — the different Z₀ comes from the ratio of conductor diameters."
+            attribution="FDominec, CC BY-SA 3.0 — Wikimedia Commons"
+            sourceUrl="https://commons.wikimedia.org/wiki/File:RG-59.jpg"
+          />
         </div>
 
         <CollapsibleSection title="General case: lossy line" variant="inline">
@@ -266,6 +285,16 @@ export function TransmissionLines() {
           <span className="text-engineering-blue-600 dark:text-engineering-blue-400 font-mono text-sm">3.4</span>
           The Smith Chart
         </h2>
+
+        <FigureImage
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Network_Analyzer_Agilent_8714ET.jpg/640px-Network_Analyzer_Agilent_8714ET.jpg"
+          alt="Agilent vector network analyzer displaying S-parameter measurements on a Smith chart"
+          caption="A Vector Network Analyzer (VNA) measuring impedance and displaying results on a Smith chart. This is the primary instrument for characterizing transmission line and antenna impedance in the lab."
+          attribution="Binarysequence, CC BY-SA 4.0 — Wikimedia Commons"
+          sourceUrl="https://commons.wikimedia.org/wiki/File:Network_Analyzer_Agilent_8714ET.jpg"
+          className="sm:max-w-md"
+        />
+
         <p className="text-sm text-slate-600 dark:text-slate-400">
           The Smith chart is a graphical tool that maps every possible complex impedance onto a circle.
           The center represents a matched load (&Gamma; = 0), the left edge is a short circuit (&Gamma; = &minus;1),
