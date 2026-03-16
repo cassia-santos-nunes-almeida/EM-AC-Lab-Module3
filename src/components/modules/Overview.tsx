@@ -32,11 +32,11 @@ export function Overview() {
 
       {/* Real-world context image */}
       <FigureImage
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/PCB_design_NASA.jpg/500px-PCB_design_NASA.jpg"
-        alt="High-frequency printed circuit board with impedance-controlled traces and ground planes"
-        caption="At GHz frequencies, PCB traces behave as transmission lines. Controlled-impedance routing (visible as precise trace widths and spacing) prevents signal reflections."
-        attribution="NASA, Public Domain — Wikimedia Commons"
-        sourceUrl="https://commons.wikimedia.org/wiki/File:PCB_design_NASA.jpg"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Microstrip_geometry.svg/500px-Microstrip_geometry.svg.png"
+        alt="Cross-section diagram of a microstrip transmission line on a PCB"
+        caption="At GHz frequencies, PCB traces behave as transmission lines. The microstrip geometry — trace width, substrate thickness, and dielectric constant — determines the characteristic impedance Z₀."
+        attribution="The Photon, CC BY-SA 3.0 — Wikimedia Commons"
+        sourceUrl="https://commons.wikimedia.org/wiki/File:Microstrip_geometry.svg"
       />
 
       {/* Learning Outcomes */}
@@ -64,11 +64,11 @@ export function Overview() {
 
       {/* RF test equipment context */}
       <FigureImage
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Laser_lab.jpg/500px-Laser_lab.jpg"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Elektronik-Labormessplatz.jpg/500px-Elektronik-Labormessplatz.jpg"
         alt="Electronics laboratory bench with oscilloscope, signal generator, and test equipment"
         caption="An electronics lab bench equipped with test instruments for measuring transmission line parameters — the tools engineers use to verify impedance matching, standing wave ratios, and signal integrity."
-        attribution="Berserkerus, CC BY-SA 3.0 — Wikimedia Commons"
-        sourceUrl="https://commons.wikimedia.org/wiki/File:Laser_lab.jpg"
+        attribution="Biezl, CC BY-SA 3.0 — Wikimedia Commons"
+        sourceUrl="https://commons.wikimedia.org/wiki/File:Elektronik-Labormessplatz.jpg"
       />
 
       {/* Section Overview */}

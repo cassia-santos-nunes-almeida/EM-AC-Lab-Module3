@@ -77,7 +77,7 @@ export function Transients() {
         </h2>
 
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          Consider a transmission line of length <MathWrapper formula="\ell" /> with characteristic
+          Consider a transmission line of length <MathWrapper formula="\\ell" /> with characteristic
           impedance <MathWrapper formula="Z_0" />, connected to a source with internal
           impedance <MathWrapper formula="Z_s" /> and terminated by a load <MathWrapper formula="Z_L" />.
           When the source applies a voltage step <MathWrapper formula="V_s" />, an initial wave is
@@ -85,7 +85,7 @@ export function Transients() {
         </p>
 
         <MathWrapper
-          formula="V_0^+ = V_s \cdot \frac{Z_0}{Z_s + Z_0}"
+          formula="V_0^+ = V_s \\cdot \\frac{Z_0}{Z_s + Z_0}"
           block
         />
 
@@ -94,7 +94,7 @@ export function Transients() {
         </p>
 
         <MathWrapper
-          formula="T_D = \frac{\ell}{v_p}"
+          formula="T_D = \\frac{\\ell}{v_p}"
           block
         />
 
@@ -104,7 +104,7 @@ export function Transients() {
         </p>
 
         <MathWrapper
-          formula="\Gamma_L = \frac{Z_L - Z_0}{Z_L + Z_0}"
+          formula="\\Gamma_L = \\frac{Z_L - Z_0}{Z_L + Z_0}"
           block
         />
 
@@ -113,18 +113,18 @@ export function Transients() {
         </p>
 
         <MathWrapper
-          formula="\Gamma_s = \frac{Z_s - Z_0}{Z_s + Z_0}"
+          formula="\\Gamma_s = \\frac{Z_s - Z_0}{Z_s + Z_0}"
           block
         />
 
         <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
-          Each successive reflection multiplies by the appropriate <MathWrapper formula="\Gamma" />.
-          If <MathWrapper formula="|\Gamma_L \cdot \Gamma_s| < 1" />, the reflections decay and
+          Each successive reflection multiplies by the appropriate <MathWrapper formula="\\Gamma" />.
+          If <MathWrapper formula="|\\Gamma_L \\cdot \\Gamma_s| < 1" />, the reflections decay and
           the voltage converges to the steady-state value:
         </p>
 
         <MathWrapper
-          formula="V_{ss} = V_0^+ \cdot \frac{1 + \Gamma_L}{1 - \Gamma_L \Gamma_s} = V_s \cdot \frac{Z_L}{Z_s + Z_L}"
+          formula="V_{ss} = V_0^+ \\cdot \\frac{1 + \\Gamma_L}{1 - \\Gamma_L \\Gamma_s} = V_s \\cdot \\frac{Z_L}{Z_s + Z_L}"
           block
         />
 
@@ -140,15 +140,15 @@ export function Transients() {
               line. Each bounce multiplies by the appropriate reflection coefficient:
             </p>
             <MathWrapper
-              formula="V_n = V_0^+ \cdot \Gamma_L^{\lceil n/2 \rceil} \cdot \Gamma_s^{\lfloor n/2 \rfloor}"
+              formula="V_n = V_0^+ \\cdot \\Gamma_L^{\\lceil n/2 \\rceil} \\cdot \\Gamma_s^{\\lfloor n/2 \\rfloor}"
               block
             />
             <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
               The total voltage at the load after <MathWrapper formula="N" /> bounces is the
               geometric series sum of all arriving waves. As{' '}
-              <MathWrapper formula="N \to \infty" />, this converges to{' '}
+              <MathWrapper formula="N \\to \\infty" />, this converges to{' '}
               <MathWrapper formula="V_{ss}" /> provided{' '}
-              <MathWrapper formula="|\Gamma_L \Gamma_s| < 1" />.
+              <MathWrapper formula="|\\Gamma_L \\Gamma_s| < 1" />.
             </p>
           </div>
         </CollapsibleSection>
@@ -168,7 +168,7 @@ export function Transients() {
           </div>
           <div className="space-y-3 text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             <p>
-              A matched transmission line (<MathWrapper formula="\Gamma = 0" />) delivers all power
+              A matched transmission line (<MathWrapper formula="\\Gamma = 0" />) delivers all power
               to the load. An antenna is a load designed to "absorb" power by <em>radiating</em> it
               into space rather than dissipating it as heat.
             </p>
@@ -219,8 +219,8 @@ export function Transients() {
               <p>
                 With a matched source (<MathWrapper formula="Z_s = Z_0" />), the initial voltage
                 launched onto the line is <MathWrapper formula="V_0 = V_s / 2" />. At an open
-                circuit, <MathWrapper formula="\Gamma_L = +1" />, so the total voltage at the
-                load is <MathWrapper formula="V_0(1 + \Gamma_L) = V_0 \times 2 = V_s" />.
+                circuit, <MathWrapper formula="\\Gamma_L = +1" />, so the total voltage at the
+                load is <MathWrapper formula="V_0(1 + \\Gamma_L) = V_0 \\times 2 = V_s" />.
               </p>
             }
           >
@@ -236,38 +236,38 @@ export function Transients() {
           </h3>
           <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             <span className="font-semibold">Given:</span>{' '}
-            <MathWrapper formula="V_s = 10\text{V}" />,{' '}
-            <MathWrapper formula="Z_0 = 50\,\Omega" />,{' '}
-            <MathWrapper formula="\Gamma_L = +0.5" />,{' '}
-            <MathWrapper formula="\Gamma_s = 0" /> (matched source). Show the first 3 bounces.
+            <MathWrapper formula="V_s = 10\\text{V}" />,{' '}
+            <MathWrapper formula="Z_0 = 50\\,\\Omega" />,{' '}
+            <MathWrapper formula="\\Gamma_L = +0.5" />,{' '}
+            <MathWrapper formula="\\Gamma_s = 0" /> (matched source). Show the first 3 bounces.
           </p>
 
           <div className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-4 space-y-3 text-sm text-slate-700 dark:text-slate-300">
             <p>
               <span className="font-semibold">Bounce 1 (forward):</span>{' '}
-              <MathWrapper formula="V_0^+ = 10 \times \frac{50}{50 + 50} = 5\text{V}" />.
+              <MathWrapper formula="V_0^+ = 10 \\times \\frac{50}{50 + 50} = 5\\text{V}" />.
               This wave travels from source to load.
             </p>
             <p>
               <span className="font-semibold">Bounce 2 (backward):</span>{' '}
-              Reflects at load: <MathWrapper formula="V_1^- = 5 \times 0.5 = 2.5\text{V}" />.
+              Reflects at load: <MathWrapper formula="V_1^- = 5 \\times 0.5 = 2.5\\text{V}" />.
               Travels back toward the source.
             </p>
             <p>
               <span className="font-semibold">Bounce 3 (forward):</span>{' '}
-              Reflects at source: <MathWrapper formula="V_2^+ = 2.5 \times 0 = 0\text{V}" />.
-              With a matched source (<MathWrapper formula="\Gamma_s = 0" />), no further reflections
+              Reflects at source: <MathWrapper formula="V_2^+ = 2.5 \\times 0 = 0\\text{V}" />.
+              With a matched source (<MathWrapper formula="\\Gamma_s = 0" />), no further reflections
               occur. The line settles after just one round trip.
             </p>
             <p className="font-semibold pt-2 border-t border-slate-200 dark:border-slate-600">
               Steady-state voltage:{' '}
-              <MathWrapper formula="V_{ss} = 5 \times \frac{1 + 0.5}{1 - 0} = 7.5\text{V}" />.
+              <MathWrapper formula="V_{ss} = 5 \\times \\frac{1 + 0.5}{1 - 0} = 7.5\\text{V}" />.
             </p>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Check: <MathWrapper formula="V_s \times Z_L / (Z_s + Z_L)" />.
-              With <MathWrapper formula="\Gamma_L = 0.5" />,{' '}
-              <MathWrapper formula="Z_L = Z_0 \frac{1+\Gamma_L}{1-\Gamma_L} = 50 \times \frac{1.5}{0.5} = 150\,\Omega" />.
-              So <MathWrapper formula="V_{ss} = 10 \times 150 / (50 + 150) = 7.5\text{V}" />. Confirmed.
+              Check: <MathWrapper formula="V_s \\times Z_L / (Z_s + Z_L)" />.
+              With <MathWrapper formula="\\Gamma_L = 0.5" />,{' '}
+              <MathWrapper formula="Z_L = Z_0 \\frac{1+\\Gamma_L}{1-\\Gamma_L} = 50 \\times \\frac{1.5}{0.5} = 150\\,\\Omega" />.
+              So <MathWrapper formula="V_{ss} = 10 \\times 150 / (50 + 150) = 7.5\\text{V}" />. Confirmed.
             </p>
           </div>
 
@@ -329,14 +329,14 @@ export function Transients() {
             correctReveal={
               <div className="text-sm text-slate-700 dark:text-slate-300 space-y-2">
                 <p>
-                  With <MathWrapper formula="\Gamma_L = -0.5" /> and <MathWrapper formula="\Gamma_s = 0" />:
+                  With <MathWrapper formula="\\Gamma_L = -0.5" /> and <MathWrapper formula="\\Gamma_s = 0" />:
                 </p>
                 <MathWrapper
-                  formula="V_{ss} = 5 \times \frac{1 + (-0.5)}{1 - 0} = 5 \times 0.5 = 2.5\text{V}"
+                  formula="V_{ss} = 5 \\times \\frac{1 + (-0.5)}{1 - 0} = 5 \\times 0.5 = 2.5\\text{V}"
                   block
                 />
                 <p>
-                  Compare to 7.5V with <MathWrapper formula="\Gamma_L = +0.5" />. The negative
+                  Compare to 7.5V with <MathWrapper formula="\\Gamma_L = +0.5" />. The negative
                   reflection coefficient significantly reduces the steady-state voltage.
                 </p>
               </div>
