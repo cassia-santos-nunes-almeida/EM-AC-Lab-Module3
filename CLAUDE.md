@@ -1,8 +1,8 @@
 # EM&AC Lab — Module 3: Transmission Lines & Antennas
 
-Part of the three-module EM&AC Lab course: M1 (EM Fundamentals) → M2 (Circuit Analysis) → **M3 (Transmission Lines & Antennas)**.
+> **Global rules:** see `../CLAUDE.md`. **Recurring corrections:** see `../PATTERNS.md`. **Session state:** see `../SESSION.md`.
 
-> **Shared conventions:** See `COURSE_GUIDELINES.md` for cross-module patterns, lessons learned, and pedagogical guidelines.
+Part of the three-module EM&AC Lab course: M1 (EM Fundamentals) → M2 (Circuit Analysis) → **M3 (Transmission Lines & Antennas)**.
 
 ## Build & Dev
 
@@ -13,21 +13,6 @@ npm run lint         # ESLint (incl. jsx-a11y accessibility)
 npm test             # Vitest test suite (81 tests)
 npm run preview      # Preview production build locally
 ```
-
-## Architecture
-
-| Layer | Technology |
-|---|---|
-| Framework | React 19 + TypeScript |
-| Build | Vite 7 |
-| Styling | Tailwind CSS v4 (PostCSS) |
-| State | Zustand (persisted to localStorage) |
-| Routing | react-router-dom v7 (lazy-loaded pages) |
-| Icons | lucide-react |
-| Math | KaTeX via `MathWrapper` component |
-| AI Tutor | Google Gemini API (client-side) |
-| PWA | vite-plugin-pwa |
-| Testing | Vitest |
 
 ## Key Directories
 
@@ -53,17 +38,6 @@ src/
         └── transmissionMath.test.ts — 52 edge-case tests
 ```
 
-## Conventions
-
-- **Class merging**: Always use `cn()` from `src/utils/cn` for Tailwind classes
-- **Dark mode**: Class-based (`.dark` on `<html>`). Uses `useThemeStore` persisted to `emac-theme` (shared key across all three modules). Every component MUST have `dark:` variants
-- **Canvas simulations**: Use `requestAnimationFrame` in `useEffect` with cleanup via `cancelAnimationFrame`. Read state from refs (not closures) to satisfy React 19 `react-hooks/refs` rules
-- **Math rendering**: Use `<MathWrapper formula="..." />` — never raw HTML or custom parsers
-- **Icons**: Import from `lucide-react`
-- **Components**: TypeScript + proper interfaces for all props
-- **State**: Zustand store for cross-component state; local useState for component-internal state
-- **Cross-module URLs**: Import from `src/constants/modules.ts`
-
 ## Physics Modules
 
 | Route | Component | Simulations | Key Features |
@@ -87,17 +61,16 @@ src/
 
 **Smith Chart:** `calculateComplexReflectionCoefficient`
 
-## Cross-Module Integration
+## Content Bridges
 
-- **Dark mode**: Shared `emac-theme` localStorage key — toggling in any module affects all three
-- **Navigation**: `src/constants/modules.ts` provides URLs to M1 and M2
-- **Content bridges**: Coupled coils ← M2 transformer theory; EM waves ← M1 wave propagation; Impedance analysis ← M2 Laplace transforms
+- **Coupled coils** ← M2 transformer theory
+- **EM waves** ← M1 wave propagation, Faraday/Maxwell
+- **Impedance analysis** ← M2 Laplace transforms
+- **Phasors** ← M1 phasor concepts
 
-## Context Files
+## Reference
 
-- `context/current-sprint.md` — Current work progress
-- `context/decisions.md` — Architecture decisions log
-- `context/known-issues.md` — Known bugs and tech debt
+- `context/decisions.md` — Architecture decisions log (7 ADRs)
 
 ## Do Not Touch
 
