@@ -345,9 +345,9 @@ export function TransmissionLines() {
               explanation: 'Close, but not quite. Calculate |\u0393| first from the complex Z_L and Z\u2080.',
             },
             {
-              text: 'VSWR \u2248 2.6',
+              text: 'VSWR \u2248 2.4',
               correct: true,
-              explanation: 'Correct! \u0393 = (75 + j50 \u2212 50)/(75 + j50 + 50) = (25 + j50)/(125 + j50). |\u0393| \u2248 0.45, so VSWR = (1 + 0.45)/(1 \u2212 0.45) \u2248 2.6.',
+              explanation: 'Correct! \u0393 = (75 + j50 \u2212 50)/(75 + j50 + 50) = (25 + j50)/(125 + j50). |\u0393| = 55.9/134.6 \u2248 0.415, so VSWR = (1 + 0.415)/(1 \u2212 0.415) \u2248 2.42.',
             },
             {
               text: 'VSWR \u2248 1.5',

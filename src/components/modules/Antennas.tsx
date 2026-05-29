@@ -164,6 +164,14 @@ export function Antennas() {
                 dipole (<MathWrapper formula="L \\ll \\lambda" />), <MathWrapper formula="R_{\\text{rad}} = 20\\pi^2(L/\\lambda)^2 \\approx 2\\,\\Omega" />,
                 which makes matching difficult.
               </p>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Note on the pattern simulation below: its radiation-resistance readout uses the
+                sinusoidal (center-fed) current model, which is accurate near{' '}
+                <MathWrapper formula="L = \\lambda/2" /> (the 73-ohm result above). The short-dipole
+                formula <MathWrapper formula="20\\pi^2(L/\\lambda)^2" /> assumes a different
+                short-element current distribution, so at very small{' '}
+                <MathWrapper formula="L/\\lambda" /> the simulated value and this formula do not match.
+              </p>
             </div>
           </CollapsibleSection>
         </div>
