@@ -26,7 +26,7 @@ const CHALLENGE = {
     `With k still near 1, compare the 'V2 (ideal, k=1)' and 'V2 (actual)' readout cards: confirm they agree closely at high k, then slide k down below 0.9 and observe the amber flux-leakage warning appear and 'V2 (actual)' fall while 'V2 (ideal)' stays fixed, demonstrating that actual V2 is approximately k times the ideal value.`,
     `Set k back to 1 and fix N1 at 50, then double the Secondary turns N2 from 50 to 100 and read 'V2 (actual)': verify it doubles, matching the voltage ratio V2/V1 = N2/N1 from the Theory tab.`,
     `Keep N2 = 100 and N1 = 50 and read 'Secondary current I2': note that as N2 exceeded N1 the secondary current is smaller than the primary current, consistent with the current ratio I2/I1 = N1/N2 and the fact that power in equals power out.`,
-    `Set N1 = 100, N2 = 50, and ZL = 200 Ω and read 'Reflected impedance Z_ref' (about 800 Ω); now double N1 to 200 and watch Z_ref jump to roughly 3200 Ω, confirming Z_ref scales with the square of the turns ratio (N1/N2)² times ZL.`,
+    `Set N1 = 50, N2 = 50, and ZL = 200 Ω and read 'Reflected impedance Z_ref' (200 Ω, since the turns ratio is 1:1); now double N1 to 100 and watch Z_ref jump to roughly 800 Ω — a 4× increase confirming Z_ref scales with the square of the turns ratio (N1/N2)² times ZL.`,
     `Conclude in your own words how coupling coefficient k governs flux leakage and the gap between ideal and actual V2, while the turns ratio N1/N2 sets voltage linearly, current inversely, and reflected impedance by its square.`,
   ],
   hint: `Watch the readout cards change as you move one slider at a time, and remember V2/V1 = N2/N1, I2/I1 = N1/N2, and Z_ref = (N1/N2)² × ZL.`,

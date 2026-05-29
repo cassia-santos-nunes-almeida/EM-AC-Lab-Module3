@@ -67,7 +67,7 @@ const CHALLENGE = {
     `Drag the Dipole Length slider to 0.50λ (the half-wave dipole) and observe that the Radiation Resistance readout settles near 73 Ω — the value that nearly matches the 75 Ω coaxial standard discussed in the Theory tab.`,
     `Compare the Directivity readout between 0.10λ and 0.50λ: confirm it rises toward about 1.64 (≈2.15 dBi) and that the Half-Power Beamwidth readout shrinks as the pattern narrows in the broadside direction.`,
     `Continue increasing the Dipole Length slider past 1.00λ toward 1.50λ and watch the polar pattern develop extra side lobes splitting off the broadside main lobe, while the Half-Power Beamwidth readout changes accordingly.`,
-    `Identify the slider position where the main lobe is still single (no side lobes) yet the Directivity readout is at its largest, and note where additional lobes first appear.`,
+    `Find the longest dipole length at which the main lobe is still single (no side lobes have split off yet) — around 1.00λ — and note that the Directivity readout is at its largest for a single-lobe pattern right at that boundary, just before extra lobes appear at the next step.`,
     `Conclude in your own words why ~0.50λ is the practical design choice: relate the 73 Ω Radiation Resistance to easy matching with Γ ≈ 0, and explain the trade-off between higher directivity and the unwanted side lobes that appear at longer lengths.`,
   ],
   hint: `Keep one eye on the Radiation Resistance readout near 0.50λ and watch the broadside lobe split as you push the slider toward 1.50λ.`,
