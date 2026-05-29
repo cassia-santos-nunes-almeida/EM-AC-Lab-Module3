@@ -5,6 +5,7 @@ import { PredictionGate } from '@/components/common/PredictionGate';
 import { ConceptCheck } from '@/components/common/ConceptCheck';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { SectionHook } from '@/components/common/SectionHook';
 import { FigureImage } from '@/components/common/FigureImage';
 import { Tabs } from '@/components/common/Tabs';
@@ -17,6 +18,20 @@ import { CoupledCoilsSim } from '@/components/simulations/CoupledCoilsSim';
  * Covers coupling coefficient, dot convention, ideal transformer analysis,
  * and an interactive coupled-coils simulation.
  */
+const CHALLENGE = {
+  title: `Engineer a Transformer: Coupling, Turns Ratio, and Reflected Impedance`,
+  description: `In the Simulations tab, the CoupledCoilsSim lets you manipulate the coupling coefficient, both turns counts, and the load impedance while watching mutual inductance, ideal vs. actual secondary voltage, secondary current, and reflected impedance update live. This guided exploration walks through the three core transformer relationships (voltage ratio, current ratio, reflected impedance) and the practical effect of imperfect coupling (flux leakage), connecting the live readouts back to the ideal-transformer equations from the Theory tab.`,
+  instructions: [
+    `Set Primary turns N1 and Secondary turns N2 equal (for example both at 50), then drag the Coupling coefficient k slider from 0 up to 1 and watch the canvas: note that the two coils move closer together, the magnetic field lines and flux dots intensify, and the iron-core line appears once k passes 0.8.`,
+    `With k still near 1, compare the 'V2 (ideal, k=1)' and 'V2 (actual)' readout cards: confirm they agree closely at high k, then slide k down below 0.9 and observe the amber flux-leakage warning appear and 'V2 (actual)' fall while 'V2 (ideal)' stays fixed, demonstrating that actual V2 is approximately k times the ideal value.`,
+    `Set k back to 1 and fix N1 at 50, then double the Secondary turns N2 from 50 to 100 and read 'V2 (actual)': verify it doubles, matching the voltage ratio V2/V1 = N2/N1 from the Theory tab.`,
+    `Keep N2 = 100 and N1 = 50 and read 'Secondary current I2': note that as N2 exceeded N1 the secondary current is smaller than the primary current, consistent with the current ratio I2/I1 = N1/N2 and the fact that power in equals power out.`,
+    `Set N1 = 100, N2 = 50, and ZL = 200 Ω and read 'Reflected impedance Z_ref' (about 800 Ω); now double N1 to 200 and watch Z_ref jump to roughly 3200 Ω, confirming Z_ref scales with the square of the turns ratio (N1/N2)² times ZL.`,
+    `Conclude in your own words how coupling coefficient k governs flux leakage and the gap between ideal and actual V2, while the turns ratio N1/N2 sets voltage linearly, current inversely, and reflected impedance by its square.`,
+  ],
+  hint: `Watch the readout cards change as you move one slider at a time, and remember V2/V1 = N2/N1, I2/I1 = N1/N2, and Z_ref = (N1/N2)² × ZL.`,
+};
+
 export function Transformers() {
   const markVisited = useProgressStore((s) => s.markVisited);
   useEffect(() => { markVisited('transformers'); }, [markVisited]);
@@ -466,6 +481,8 @@ export function Transformers() {
         },
       ]} />
 
+
+      <GuidedChallenge challenge={CHALLENGE} />
 
       <ModuleNavigation />
     </div>

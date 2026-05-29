@@ -6,6 +6,7 @@ import { CollapsibleSection } from '@/components/common/CollapsibleSection';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
 import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
@@ -20,6 +21,20 @@ import { SmithChartSim } from '@/components/simulations/SmithChartSim';
  * transmission line simulation gated behind prediction questions, and a
  * standing wave identification quiz.
  */
+const CHALLENGE = {
+  title: `Reading Reflections: From Matched Line to Standing Wave`,
+  description: `A guided exploration of the interactive transmission line simulation (section 3.3). Sweep the load impedance through matched, mismatched, open, and short conditions while watching the incident, reflected, and total waves and the live Γ / VSWR readouts, building intuition for how the load termination controls reflection and the standing-wave pattern.`,
+  instructions: [
+    `Open the Simulations tab and pass or skip the prediction prompts to reveal the line simulation. Set the Signal toggle to Sinusoidal, leave Z₀ (characteristic) at 50 Ω, and drag Zₗ (load) to 50 Ω so it equals Z₀. Observe that the orange Reflected wave flattens out and the green Total wave becomes a clean travelling wave, and confirm the readouts show Γ ≈ 0 and VSWR ≈ 1.`,
+    `Now drag Zₗ (load) up to about 150 Ω. Watch the orange Reflected wave grow and the green Total wave develop fixed peaks and dips that no longer travel, and note how the VSWR readout climbs above 1 as |Γ| increases.`,
+    `Tick the Open checkbox (Zₗ = ∞). Observe that |Γ| jumps to 1 and VSWR reads ∞, and that the Total voltage at the load (right) end swells to roughly twice the incident amplitude, consistent with Γ = +1.`,
+    `Untick Open and drag Zₗ (load) down to 0 Ω (short circuit). Compare with the open case: |Γ| is again 1 but the Total voltage now goes to zero at the load end, confirming Γ = −1 inverts the reflected wave.`,
+    `Return Zₗ to a mismatch like 150 Ω and sweep the Frequency slider from 1 MHz toward 10 GHz. Watch the Wavelength λ readout shrink and the 'Line = Nλ₀' value grow, and note how many more standing-wave peaks fit along the same physical line at higher frequency.`,
+    `Conclude: in your own words, explain how the load impedance Zₗ relative to Z₀ sets the reflection coefficient and VSWR, why open and short circuits both give |Γ| = 1 yet produce opposite voltage at the load, and how electrical length (line length in wavelengths) governs the standing-wave pattern.`,
+  ],
+  hint: `Watch the |Γ| and VSWR readouts together: VSWR = 1 means a perfect match (no reflection), and VSWR → ∞ means total reflection (open or short).`,
+};
+
 export function TransmissionLines() {
   const markVisited = useProgressStore((s) => s.markVisited);
   useEffect(() => { markVisited('transmission-lines'); }, [markVisited]);
@@ -436,6 +451,8 @@ export function TransmissionLines() {
           ),
         },
       ]} />
+
+      <GuidedChallenge challenge={CHALLENGE} />
 
       <ModuleNavigation />
     </div>
