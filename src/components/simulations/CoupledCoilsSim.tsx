@@ -375,6 +375,9 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
           <p className="text-[11px] text-slate-400 dark:text-slate-500">
             Fixed: L₁ = 10 mH, L₂ = 10 mH, V<sub>s</sub> = 120 V.
             V₂ (actual) ≈ k &times; V<sub>s</sub> &times; N₂/N₁. I₂ and Z<sub>ref</sub> use the ideal transformer model (k = 1).
+            These quantities are illustrative: M is computed from the fixed reference inductances while the
+            voltage ratio follows the turns ratio (which would require L &prop; N<sup>2</sup>), so they are not
+            jointly solved from one consistent coil geometry.
           </p>
         </div>
       </div>
