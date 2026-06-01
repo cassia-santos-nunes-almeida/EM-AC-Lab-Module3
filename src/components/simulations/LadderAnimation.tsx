@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Play, Pause, SkipForward } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { useCanvasSetup } from '@/hooks/useCanvasSetup';
+import { useAnimationFrame } from '@/hooks/useAnimationFrame';
 
 /* ── Subdivision stages ──────────────────────────────────────────── */
 
@@ -137,16 +139,10 @@ export function LadderAnimation({
 
   /** Animation time reference (seconds). */
   const timeRef = useRef(0);
-  /** RAF timestamp of the previous frame for delta time calculation. */
-  const lastTimeRef = useRef<number>(0);
   /** Timestamp of the last stage advance while auto-playing. */
   const lastAdvanceRef = useRef(0);
-  /** requestAnimationFrame handle. */
-  const rafRef = useRef(0);
-  /** Stable reference to the render function (avoids self-referencing useCallback). */
-  const renderRef = useRef<FrameRequestCallback>(() => {});
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { canvasRef, prepareFrame } = useCanvasSetup();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const isContinuous = stageIndex >= STAGES.length;
@@ -169,20 +165,10 @@ export function LadderAnimation({
 
   /* ── Render loop ───────────────────────────────────────────────── */
 
-  const render = useCallback((timestamp: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const w = rect.width;
-    const h = rect.height;
+  useAnimationFrame(({ dt }) => {
+    const frame = prepareFrame();
+    if (!frame) return;
+    const { ctx, width: w, height: h } = frame;
     const dark = isDark();
 
     // --- Clear ---
@@ -405,9 +391,6 @@ export function LadderAnimation({
     }
 
     // Advance time
-    if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-    const dt = (timestamp - lastTimeRef.current) / 1000;
-    lastTimeRef.current = timestamp;
     timeRef.current += dt;
 
     // Auto-advance stage while playing (every 2 seconds)
@@ -417,17 +400,7 @@ export function LadderAnimation({
         advanceStage();
       }
     }
-
-    rafRef.current = requestAnimationFrame(renderRef.current);
-  }, [stageIndex, playing, totalL, totalC, advanceStage]);
-
-  /* ── Lifecycle ─────────────────────────────────────────────────── */
-
-  useEffect(() => {
-    renderRef.current = render;
-    rafRef.current = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [render]);
+  }, true);
 
   /* ── Control handlers ──────────────────────────────────────────── */
 

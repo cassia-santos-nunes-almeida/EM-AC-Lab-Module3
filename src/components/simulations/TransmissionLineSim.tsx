@@ -1,9 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   calculateReflectionCoefficient,
   calculateVSWR,
   calculateWavelength,
 } from '@/utils/transmissionMath';
+import { useCanvasSetup } from '@/hooks/useCanvasSetup';
+import { useAnimationFrame } from '@/hooks/useAnimationFrame';
 
 /** Props for the TransmissionLineSim component. */
 interface TransmissionLineSimProps {
@@ -48,13 +50,9 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
 
   /* -- Canvas refs & animation ------------------------------------------ */
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { canvasRef, prepareFrame } = useCanvasSetup();
   const containerRef = useRef<HTMLDivElement>(null);
-  const animFrameRef = useRef<number>(0);
   const timeRef = useRef(0);
-  const lastTimeRef = useRef<number>(0);
-  /** Stable reference to the render function (avoids self-referencing useCallback). */
-  const renderRef = useRef<FrameRequestCallback>(() => {});
   /** Latest slider/derived params, read by the render loop so it need not be recreated on each change. */
   const paramsRef = useRef({ lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength });
 
@@ -80,20 +78,10 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
 
   /* -- Main render loop ------------------------------------------------- */
 
-  const render = useCallback((timestamp: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const w = rect.width;
-    const h = rect.height;
+  useAnimationFrame(({ dt }) => {
+    const frame = prepareFrame();
+    if (!frame) return;
+    const { ctx, width: w, height: h } = frame;
     const dark = isDark();
     const { lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength } = paramsRef.current;
 
@@ -271,25 +259,13 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
     }
 
     // Advance time
-    if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-    const dt = (timestamp - lastTimeRef.current) / 1000;
-    lastTimeRef.current = timestamp;
     timeRef.current += dt;
-    animFrameRef.current = requestAnimationFrame(renderRef.current);
-  }, []);
+  });
 
   /** Keep the render loop's params ref in sync with the sliders and derived values. */
   useEffect(() => {
     paramsRef.current = { lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength };
   }, [lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength]);
-
-  /* -- Lifecycle: animation loop ---------------------------------------- */
-
-  useEffect(() => {
-    renderRef.current = render;
-    animFrameRef.current = requestAnimationFrame(render);
-    return () => cancelAnimationFrame(animFrameRef.current);
-  }, [render]);
 
   /* -- UI ---------------------------------------------------------------- */
 
