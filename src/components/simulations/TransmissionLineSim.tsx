@@ -283,19 +283,6 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
     return () => cancelAnimationFrame(animFrameRef.current);
   }, [render]);
 
-  /* -- Lifecycle: redraw on dark mode toggle ----------------------------- */
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      // render loop will pick up the change automatically
-    });
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-    return () => observer.disconnect();
-  }, []);
-
   /* -- UI ---------------------------------------------------------------- */
 
   return (

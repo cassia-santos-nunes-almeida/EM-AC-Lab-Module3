@@ -424,14 +424,6 @@ export function LadderAnimation({
   /* ── Lifecycle ─────────────────────────────────────────────────── */
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-    const observer = new ResizeObserver(() => { /* render loop handles resize */ });
-    observer.observe(container);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
     renderRef.current = render;
     rafRef.current = requestAnimationFrame(render);
     return () => cancelAnimationFrame(rafRef.current);
