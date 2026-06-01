@@ -30,6 +30,8 @@ interface PredictionGateProps {
   allowSkip?: boolean;
   /** Additional CSS class names */
   className?: string;
+  /** Called when the student submits a prediction */
+  onPredict?: (correct: boolean) => void;
 }
 
 export function PredictionGate({
@@ -41,6 +43,7 @@ export function PredictionGate({
   resetKey,
   allowSkip = true,
   className,
+  onPredict,
 }: PredictionGateProps) {
   return (
     <PredictionGateInner
@@ -51,6 +54,7 @@ export function PredictionGate({
       explanation={explanation}
       allowSkip={allowSkip}
       className={className}
+      onPredict={onPredict}
     >
       {children}
     </PredictionGateInner>
@@ -65,6 +69,7 @@ function PredictionGateInner({
   children,
   allowSkip = true,
   className,
+  onPredict,
 }: Omit<PredictionGateProps, 'resetKey'>) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [passed, setPassed] = useState(false);
@@ -76,6 +81,7 @@ function PredictionGateInner({
   const handleSelect = (id: string) => {
     if (hasAnswered) return;
     setSelectedId(id);
+    onPredict?.(id === correctId);
   };
 
   const handleContinue = () => {

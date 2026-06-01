@@ -32,9 +32,13 @@ interface ConceptCheckProps {
   data: ConceptCheckData;
   /** Additional CSS class names */
   className?: string;
+  /** Called when a correct answer is selected or answer is revealed */
+  onComplete?: () => void;
+  /** Called when a hint is revealed, with the hint tier (1-based) */
+  onHint?: (tier: number) => void;
 }
 
-export function ConceptCheck({ data, className }: ConceptCheckProps) {
+export function ConceptCheck({ data, className, onComplete, onHint }: ConceptCheckProps) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [revealed, setRevealed] = useState(false);
   const [hintLevel, setHintLevel] = useState(0);
@@ -73,7 +77,11 @@ export function ConceptCheck({ data, className }: ConceptCheckProps) {
 
       {canShowMoreHints && selectedIndex === null && !revealed && (
         <button
-          onClick={() => setHintLevel(prev => prev + 1)}
+          onClick={() => {
+            const next = hintLevel + 1;
+            setHintLevel(next);
+            onHint?.(next);
+          }}
           className="ml-7 mb-3 text-xs text-amber-700 dark:text-amber-400 hover:underline font-medium flex items-center gap-1"
         >
           <Lightbulb className="w-3 h-3" />
@@ -90,7 +98,10 @@ export function ConceptCheck({ data, className }: ConceptCheckProps) {
             return (
               <button
                 key={idx}
-                onClick={() => setSelectedIndex(idx)}
+                onClick={() => {
+                  setSelectedIndex(idx);
+                  if (option.correct) onComplete?.();
+                }}
                 disabled={selectedIndex !== null}
                 className={cn(
                   'w-full text-left px-3 py-2 rounded-md text-sm transition-colors',
@@ -140,7 +151,7 @@ export function ConceptCheck({ data, className }: ConceptCheckProps) {
             </div>
           ) : (
             <button
-              onClick={() => setRevealed(true)}
+              onClick={() => { setRevealed(true); onComplete?.(); }}
               className="px-3 py-1.5 rounded-md text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors"
             >
               Reveal Answer

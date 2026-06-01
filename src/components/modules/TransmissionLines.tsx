@@ -37,6 +37,9 @@ const CHALLENGE = {
 
 export function TransmissionLines() {
   const markVisited = useProgressStore((s) => s.markVisited);
+  const incrementConceptChecks = useProgressStore((s) => s.incrementConceptChecks);
+  const incrementHints = useProgressStore((s) => s.incrementHints);
+  const markPredictionGate = useProgressStore((s) => s.markPredictionGate);
   useEffect(() => { markVisited('transmission-lines'); }, [markVisited]);
 
   return (
@@ -190,6 +193,8 @@ export function TransmissionLines() {
         </div>
 
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('transmission-lines')}
+          onHint={() => incrementHints('transmission-lines')}
           data={{
             mode: 'multiple-choice',
             question: 'What \u0393 and VSWR indicate a perfectly matched load?',
@@ -234,6 +239,7 @@ export function TransmissionLines() {
             { id: 'double-amplitude', label: 'Double amplitude' },
           ]}
           getCorrectAnswer={() => 'no-reflection'}
+          onPredict={(correct) => markPredictionGate('transmission-lines', correct)}
           explanation={
             <span>
               When <MathWrapper formula="Z_L = Z_0" />, the reflection coefficient{' '}
@@ -252,6 +258,7 @@ export function TransmissionLines() {
               { id: 'half', label: 'Half' },
             ]}
             getCorrectAnswer={() => 'double'}
+            onPredict={(correct) => markPredictionGate('transmission-lines', correct)}
             explanation={
               <span>
                 At an open circuit, <MathWrapper formula="\\Gamma = +1" />. The reflected wave
@@ -336,6 +343,8 @@ export function TransmissionLines() {
         </CollapsibleSection>
 
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('transmission-lines')}
+          onHint={() => incrementHints('transmission-lines')}
           data={{
             mode: 'multiple-choice',
             question: 'On the Smith chart, where is the short circuit located?',
@@ -433,6 +442,8 @@ export function TransmissionLines() {
         </div>
 
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('transmission-lines')}
+          onHint={() => incrementHints('transmission-lines')}
           data={{
             mode: 'multiple-choice',
             question: 'If VSWR = 3, what is |\u0393|?',

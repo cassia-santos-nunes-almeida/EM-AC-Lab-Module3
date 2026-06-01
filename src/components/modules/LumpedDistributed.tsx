@@ -35,6 +35,9 @@ const CHALLENGE = {
 
 export function LumpedDistributed() {
   const markVisited = useProgressStore((s) => s.markVisited);
+  const incrementConceptChecks = useProgressStore((s) => s.incrementConceptChecks);
+  const incrementHints = useProgressStore((s) => s.incrementHints);
+  const markPredictionGate = useProgressStore((s) => s.markPredictionGate);
   useEffect(() => { markVisited('lumped-distributed'); }, [markVisited]);
 
   return (
@@ -254,6 +257,7 @@ export function LumpedDistributed() {
             { id: 'same', label: 'Stays the same' },
           ]}
           getCorrectAnswer={() => 'same'}
+          onPredict={(correct) => markPredictionGate('lumped-distributed', correct)}
           explanation={
             <p>
               The wave speed{' '}
@@ -282,6 +286,8 @@ export function LumpedDistributed() {
           content: (
             <div className="space-y-10">
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('lumped-distributed')}
+          onHint={() => incrementHints('lumped-distributed')}
           data={{
             mode: 'multiple-choice',
             question: 'Which Kirchhoff law gives the first telegrapher\'s equation (\u2202V/\u2202x = \u2212L\u2032 \u2202I/\u2202t)?',

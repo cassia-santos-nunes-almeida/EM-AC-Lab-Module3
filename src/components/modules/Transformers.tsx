@@ -34,6 +34,9 @@ const CHALLENGE = {
 
 export function Transformers() {
   const markVisited = useProgressStore((s) => s.markVisited);
+  const incrementConceptChecks = useProgressStore((s) => s.incrementConceptChecks);
+  const incrementHints = useProgressStore((s) => s.incrementHints);
+  const markPredictionGate = useProgressStore((s) => s.markPredictionGate);
   useEffect(() => { markVisited('transformers'); }, [markVisited]);
 
   return (
@@ -218,6 +221,8 @@ export function Transformers() {
         </div>
 
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('transformers')}
+          onHint={() => incrementHints('transformers')}
           data={{
             mode: 'multiple-choice',
             question: 'Current enters the undotted terminal of the primary coil. What is the polarity of the induced voltage at the dotted terminal of the secondary?',
@@ -389,6 +394,7 @@ export function Transformers() {
             { id: 'quadruples', label: 'Quadruples' },
           ]}
           getCorrectAnswer={() => 'doubles'}
+          onPredict={(correct) => markPredictionGate('transformers', correct)}
           explanation={
             <p>
               The voltage ratio is{' '}

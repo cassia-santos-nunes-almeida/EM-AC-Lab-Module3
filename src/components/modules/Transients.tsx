@@ -36,6 +36,9 @@ const CHALLENGE = {
 
 export function Transients() {
   const markVisited = useProgressStore((s) => s.markVisited);
+  const incrementConceptChecks = useProgressStore((s) => s.incrementConceptChecks);
+  const incrementHints = useProgressStore((s) => s.incrementHints);
+  const markPredictionGate = useProgressStore((s) => s.markPredictionGate);
   useEffect(() => { markVisited('transients'); }, [markVisited]);
 
   return (
@@ -230,6 +233,7 @@ export function Transients() {
               { id: 'vshalf', label: 'V\u209B / 2' },
             ]}
             getCorrectAnswer={() => 'vs'}
+            onPredict={(correct) => markPredictionGate('transients', correct)}
             explanation={
               <p>
                 With a matched source (<MathWrapper formula="Z_s = Z_0" />), the initial voltage
@@ -297,6 +301,8 @@ export function Transients() {
           content: (
             <div className="space-y-10">
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('transients')}
+          onHint={() => incrementHints('transients')}
           data={{
             mode: 'multiple-choice',
             question: 'After 3 round trips with \u0393_L = 0.5 and \u0393_S = \u22120.3, does V_load converge above or below V_ss?',
@@ -359,6 +365,8 @@ export function Transients() {
           />
 
       <ConceptCheck
+        onComplete={() => incrementConceptChecks('transients')}
+        onHint={() => incrementHints('transients')}
         data={{
           mode: 'multiple-choice',
           question: 'What determines the final steady-state voltage on a transmission line?',

@@ -75,6 +75,9 @@ const CHALLENGE = {
 
 export function Antennas() {
   const markVisited = useProgressStore((s) => s.markVisited);
+  const incrementConceptChecks = useProgressStore((s) => s.incrementConceptChecks);
+  const incrementHints = useProgressStore((s) => s.incrementHints);
+  const markPredictionGate = useProgressStore((s) => s.markPredictionGate);
   useEffect(() => { markVisited('antennas'); }, [markVisited]);
 
   return (
@@ -391,6 +394,7 @@ export function Antennas() {
             { id: 'same', label: 'Stays the same' },
           ]}
           getCorrectAnswer={() => 'increases'}
+          onPredict={(correct) => markPredictionGate('antennas', correct)}
           explanation={
             <p>
               A longer dipole has more current elements, each radiating individually. Their
@@ -414,6 +418,8 @@ export function Antennas() {
           content: (
             <div className="space-y-10">
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('antennas')}
+          onHint={() => incrementHints('antennas')}
           data={{
             mode: 'multiple-choice',
             question: 'A half-wave dipole has nulls at \u03B8 = 0\u00B0 and \u03B8 = 180\u00B0 (along the antenna axis). Why?',
@@ -430,6 +436,8 @@ export function Antennas() {
         />
 
       <ConceptCheck
+        onComplete={() => incrementConceptChecks('antennas')}
+        onHint={() => incrementHints('antennas')}
         data={{
           mode: 'multiple-choice',
           question: 'If an antenna has directivity D = 1.64, what does this mean physically?',
