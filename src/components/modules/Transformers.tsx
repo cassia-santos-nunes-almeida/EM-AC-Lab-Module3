@@ -490,7 +490,7 @@ export function Transformers() {
 
       <GuidedChallenge challenge={CHALLENGE} />
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="transformers" />
     </div>
   );
 }

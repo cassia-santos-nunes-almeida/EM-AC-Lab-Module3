@@ -352,7 +352,7 @@ export function LumpedDistributed() {
       {/* ── Module navigation ─────────────────────────────────────── */}
       <GuidedChallenge challenge={CHALLENGE} />
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="lumped-distributed" />
     </div>
   );
 }

@@ -137,7 +137,7 @@ export function Overview() {
         </ul>
       </div>
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="overview" />
     </div>
   );
 }

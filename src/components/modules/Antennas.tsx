@@ -551,7 +551,7 @@ export function Antennas() {
 
       <GuidedChallenge challenge={CHALLENGE} />
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="antennas" />
     </div>
   );
 }

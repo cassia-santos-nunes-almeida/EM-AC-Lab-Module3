@@ -387,7 +387,7 @@ export function Transients() {
 
       <GuidedChallenge challenge={CHALLENGE} />
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="transients" />
     </div>
   );
 }

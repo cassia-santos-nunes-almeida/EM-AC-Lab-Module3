@@ -465,7 +465,7 @@ export function TransmissionLines() {
 
       <GuidedChallenge challenge={CHALLENGE} />
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="transmission-lines" />
     </div>
   );
 }
