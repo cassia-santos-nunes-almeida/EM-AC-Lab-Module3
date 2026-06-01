@@ -14,7 +14,29 @@ when a rule here conflicts with shared-patterns, the project-specific rule wins.
 
 ## UI/UX (P-UI)
 
-*No entries yet.*
+### P-UI-01 — Guided-challenge steps must reference real, reachable controls
+**Pattern:** Draft GuidedChallenge instructions referenced controls that did not
+exist or could not be reached — e.g. a step assumed N₁ = 200 when the slider maxes
+at 100 (Transformers), and a "drive it unstable" step used Γₗ = Γₛ = 0.95, which
+never satisfies the exact Γₗ·Γₛ = 1 condition the label checks (Transients).
+**Rule:** Before inlining a GuidedChallenge, inventory the target sim's actual
+affordances (slider ranges, toggles, tabs, readouts) and confirm every instruction
+maps to a control that exists AND a value it can actually reach. If a sim lives in
+a "Simulations" tab, step 1 must say to open it.
+**Scope:** All `GuidedChallenge` capstones across the 5 sections.
+**First seen:** 2026-05 cross-module review (fixes in commit `f830994`).
+
+### P-UI-02 — Active-recall components must expose store-wired progress callbacks
+**Pattern:** `progressStore` defined `incrementConceptChecks` / `incrementHints` /
+`markPredictionGate`, but ConceptCheck/PredictionGate accepted no callbacks and no
+call site invoked the actions, so `emac-m3-progress` counters stayed at zero
+forever (write-defined, never written).
+**Rule:** When a component records learner activity that a counter tracks, it must
+expose the callback (ConceptCheck `onComplete`/`onHint`, PredictionGate
+`onPredict`) AND every call site must wire it to the store with the section id
+(parity with M2). Add a test asserting the counter moves.
+**Scope:** `ConceptCheck`, `PredictionGate`, the 5 module call sites, `progressStore`.
+**First seen:** 2026-06-01 review follow-up (commit `ecb20c6`).
 
 ## Build (P-BUILD)
 
