@@ -1,10 +1,10 @@
 # SESSION — EM-AC-Lab-Module3
 
 ## Last Updated
-2026-06-01 (cross-module review follow-up: progress wiring + full consistency/opt pass)
+2026-06-02 (cross-module review follow-up: progress wiring + full consistency/opt pass, incl. Opt #5 shared canvas hooks)
 
 ## Completed This Session
-Branch `chore/m3-progress-and-cleanup-2026-06` (off `origin/main`), 9 per-concern commits:
+Branch `chore/m3-progress-and-cleanup-2026-06` (off `origin/main`), 13 per-concern commits:
 - [x] **Progress callbacks wired** (`ecb20c6`) — backported M2's `onComplete`/`onHint`
   (ConceptCheck) and `onPredict` (PredictionGate); wired all 15 call sites in the 5
   modules to the store. The `emac-m3-progress` counters now populate to M2 parity.
@@ -24,8 +24,14 @@ Branch `chore/m3-progress-and-cleanup-2026-06` (off `origin/main`), 9 per-concer
 - [x] **rAF param-ref refactor** (`ecc66e0`) — Opt #1/#2; CoupledCoilsSim + TransmissionLineSim
   loops built once. Behaviourally verified in headless Chrome (k/N1 and ZL drive the
   canvas correctly).
+- [x] **Shared canvas hooks** (`b7c3d4d` + `e7ab016`) — Opt #5; new `useCanvasSetup` +
+  `useAnimationFrame` (M3-local, DPR-aware, timestamp timing; 6 tests). Adopted in the 4
+  animating sims (SmithChart, CoupledCoils, TransmissionLine, Ladder), removing the
+  hand-rolled rAF + DPR boilerplate (−89 lines). Browser-verified all four. The 3 static
+  sims (BounceDiagram, RadiationPatternSim, StandingWaveQuiz) intentionally left — no rAF
+  loop to DRY + bespoke container sizing.
 
-Gate: `tsc -b` clean · `eslint src` clean · `vitest` 101/101 green · `GITHUB_ACTIONS=true
+Gate: `tsc -b` clean · `eslint src` clean · `vitest` 107/107 green · `GITHUB_ACTIONS=true
 npm run build` green · dev boots HTTP 200. Pushed; PR not yet opened:
 https://github.com/cassia-santos-nunes-almeida/EM-AC-Lab-Module3/pull/new/chore/m3-progress-and-cleanup-2026-06
 
@@ -34,9 +40,10 @@ VSWR quiz fix (M3-PHYS-01), short-dipole caption (M3-PHYS-02), guided-challenge 
 
 ## Next Session
 - **Owner review** of the two new ConceptCheck questions (#2) — physics wording/distractors.
-- **Optimization #5** (review doc) — refactor the 7 inline sims onto shared M1 canvas hooks;
-  BLOCKED on M1 extracting `useCanvasSetup` / `useAnimationFrame`.
-- Optional: adopt TableOfContents in more multi-section tabs if desired (currently Antennas only).
+- The `cross-module-review-2026-05.md` backlog is now **fully addressed for M3**.
+- Optional future: adopt `useCanvasSetup` in the 3 static sims (BounceDiagram /
+  RadiationPatternSim / StandingWaveQuiz) once their bespoke container sizing is
+  reconciled (low value); adopt TableOfContents in more multi-section tabs if desired.
 
 ## Open Decisions
 - None blocking. The cross-module-review-2026-05.md backlog is otherwise complete for M3.
