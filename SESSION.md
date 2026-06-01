@@ -1,52 +1,47 @@
 # SESSION — EM-AC-Lab-Module3
 
 ## Last Updated
-2026-06-01 (cross-module review follow-up: progress wiring + cleanup)
+2026-06-01 (cross-module review follow-up: progress wiring + full consistency/opt pass)
 
 ## Completed This Session
-Branch `chore/m3-progress-and-cleanup-2026-06` (off `origin/main`):
-- [x] **Progress callbacks wired** — backported M2's `onComplete`/`onHint`
-  (ConceptCheck) and `onPredict` (PredictionGate); wired all 15 call sites across
-  the 5 modules to `incrementConceptChecks` / `incrementHints` /
-  `markPredictionGate`. The `emac-m3-progress` counters
-  (`conceptChecksCompleted`, `predictionGatesAnswered/Correct`, `hintsUsed`) were
-  write-defined but never written — now populate to M2 parity. (commit `ecb20c6`)
-- [x] **`progressWiring.test.tsx`** added (9 cases): callback contract + store
-  integration. Suite 85 → **94 tests, all green**.
-- [x] **Dead observers removed** — empty `ResizeObserver` (LadderAnimation) and
-  empty `MutationObserver` (TransmissionLineSim); the continuous rAF loops already
-  cover resize/theme each frame (review Opt #3/#4). (commit `2e38b1a`)
-- [x] **Coupled-coils caption** — added the fixed-L vs free-N clarification
-  (M3-PHYS-04). (commit `fcabb68`)
-- [x] **SESSION.md / PATTERNS.md refreshed** (this commit); added P-UI-01, P-UI-02.
+Branch `chore/m3-progress-and-cleanup-2026-06` (off `origin/main`), 9 per-concern commits:
+- [x] **Progress callbacks wired** (`ecb20c6`) — backported M2's `onComplete`/`onHint`
+  (ConceptCheck) and `onPredict` (PredictionGate); wired all 15 call sites in the 5
+  modules to the store. The `emac-m3-progress` counters now populate to M2 parity.
+  + `progressWiring.test.tsx` (9 cases).
+- [x] **Dead observers removed** (`2e38b1a`) — empty ResizeObserver (LadderAnimation)
+  + empty MutationObserver (TransmissionLineSim) — review Opt #3/#4.
+- [x] **Coupled-coils caption** (`fcabb68`) — fixed-L vs free-N clarification (M3-PHYS-04).
+- [x] **Docs** (`c9b7e45`) — SESSION.md refresh + PATTERNS P-UI-01/P-UI-02.
+- [x] **ModuleNavigation data-driven** (`71718a7`) — Consistency #3; MODULE_SECTIONS +
+  getAdjacentModules in constants/modules.ts; `currentModuleId` prop.
+- [x] **Tabs → TabSet + Home/End keys** (`30f20e4`) — Consistency #5.
+- [x] **TableOfContents + useActiveSection scroll-spy** (`19fa66c`) — Consistency #4;
+  adopted in the Antennas Theory tab. Hook re-queries the DOM on scroll (tolerant of
+  tab remounts). 6 new tests.
+- [x] **2nd ConceptCheck** in Transformers + LumpedDistributed (`8ae6ae3`) — Consistency
+  #2. ⚠ NEW physics content — owner should review wording/distractors before merge.
+- [x] **rAF param-ref refactor** (`ecc66e0`) — Opt #1/#2; CoupledCoilsSim + TransmissionLineSim
+  loops built once. Behaviourally verified in headless Chrome (k/N1 and ZL drive the
+  canvas correctly).
 
-Gate: `npx tsc -b` clean · `npx eslint src` clean · `npx vitest run` 94/94 green.
-Not browser-verified this session: per-slider canvas interactivity (no E2E harness).
+Gate: `tsc -b` clean · `eslint src` clean · `vitest` 101/101 green · `GITHUB_ACTIONS=true
+npm run build` green · dev boots HTTP 200. Pushed; PR not yet opened:
+https://github.com/cassia-santos-nunes-almeida/EM-AC-Lab-Module3/pull/new/chore/m3-progress-and-cleanup-2026-06
 
 ### Already on `origin/main` (prior review, merged via PR #20)
-- VSWR Smith-chart quiz fix (M3-PHYS-01), short-dipole radiation-resistance
-  caption (M3-PHYS-02), guided-challenge exploration capstones in all 5 sections
-  (`1457ca0` + reachability fix `f830994`).
+VSWR quiz fix (M3-PHYS-01), short-dipole caption (M3-PHYS-02), guided-challenge capstones.
 
 ## Next Session
-Remaining items from `docs/cross-module-review-2026-05.md` (none started):
-1. **Consistency #2** — lift Transformers + LumpedDistributed from 1 to ≥2 inline
-   ConceptChecks. ⚠ requires new physics content → author + owner review.
-2. **Consistency #3** — make `ModuleNavigation` data-driven (M1's
-   `getAdjacentModules`) instead of `useLocation` + hardcoded `modules[]`.
-3. **Consistency #4** — add a `TableOfContents` (M1 items + activeId scroll-spy,
-   M2 smooth `scrollIntoView`); none exists today.
-4. **Consistency #5** — rename `Tabs` → `<TabSet>` + add Home/End keyboard support.
-5. **Optimization #1/#2** — rAF ref-refactor (CoupledCoilsSim, TransmissionLineSim).
-   ⚠ Low value for these *continuous* loops (restart = one cancel+rearm) and needs
-   in-browser slider verification per P-TEST-01. Recommend only if measured.
-6. **Optimization #5** — refactor the 7 inline sims onto shared M1 canvas hooks
-   (blocked on M1 extracting `useCanvasSetup`/`useAnimationFrame`).
+- **Owner review** of the two new ConceptCheck questions (#2) — physics wording/distractors.
+- **Optimization #5** (review doc) — refactor the 7 inline sims onto shared M1 canvas hooks;
+  BLOCKED on M1 extracting `useCanvasSetup` / `useAnimationFrame`.
+- Optional: adopt TableOfContents in more multi-section tabs if desired (currently Antennas only).
 
 ## Open Decisions
-- rAF ref-refactor (Opt #1/#2): proceed, or leave as-is given negligible gain?
-- ConceptCheck cadence (#2): who authors/validates the new physics content?
+- None blocking. The cross-module-review-2026-05.md backlog is otherwise complete for M3.
 
 ## Patterns Triggered
 - **P-UI-01** — guided-challenge steps must reference real, reachable controls.
 - **P-UI-02** — active-recall components must expose store-wired progress callbacks.
+- **P-UI-03** — continuous rAF loops should read params from a ref, not the dep array.

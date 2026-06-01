@@ -38,6 +38,18 @@ expose the callback (ConceptCheck `onComplete`/`onHint`, PredictionGate
 **Scope:** `ConceptCheck`, `PredictionGate`, the 5 module call sites, `progressStore`.
 **First seen:** 2026-06-01 review follow-up (commit `ecb20c6`).
 
+### P-UI-03 — Continuous rAF loops read params from a ref, not the dependency array
+**Pattern:** A canvas sim's render `useCallback` listed every slider value in its deps,
+so each slider change recreated `render` and tore down / restarted the
+`requestAnimationFrame` loop (the loop already re-arms every frame via a `renderRef`).
+**Rule:** For a CONTINUOUS rAF loop, hold the slider/derived values in a `paramsRef`
+synced by a separate `useEffect(..., [those values])`, read `paramsRef.current` inside
+render, and keep render's deps to the stable memoised draw helpers (or empty). The loop
+is then created once and still picks up new params every frame. Verify in a browser that
+sliders still drive the canvas (P-TEST-01).
+**Scope:** `CoupledCoilsSim`, `TransmissionLineSim` (and any future continuous-loop sim).
+**First seen:** 2026-06-01 review follow-up (commit `ecc66e0`).
+
 ## Build (P-BUILD)
 
 *No entries yet.*
