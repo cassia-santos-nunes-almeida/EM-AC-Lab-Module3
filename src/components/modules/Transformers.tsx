@@ -297,6 +297,24 @@ export function Transformers() {
           </p>
         </div>
 
+        <ConceptCheck
+          onComplete={() => incrementConceptChecks('transformers')}
+          onHint={() => incrementHints('transformers')}
+          data={{
+            mode: 'multiple-choice',
+            question: 'An ideal transformer steps the voltage up by a factor of 2 (N₂/N₁ = 2). What happens to the maximum available secondary current relative to the primary?',
+            options: [
+              { text: 'It is halved (I₂/I₁ = N₁/N₂ = ½)', correct: true, explanation: 'Correct. An ideal transformer conserves power, so V₁I₁ = V₂I₂. Doubling the voltage forces the current to halve: I₂/I₁ = N₁/N₂ = ½.' },
+              { text: 'It also doubles', correct: false, explanation: 'That would double the output power for free. An ideal transformer conserves power (V₁I₁ = V₂I₂), so stepping the voltage up steps the current down.' },
+              { text: 'It stays the same', correct: false, explanation: 'Current scales inversely with the turns ratio, I₂/I₁ = N₁/N₂, so it cannot stay constant while the voltage changes if power is conserved.' },
+            ],
+            hints: [
+              'An ideal transformer conserves power: V₁I₁ = V₂I₂.',
+              'The current ratio is the inverse of the voltage (turns) ratio: I₂/I₁ = N₁/N₂.',
+            ],
+          }}
+        />
+
         {/* Worked example */}
         <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-5 space-y-3 mt-4">
           <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">

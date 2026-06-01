@@ -229,6 +229,24 @@ export function LumpedDistributed() {
             you already know.
           </p>
         </div>
+
+        <ConceptCheck
+          onComplete={() => incrementConceptChecks('lumped-distributed')}
+          onHint={() => incrementHints('lumped-distributed')}
+          data={{
+            mode: 'multiple-choice',
+            question: 'Which Kirchhoff law yields the second telegrapher equation, ∂I/∂x = −C′ ∂V/∂t?',
+            options: [
+              { text: 'KCL (Kirchhoff’s Current Law), applied at the node', correct: true, explanation: 'Correct. At the node, the current that does not continue along the line is diverted to charge the shunt capacitance C′Δx, giving ∂I/∂x = −C′ ∂V/∂t.' },
+              { text: 'KVL (Kirchhoff’s Voltage Law), applied around the loop', correct: false, explanation: 'KVL around the loop gives the first telegrapher equation, ∂V/∂x = −L′ ∂I/∂t. The second equation comes from current balance at the node (KCL).' },
+              { text: 'Faraday’s law of induction', correct: false, explanation: 'Faraday’s law underlies the series inductor’s V–I relation, but both telegrapher equations are obtained by applying KVL and KCL to the infinitesimal LC segment.' },
+            ],
+            hints: [
+              'The first equation came from the loop (KVL); the second comes from the node.',
+              'At the node, current splits between continuing down the line and charging the shunt capacitor C′Δx.',
+            ],
+          }}
+        />
       </section>
             </div>
           ),
