@@ -55,6 +55,8 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
   const lastTimeRef = useRef<number>(0);
   /** Stable reference to the render function (avoids self-referencing useCallback). */
   const renderRef = useRef<FrameRequestCallback>(() => {});
+  /** Latest slider/derived params, read by the render loop so it need not be recreated on each change. */
+  const paramsRef = useRef({ lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength });
 
   /** Detect dark mode from root element class list. */
   const isDark = (): boolean =>
@@ -93,6 +95,7 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
     const w = rect.width;
     const h = rect.height;
     const dark = isDark();
+    const { lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength } = paramsRef.current;
 
     // Clear
     ctx.fillStyle = dark ? '#1e293b' : '#ffffff';
@@ -273,6 +276,11 @@ export function TransmissionLineSim({ className }: TransmissionLineSimProps) {
     lastTimeRef.current = timestamp;
     timeRef.current += dt;
     animFrameRef.current = requestAnimationFrame(renderRef.current);
+  }, []);
+
+  /** Keep the render loop's params ref in sync with the sliders and derived values. */
+  useEffect(() => {
+    paramsRef.current = { lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength };
   }, [lineLength, Z0, ZLValue, isOpen, Zs, signalType, gamma, wavelength]);
 
   /* -- Lifecycle: animation loop ---------------------------------------- */

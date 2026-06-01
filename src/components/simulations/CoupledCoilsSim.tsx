@@ -55,6 +55,8 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
   const animFrameRef = useRef<number>(0);
   const timeRef = useRef(0);
   const lastTimeRef = useRef<number>(0);
+  /** Latest slider params, read by the render loop so it need not be recreated on each change. */
+  const paramsRef = useRef({ k, N1, N2 });
 
   /** Detect dark mode by checking the root element class list. */
   const isDark = (): boolean =>
@@ -187,6 +189,7 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
     const w = rect.width;
     const h = rect.height;
     const dark = isDark();
+    const { k, N1, N2 } = paramsRef.current;
 
     // Clear
     ctx.clearRect(0, 0, w, h);
@@ -240,7 +243,12 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
     const dt = (timestamp - lastTimeRef.current) / 1000;
     lastTimeRef.current = timestamp;
     timeRef.current += dt;
-  }, [k, N1, N2, drawCoil, drawFieldLines]);
+  }, [drawCoil, drawFieldLines]);
+
+  /** Keep the render loop's params ref in sync with the sliders. */
+  useEffect(() => {
+    paramsRef.current = { k, N1, N2 };
+  }, [k, N1, N2]);
 
   /** Animation loop: schedules render on every frame. */
   useEffect(() => {
