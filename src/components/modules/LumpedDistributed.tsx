@@ -6,6 +6,7 @@ import { ConceptCheck } from '@/components/common/ConceptCheck';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
 import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
@@ -18,6 +19,20 @@ import { LadderAnimation } from '@/components/simulations/LadderAnimation';
  * transmission line, and the derivation of the telegrapher's equations from
  * Kirchhoff's laws applied to an infinitesimal segment.
  */
+const CHALLENGE = {
+  title: `From Lumped LC Sections to a Continuous Line`,
+  description: `Use the LadderAnimation in the Simulations tab to subdivide an LC ladder from a single lumped section toward a continuous transmission line, and discover why the wave speed v = 1/√(L′C′) stays fixed even as the individual components shrink.`,
+  instructions: [
+    `In the Simulations tab, press Reset so the canvas shows Stage 1 / 7, a single LC section. Read the 'Sections (N)', 'L per section', 'C per section', and 'Wave speed v' readout cards and write down all four starting values.`,
+    `Click Step once to move to 2 sections. Note that 'L per section' and 'C per section' each roughly halve, but record what happens to the 'Wave speed v' card.`,
+    `Keep clicking Step (4, then 8, then 16, then 32 sections), watching the 'Sections (N)' and per-section readouts after each press. Confirm L per section and C per section keep shrinking while the canvas shows ever-smaller inductor and capacitor symbols.`,
+    `Step one more time to reach the 'Continuous transmission line' stage (Stage 7 / 7). Observe that 'Sections (N)' now reads ∞ and that 'L per section' and 'C per section' both read → 0, yet compare 'Wave speed v' to the value you recorded in step 1.`,
+    `Press Reset, then press Play and watch the Stage indicator auto-advance through all stages. Track the highlighted 'Wave speed v' card the whole way through to verify it never changes as the ladder subdivides.`,
+    `Conclude why v stays constant: because v = 1/√(L′C′) depends only on the per-unit-length L′ and C′ (total L and C over the fixed physical length), and subdividing changes N without changing L′ or C′ — so the discrete ladder smoothly becomes a continuous line carrying a wave at the same speed.`,
+  ],
+  hint: `Watch the highlighted Wave speed v card, not the shrinking per-section L and C values — that contrast is the whole point.`,
+};
+
 export function LumpedDistributed() {
   const markVisited = useProgressStore((s) => s.markVisited);
   useEffect(() => { markVisited('lumped-distributed'); }, [markVisited]);
@@ -329,6 +344,8 @@ export function LumpedDistributed() {
       ]} />
 
       {/* ── Module navigation ─────────────────────────────────────── */}
+      <GuidedChallenge challenge={CHALLENGE} />
+
       <ModuleNavigation />
     </div>
   );

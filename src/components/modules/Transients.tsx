@@ -7,6 +7,7 @@ import { CollapsibleSection } from '@/components/common/CollapsibleSection';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
 import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
@@ -19,6 +20,20 @@ import { BounceDiagram } from '@/components/simulations/BounceDiagram';
  * Includes an interactive bounce diagram simulation, prediction gates,
  * worked examples, and a your-turn exercise panel.
  */
+const CHALLENGE = {
+  title: `Build a Bounce Diagram and Watch It Settle`,
+  description: `Use the interactive Bounce Diagram Builder to launch a voltage step onto a 50 Ω line and track how reflections at the load and source ends superimpose, overshoot, alternate, and converge toward the DC voltage-divider steady state.`,
+  instructions: [
+    `Open the Simulations tab. Set 'Γ at Load (Γₗ)' to about +0.50 and 'Γ at Source (Γₛ)' to 0.00, then read the V₀ and Vss values in the readout strip — confirm V₀ = 5.00 V (half of Vs because the source is matched) and Vss = 7.50 V.`,
+    `Click 'Start Step-Through', then press 'Next Bounce' once to reveal the first blue forward wave; note its +5.00 V label on the canvas and watch the 'Voltage at Load End' chart jump only after one propagation delay T_D.`,
+    `Press 'Next Bounce' again to add the red backward wave and observe that with Γₛ = 0 no further forward bounce appears — the load voltage settles at 7.50 V after a single round trip (the matched source absorbs the returning wave).`,
+    `Drag 'Γ at Source (Γₛ)' to a negative value such as -0.30 (keeping Γₗ ≈ +0.50) and raise 'Number of Bounces' to 8; click 'Play All' and watch the load-end voltage overshoot above Vss then alternate above and below it on successive bounces because the product Γₗ·Γₛ is negative.`,
+    `Drag 'Γ at Load (Γₗ)' down to a negative value like -0.50 and compare the new Vss readout to the positive-Γₗ case — confirm the steady-state voltage drops (to 2.50 V at Γₛ = 0) because the reflected wave now subtracts from the incident wave.`,
+    `Finally, drag both 'Γ at Load (Γₗ)' and 'Γ at Source (Γₛ)' all the way to their +1.00 endpoints (a fully open–open extreme) and observe the Vss readout switch to '∞ (unstable)' as Γₗ·Γₛ → 1; summarize how the sign and magnitude of the two reflection coefficients set whether the line overshoots, undershoots, alternates, or fails to converge, while Vss otherwise always matches the DC voltage divider Vs·Zₗ/(Zₛ+Zₗ).`,
+  ],
+  hint: `Vss is always the DC voltage-divider result; the reflection coefficients only control the transient path (overshoot, alternation, settling speed) taken to reach it.`,
+};
+
 export function Transients() {
   const markVisited = useProgressStore((s) => s.markVisited);
   useEffect(() => { markVisited('transients'); }, [markVisited]);
@@ -361,6 +376,8 @@ export function Transients() {
           ),
         },
       ]} />
+
+      <GuidedChallenge challenge={CHALLENGE} />
 
       <ModuleNavigation />
     </div>

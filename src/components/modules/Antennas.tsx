@@ -7,6 +7,7 @@ import { CollapsibleSection } from '@/components/common/CollapsibleSection';
 import { YourTurnPanel } from '@/components/common/YourTurnPanel';
 import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
+import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
 import { Tabs } from '@/components/common/Tabs';
 import { useProgressStore } from '@/store/progressStore';
@@ -57,6 +58,20 @@ const antennaCards: AntennaCard[] = [
     icon: Satellite,
   },
 ];
+
+const CHALLENGE = {
+  title: `Reading a Dipole's Radiation Pattern`,
+  description: `Manipulate the dipole length and watch how the polar radiation pattern, directivity, radiation resistance, and beamwidth respond. This builds intuition for why the half-wave dipole is the practical sweet spot and why matching it to a 75 Ω coax feed is no accident.`,
+  instructions: [
+    `In the Simulations tab, pass or skip the prediction prompt to reveal the radiation-pattern simulation, then set the Dipole Length slider to its minimum, 0.10λ (a short dipole), and note the broad, nearly round lobe in the polar pattern plus the low Directivity and very small Radiation Resistance readout.`,
+    `Drag the Dipole Length slider to 0.50λ (the half-wave dipole) and observe that the Radiation Resistance readout settles near 73 Ω — the value that nearly matches the 75 Ω coaxial standard discussed in the Theory tab.`,
+    `Compare the Directivity readout between 0.10λ and 0.50λ: confirm it rises toward about 1.64 (≈2.15 dBi) and that the Half-Power Beamwidth readout shrinks as the pattern narrows in the broadside direction.`,
+    `Continue increasing the Dipole Length slider past 1.00λ toward 1.50λ and watch the polar pattern develop extra side lobes splitting off the broadside main lobe, while the Half-Power Beamwidth readout changes accordingly.`,
+    `Find the longest dipole length at which the main lobe is still single (no side lobes have split off yet) — around 1.00λ — and note that the Directivity readout is at its largest for a single-lobe pattern right at that boundary, just before extra lobes appear at the next step.`,
+    `Conclude in your own words why ~0.50λ is the practical design choice: relate the 73 Ω Radiation Resistance to easy matching with Γ ≈ 0, and explain the trade-off between higher directivity and the unwanted side lobes that appear at longer lengths.`,
+  ],
+  hint: `Keep one eye on the Radiation Resistance readout near 0.50λ and watch the broadside lobe split as you push the slider toward 1.50λ.`,
+};
 
 export function Antennas() {
   const markVisited = useProgressStore((s) => s.markVisited);
@@ -163,6 +178,14 @@ export function Antennas() {
                 gives <MathWrapper formula="R_{\\text{rad}} \\approx 73.1\\,\\Omega" />. For a short
                 dipole (<MathWrapper formula="L \\ll \\lambda" />), <MathWrapper formula="R_{\\text{rad}} = 20\\pi^2(L/\\lambda)^2 \\approx 2\\,\\Omega" />,
                 which makes matching difficult.
+              </p>
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                Note on the pattern simulation below: its radiation-resistance readout uses the
+                sinusoidal (center-fed) current model, which is accurate near{' '}
+                <MathWrapper formula="L = \\lambda/2" /> (the 73-ohm result above). The short-dipole
+                formula <MathWrapper formula="20\\pi^2(L/\\lambda)^2" /> assumes a different
+                short-element current distribution, so at very small{' '}
+                <MathWrapper formula="L/\\lambda" /> the simulated value and this formula do not match.
               </p>
             </div>
           </CollapsibleSection>
@@ -517,6 +540,8 @@ export function Antennas() {
           ),
         },
       ]} />
+
+      <GuidedChallenge challenge={CHALLENGE} />
 
       <ModuleNavigation />
     </div>

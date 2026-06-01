@@ -1,0 +1,40 @@
+# Module 3 (Transmission Lines & Antennas) -- Phase 2 Plan
+
+Repo: C:\Users\cassi\Documents\GitHub\EM-AC-Lab-Module3
+
+## Physics correctness
+
+1. Smith-chart VSWR exercise (CRITICAL) -- P1. File: src/components/modules/TransmissionLines.tsx (YourTurnPanel, options array lines 341-357, second option marked correct at ~348-350; correctReveal already correct at 365, 369). Change (revise-fix, verifier text): in the option currently marked correct, change BOTH the text and the explanation. text: 'VSWR approx 2.6' becomes 'VSWR approx 2.4'. explanation: change to 'Correct! Gamma = (75 + j50 - 50)/(75 + j50 + 50) = (25 + j50)/(125 + j50). |Gamma| approx 0.415, so VSWR = (1 + 0.415)/(1 - 0.415) approx 2.42.' This corrects both the rounded |Gamma| (0.45 to 0.415) and the result so the graded option agrees with the reveal. Do NOT touch src/utils/transmissionMath.ts (Do Not Touch). Finding M3-PHYS-01. Citation: Ulaby 7e Eq 2.49 (Gamma) and Eq 2.73 (VSWR). Verification: apply-fix / revise-fix (original was wrong; revised fix verified self-consistent).
+
+2. Short-dipole radiation-resistance caption -- P2. File: src/components/modules/Antennas.tsx (short-dipole text lines 161-166, inside the Derivation: Radiation Resistance CollapsibleSection); the simulation readout uses src/utils/transmissionMath.ts calculateRadiationResistance (do not modify). Change (revise-fix, verifier text, option b): add a clarifying note next to the short-dipole text, e.g. "Note: the ~2 ohm short-dipole value uses the assumed (triangular) short-element current model. The simulation below integrates the resonant sinusoidal-current dipole pattern for every length; that model gives the correct 73 ohm at L=lambda/2 but in the short limit falls off as ~20*(pi L/lambda)^4 (about 0.19 ohm at L/lambda=0.1) rather than 20*pi^2*(L/lambda)^2, so do not expect the slider readout to reproduce the ~2 ohm figure at 0.1 lambda." Option a (a caption on the RadiationPatternSim readout noting it uses the resonant sinusoidal-current model valid near lambda/2) is equally acceptable. No formula change; transmissionMath.ts is Do Not Touch and its 73.1 ohm half-wave value is correct. Finding M3-PHYS-02. Citation: Ulaby 7e Ch 9 (Sec 9-1 short dipole, Sec 9-3 half-wave dipole). Verification: apply-fix / revise-fix.
+
+3. Coupled-coils fixed-L vs free-N caption -- P3. File: src/components/simulations/CoupledCoilsSim.tsx (constants L1/L2/VS lines 17-19; derived M/V2 lines 44-46; existing caption lines 375-378). Change (revise-fix, verifier text): integrate one sentence into the existing caption rather than adding a paragraph, e.g. append to lines 377-378: "These quantities are illustrative: M is computed from the fixed reference inductances while the voltage ratio follows the turns ratio (which would require L proportional to N^2), so they are not jointly solved from one consistent coil geometry." No math change; do not touch transmissionMath.ts. Finding M3-PHYS-04. Citation: Nilsson 11e Sec 6.4-6.5 (M = k sqrt(L1 L2)) and Ch 9 ideal transformer (L proportional to N^2). Verification: apply-fix / revise-fix.
+
+### Verified correct, no change
+- Coupled coils V2 k-dependence (the prior suite "big one") -- now shows V2 ideal and V2 actual = k V1 N2/N1 with an amber warning below k=0.9; the open-circuit model V2 = (M/L1) V1 = k sqrt(L2/L1) V1 is correct (M3-PHYS-03, Nilsson 11e Ch 6, Sec 9.11).
+- Coupled coils I2 and Z_ref k-independence -- acceptable labeled simplification; the warning banner and footnote disclose that I2 and Z_ref use the ideal k=1 model (M3-PHYS-05, Nilsson 11e Sec 9.11).
+- Transmission-line core formulas (Z0, lossy Z0, Gamma, VSWR, v, open/short edge cases) -- all re-derived correct, 52-test engine (M3-PHYS-06, Ulaby 7e Eqs 2.36, 2.31, 2.59, 2.73, 2.45).
+- Bounce diagram and transients -- V0+, (1+Gamma) accumulation, V_ss = Vs ZL/(Zs+ZL), worked 7.5 V verified (M3-PHYS-07, Ulaby 7e Sec 2-12).
+- Telegrapher's equations and lumped-to-distributed -- wave equation and v invariance under subdivision, YourTurn v=2e8 m/s and Z0=50 ohm verified (M3-PHYS-08, Ulaby 7e Eqs 2.14-2.15, 2.18).
+- Antenna pattern / directivity / HPBW (half-wave focus) -- R_rad 73.13 ohm, D 1.641, full-wave D 2.41, HPBW approx 78 deg (M3-PHYS-09, Ulaby 7e Sec 9-3, 9-2).
+- Smith-chart engine (Gamma-Z mapping, R/X circles, quarter-wave Z_T) -- conformal map and inverse verified; only the quiz option in M3-PHYS-01 was wrong (M3-PHYS-10, Ulaby 7e Sec 2-10, 2-11).
+- Standing-wave quiz envelopes -- |V(z)| = sqrt(1 + Gamma^2 + 2 Gamma cos 2kz), all four cases correct (M3-PHYS-11, Ulaby 7e Eq 2.69).
+- Ladder animation default v=c -- coincidence of illustrative defaults, not an error; pedagogical point (v independent of N) correct (M3-PHYS-12, Ulaby 7e Eq 2.45).
+- Transformer worked example and dot convention -- V2=60 V, Z_ref=800 ohm, power balance 18 W, YourTurn 3200 ohm all verified (M3-PHYS-13, Nilsson 11e Sec 9.11, 6.5).
+
+## Consistency alignment
+
+1. ConceptCheck and PredictionGate store wiring (the sharpest defect) -- P1. File: src/components/common/ConceptCheck.tsx and src/components/common/PredictionGate.tsx. Change: backport M2's onComplete/onHint callbacks into ConceptCheck and the onPredict callback into PredictionGate so emac-m3-progress conceptChecksCompleted and hintsUsed populate; they are currently dead.
+2. ConceptCheck cadence -- P2. Files: src/components/modules/Transformers.tsx and src/components/modules/LumpedDistributed.tsx. Change: lift each from 1 to at least 2 inline ConceptChecks (P-CODE-10).
+3. ModuleNavigation data-driven -- P2. File: src/components/common/ModuleNavigation.tsx. Change: replace useLocation plus the internal hardcoded modules[] array with M1's data-driven getAdjacentModules pattern fed from a per-module constant.
+4. TableOfContents -- P2. File: src/components/common (no TableOfContents currently). Change: add a TableOfContents using M1's items plus activeId scroll-spy contract with M2's smooth scrollIntoView.
+5. Tabs rename to TabSet -- P2. File: src/components/common/Tabs.tsx and call sites. Change: rename the uncontrolled content-carrying component to <TabSet> and add Home/End keyboard support.
+6. MathWrapper and LaTeX -- P3. File: src/components/common/MathWrapper.tsx. Change: none; M3's ref-based render and double-backslash LaTeX are already canonical (use M3 as the LaTeX reference for M1/M2 normalization).
+
+## Optimization
+
+1. CoupledCoilsSim rAF restart on slider change -- P2. File: src/components/simulations/CoupledCoilsSim.tsx (render useCallback deps line 243, effect 246-253). Change: hold k/N1/N2 in a stateRef synced by a separate useEffect, read stateRef.current inside render, and give render an empty dependency array so the rAF loop is created once (P-CODE-03). drawCoil/drawFieldLines are already memoized with [].
+2. TransmissionLineSim rAF restart on slider change -- P2. File: src/components/simulations/TransmissionLineSim.tsx (deps line 276, effect 280-284). Change: store the slider scalars and derived gamma/wavelength in a single paramsRef synced via a separate useEffect, read paramsRef.current inside render, and reduce render deps to [] (P-CODE-03). renderRef already exists at line 57.
+3. LadderAnimation empty ResizeObserver -- P3. File: src/components/simulations/LadderAnimation.tsx (observer line 429, effect 426-432). Change: delete the empty ResizeObserver effect; the per-frame resize in the render loop already covers it.
+4. TransmissionLineSim empty MutationObserver -- P3. File: src/components/simulations/TransmissionLineSim.tsx (lines 288-297). Change: remove the empty MutationObserver effect; the render loop reads isDark() each frame. If the loop is later made non-continuous, replace with a callback that forces a single redraw on theme change.
+5. Canvas hooks reuse -- P3. Files: M3's 7 inline simulations under src/components/simulations. Change: once M1's useCanvasSetup/useCanvasTouch/useAnimationFrame are extracted to a shared layer, refactor M3's inline simulations onto them to remove duplicated devicePixelRatio/requestAnimationFrame boilerplate.
