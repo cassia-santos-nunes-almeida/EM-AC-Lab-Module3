@@ -9,7 +9,7 @@ import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
-import { Tabs } from '@/components/common/Tabs';
+import { TabSet } from '@/components/common/TabSet';
 import { useProgressStore } from '@/store/progressStore';
 import { BounceDiagram } from '@/components/simulations/BounceDiagram';
 
@@ -63,7 +63,7 @@ export function Transients() {
       />
 
 
-      <Tabs tabs={[
+      <TabSet tabs={[
         {
           label: 'Theory',
           icon: <BookOpen className="w-4 h-4" />,

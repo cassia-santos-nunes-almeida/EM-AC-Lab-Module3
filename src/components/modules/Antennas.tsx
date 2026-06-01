@@ -9,7 +9,7 @@ import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
-import { Tabs } from '@/components/common/Tabs';
+import { TabSet } from '@/components/common/TabSet';
 import { useProgressStore } from '@/store/progressStore';
 import { RadiationPatternSim } from '@/components/simulations/RadiationPatternSim';
 import { MODULE_URLS } from '@/constants/modules';
@@ -98,7 +98,7 @@ export function Antennas() {
 
       <SectionHook text="Every wireless device you use — phone, WiFi router, satellite dish — relies on antennas. An antenna is simply a transmission line that has been opened up to let energy escape into free space." />
 
-      <Tabs tabs={[
+      <TabSet tabs={[
         {
           label: 'Theory',
           icon: <BookOpen className="w-4 h-4" />,

@@ -8,7 +8,7 @@ import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { SectionHook } from '@/components/common/SectionHook';
 import { FigureImage } from '@/components/common/FigureImage';
-import { Tabs } from '@/components/common/Tabs';
+import { TabSet } from '@/components/common/TabSet';
 import { useProgressStore } from '@/store/progressStore';
 import { CoupledCoilsSim } from '@/components/simulations/CoupledCoilsSim';
 
@@ -58,7 +58,7 @@ export function Transformers() {
 
       <SectionHook text="Every phone charger, laptop adapter, and power substation depends on transformers. Understanding how energy couples magnetically from one coil to another is the first step toward understanding how signals propagate along transmission lines." />
 
-      <Tabs tabs={[
+      <TabSet tabs={[
         {
           label: 'Theory',
           icon: <BookOpen className="w-4 h-4" />,

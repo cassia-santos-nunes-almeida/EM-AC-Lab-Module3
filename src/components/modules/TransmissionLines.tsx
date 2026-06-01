@@ -8,7 +8,7 @@ import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
-import { Tabs } from '@/components/common/Tabs';
+import { TabSet } from '@/components/common/TabSet';
 import { useProgressStore } from '@/store/progressStore';
 import { TransmissionLineSim } from '@/components/simulations/TransmissionLineSim';
 import { StandingWaveQuiz } from '@/components/simulations/StandingWaveQuiz';
@@ -56,7 +56,7 @@ export function TransmissionLines() {
 
       <SectionHook text="Every high-speed digital bus, every RF cable, and every PCB trace longer than a few centimetres behaves as a transmission line. Understanding impedance matching and reflections is the difference between a clean signal and a corrupted one." />
 
-      <Tabs tabs={[
+      <TabSet tabs={[
         {
           label: 'Theory',
           content: (
