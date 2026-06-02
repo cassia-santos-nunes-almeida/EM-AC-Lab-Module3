@@ -1,25 +1,14 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { getAdjacentModules } from '@/constants/modules';
 
-const modules = [
-  { path: '/', label: 'Overview' },
-  { path: '/transformers', label: 'Transformers' },
-  { path: '/lumped-distributed', label: 'Lumped to Distributed' },
-  { path: '/transmission-lines', label: 'Transmission Lines' },
-  { path: '/transients', label: 'Transients' },
-  { path: '/antennas', label: 'Antennas' },
-];
+interface ModuleNavigationProps {
+  /** Section id of the current module (matches MODULE_SECTIONS / progress-store ids) */
+  currentModuleId: string;
+}
 
-export function ModuleNavigation() {
-  const location = useLocation();
-  const currentIndex = modules.findIndex(m =>
-    m.path === '/' ? location.pathname === '/' : location.pathname.startsWith(m.path)
-  );
-
-  if (currentIndex === -1) return null;
-
-  const prev = currentIndex > 0 ? modules[currentIndex - 1] : null;
-  const next = currentIndex < modules.length - 1 ? modules[currentIndex + 1] : null;
+export function ModuleNavigation({ currentModuleId }: ModuleNavigationProps) {
+  const { prev, next } = getAdjacentModules(currentModuleId);
 
   return (
     <nav className="flex items-center justify-between pt-8 mt-8 border-t border-slate-200 dark:border-slate-700" aria-label="Module navigation">

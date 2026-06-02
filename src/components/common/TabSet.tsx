@@ -6,12 +6,12 @@ interface Tab {
   content: ReactNode;
 }
 
-interface TabsProps {
+interface TabSetProps {
   tabs: Tab[];
   defaultIndex?: number;
 }
 
-export function Tabs({ tabs, defaultIndex = 0 }: TabsProps) {
+export function TabSet({ tabs, defaultIndex = 0 }: TabSetProps) {
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
@@ -19,6 +19,8 @@ export function Tabs({ tabs, defaultIndex = 0 }: TabsProps) {
     let next = index;
     if (e.key === 'ArrowRight') next = (index + 1) % tabs.length;
     else if (e.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = tabs.length - 1;
     else return;
     e.preventDefault();
     setActiveIndex(next);

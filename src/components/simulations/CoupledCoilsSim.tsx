@@ -6,6 +6,8 @@ import {
   calculateSecondaryCurrent,
   calculateReflectedImpedance,
 } from '@/utils/transmissionMath';
+import { useCanvasSetup } from '@/hooks/useCanvasSetup';
+import { useAnimationFrame } from '@/hooks/useAnimationFrame';
 
 /** Props for the CoupledCoilsSim component. */
 interface CoupledCoilsSimProps {
@@ -50,11 +52,11 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
 
   /* ── Canvas refs & animation ──────────────────────────────────── */
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { canvasRef, prepareFrame } = useCanvasSetup();
   const containerRef = useRef<HTMLDivElement>(null);
-  const animFrameRef = useRef<number>(0);
   const timeRef = useRef(0);
-  const lastTimeRef = useRef<number>(0);
+  /** Latest slider params, read by the render loop so it need not be recreated on each change. */
+  const paramsRef = useRef({ k, N1, N2 });
 
   /** Detect dark mode by checking the root element class list. */
   const isDark = (): boolean =>
@@ -171,22 +173,13 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
     [],
   );
 
-  /** Main render loop (called each frame by the effect loop). */
-  const render = useCallback((timestamp: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
-
-    const w = rect.width;
-    const h = rect.height;
+  /** Render one frame; the loop is built once and always runs the latest closure. */
+  useAnimationFrame(({ dt }) => {
+    const frame = prepareFrame();
+    if (!frame) return;
+    const { ctx, width: w, height: h } = frame;
     const dark = isDark();
+    const { k, N1, N2 } = paramsRef.current;
 
     // Clear
     ctx.clearRect(0, 0, w, h);
@@ -236,21 +229,13 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
     }
 
     // Advance animation time
-    if (!lastTimeRef.current) lastTimeRef.current = timestamp;
-    const dt = (timestamp - lastTimeRef.current) / 1000;
-    lastTimeRef.current = timestamp;
     timeRef.current += dt;
-  }, [k, N1, N2, drawCoil, drawFieldLines]);
+  });
 
-  /** Animation loop: schedules render on every frame. */
+  /** Keep the params ref in sync with the sliders (read by the render loop). */
   useEffect(() => {
-    const loop = (timestamp: number) => {
-      render(timestamp);
-      animFrameRef.current = requestAnimationFrame(loop);
-    };
-    animFrameRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(animFrameRef.current);
-  }, [render]);
+    paramsRef.current = { k, N1, N2 };
+  }, [k, N1, N2]);
 
   /* ── UI ───────────────────────────────────────────────────────── */
 
@@ -375,6 +360,9 @@ export function CoupledCoilsSim({ className }: CoupledCoilsSimProps) {
           <p className="text-[11px] text-slate-400 dark:text-slate-500">
             Fixed: L₁ = 10 mH, L₂ = 10 mH, V<sub>s</sub> = 120 V.
             V₂ (actual) ≈ k &times; V<sub>s</sub> &times; N₂/N₁. I₂ and Z<sub>ref</sub> use the ideal transformer model (k = 1).
+            These quantities are illustrative: M is computed from the fixed reference inductances while the
+            voltage ratio follows the turns ratio (which would require L &prop; N<sup>2</sup>), so they are not
+            jointly solved from one consistent coil geometry.
           </p>
         </div>
       </div>

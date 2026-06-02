@@ -9,8 +9,10 @@ import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
-import { Tabs } from '@/components/common/Tabs';
+import { TabSet } from '@/components/common/TabSet';
+import { TableOfContents } from '@/components/common/TableOfContents';
 import { useProgressStore } from '@/store/progressStore';
+import { useActiveSection } from '@/hooks/useActiveSection';
 import { RadiationPatternSim } from '@/components/simulations/RadiationPatternSim';
 import { MODULE_URLS } from '@/constants/modules';
 
@@ -73,8 +75,20 @@ const CHALLENGE = {
   hint: `Keep one eye on the Radiation Resistance readout near 0.50λ and watch the broadside lobe split as you push the slider toward 1.50λ.`,
 };
 
+/** Theory-tab sections for jump-to navigation (module-level for a stable scroll-spy ref). */
+const THEORY_SECTIONS = [
+  { id: 'antenna-fundamentals', label: 'Fundamentals' },
+  { id: 'near-far-field', label: 'Near vs Far Field' },
+  { id: 'practical-antennas', label: 'Practical Antennas' },
+];
+const THEORY_IDS = THEORY_SECTIONS.map((s) => s.id);
+
 export function Antennas() {
   const markVisited = useProgressStore((s) => s.markVisited);
+  const incrementConceptChecks = useProgressStore((s) => s.incrementConceptChecks);
+  const incrementHints = useProgressStore((s) => s.incrementHints);
+  const markPredictionGate = useProgressStore((s) => s.markPredictionGate);
+  const activeTheoryId = useActiveSection(THEORY_IDS);
   useEffect(() => { markVisited('antennas'); }, [markVisited]);
 
   return (
@@ -95,12 +109,13 @@ export function Antennas() {
 
       <SectionHook text="Every wireless device you use — phone, WiFi router, satellite dish — relies on antennas. An antenna is simply a transmission line that has been opened up to let energy escape into free space." />
 
-      <Tabs tabs={[
+      <TabSet tabs={[
         {
           label: 'Theory',
           icon: <BookOpen className="w-4 h-4" />,
           content: (
             <div className="space-y-10">
+        <TableOfContents items={THEORY_SECTIONS} activeId={activeTheoryId} />
         <FigureImage
           src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Dipole_antenna_ft_en.svg/500px-Dipole_antenna_ft_en.svg.png"
           alt="Diagram of a half-wave dipole antenna showing the two conductor elements and feed point"
@@ -110,7 +125,7 @@ export function Antennas() {
           className="sm:max-w-md"
         />
 
-        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 space-y-4">
+        <div id="antenna-fundamentals" className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 space-y-4 scroll-mt-20">
           <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             Imagine taking a transmission line and flaring its conductors apart. Instead of guiding
             the wave between two conductors, the fields now radiate outward into space. This is
@@ -195,7 +210,7 @@ export function Antennas() {
       {/* ═══════════════════════════════════════════════════════════════
           Section 5.3 — Near field vs far field
           ═══════════════════════════════════════════════════════════════ */}
-      <section className="space-y-5">
+      <section id="near-far-field" className="space-y-5 scroll-mt-20">
         <div>
           <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
             Section 5.3
@@ -282,7 +297,7 @@ export function Antennas() {
       {/* ═══════════════════════════════════════════════════════════════
           Section 5.4 — Practical antennas (concept cards)
           ═══════════════════════════════════════════════════════════════ */}
-      <section className="space-y-5">
+      <section id="practical-antennas" className="space-y-5 scroll-mt-20">
         <div>
           <p className="text-xs font-semibold text-engineering-blue-600 dark:text-engineering-blue-400 uppercase tracking-wide">
             Section 5.4
@@ -391,6 +406,7 @@ export function Antennas() {
             { id: 'same', label: 'Stays the same' },
           ]}
           getCorrectAnswer={() => 'increases'}
+          onPredict={(correct) => markPredictionGate('antennas', correct)}
           explanation={
             <p>
               A longer dipole has more current elements, each radiating individually. Their
@@ -414,6 +430,8 @@ export function Antennas() {
           content: (
             <div className="space-y-10">
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('antennas')}
+          onHint={() => incrementHints('antennas')}
           data={{
             mode: 'multiple-choice',
             question: 'A half-wave dipole has nulls at \u03B8 = 0\u00B0 and \u03B8 = 180\u00B0 (along the antenna axis). Why?',
@@ -430,6 +448,8 @@ export function Antennas() {
         />
 
       <ConceptCheck
+        onComplete={() => incrementConceptChecks('antennas')}
+        onHint={() => incrementHints('antennas')}
         data={{
           mode: 'multiple-choice',
           question: 'If an antenna has directivity D = 1.64, what does this mean physically?',
@@ -543,7 +563,7 @@ export function Antennas() {
 
       <GuidedChallenge challenge={CHALLENGE} />
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="antennas" />
     </div>
   );
 }

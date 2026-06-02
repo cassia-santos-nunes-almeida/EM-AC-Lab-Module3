@@ -8,7 +8,7 @@ import { SectionHook } from '@/components/common/SectionHook';
 import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { FigureImage } from '@/components/common/FigureImage';
-import { Tabs } from '@/components/common/Tabs';
+import { TabSet } from '@/components/common/TabSet';
 import { useProgressStore } from '@/store/progressStore';
 import { LadderAnimation } from '@/components/simulations/LadderAnimation';
 
@@ -35,6 +35,9 @@ const CHALLENGE = {
 
 export function LumpedDistributed() {
   const markVisited = useProgressStore((s) => s.markVisited);
+  const incrementConceptChecks = useProgressStore((s) => s.incrementConceptChecks);
+  const incrementHints = useProgressStore((s) => s.incrementHints);
+  const markPredictionGate = useProgressStore((s) => s.markPredictionGate);
   useEffect(() => { markVisited('lumped-distributed'); }, [markVisited]);
 
   return (
@@ -54,7 +57,7 @@ export function LumpedDistributed() {
         </p>
       </div>
 
-      <Tabs tabs={[
+      <TabSet tabs={[
         {
           label: 'Theory',
           icon: <BookOpen className="w-4 h-4" />,
@@ -226,6 +229,24 @@ export function LumpedDistributed() {
             you already know.
           </p>
         </div>
+
+        <ConceptCheck
+          onComplete={() => incrementConceptChecks('lumped-distributed')}
+          onHint={() => incrementHints('lumped-distributed')}
+          data={{
+            mode: 'multiple-choice',
+            question: 'Which Kirchhoff law yields the second telegrapher equation, ∂I/∂x = −C′ ∂V/∂t?',
+            options: [
+              { text: 'KCL (Kirchhoff’s Current Law), applied at the node', correct: true, explanation: 'Correct. At the node, the current that does not continue along the line is diverted to charge the shunt capacitance C′Δx, giving ∂I/∂x = −C′ ∂V/∂t.' },
+              { text: 'KVL (Kirchhoff’s Voltage Law), applied around the loop', correct: false, explanation: 'KVL around the loop gives the first telegrapher equation, ∂V/∂x = −L′ ∂I/∂t. The second equation comes from current balance at the node (KCL).' },
+              { text: 'Faraday’s law of induction', correct: false, explanation: 'Faraday’s law underlies the series inductor’s V–I relation, but both telegrapher equations are obtained by applying KVL and KCL to the infinitesimal LC segment.' },
+            ],
+            hints: [
+              'The first equation came from the loop (KVL); the second comes from the node.',
+              'At the node, current splits between continuing down the line and charging the shunt capacitor C′Δx.',
+            ],
+          }}
+        />
       </section>
             </div>
           ),
@@ -254,6 +275,7 @@ export function LumpedDistributed() {
             { id: 'same', label: 'Stays the same' },
           ]}
           getCorrectAnswer={() => 'same'}
+          onPredict={(correct) => markPredictionGate('lumped-distributed', correct)}
           explanation={
             <p>
               The wave speed{' '}
@@ -282,6 +304,8 @@ export function LumpedDistributed() {
           content: (
             <div className="space-y-10">
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('lumped-distributed')}
+          onHint={() => incrementHints('lumped-distributed')}
           data={{
             mode: 'multiple-choice',
             question: 'Which Kirchhoff law gives the first telegrapher\'s equation (\u2202V/\u2202x = \u2212L\u2032 \u2202I/\u2202t)?',
@@ -346,7 +370,7 @@ export function LumpedDistributed() {
       {/* ── Module navigation ─────────────────────────────────────── */}
       <GuidedChallenge challenge={CHALLENGE} />
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="lumped-distributed" />
     </div>
   );
 }

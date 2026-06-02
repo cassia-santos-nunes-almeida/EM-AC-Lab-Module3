@@ -8,7 +8,7 @@ import { ModuleNavigation } from '@/components/common/ModuleNavigation';
 import { GuidedChallenge } from '@/components/common/GuidedChallenge';
 import { SectionHook } from '@/components/common/SectionHook';
 import { FigureImage } from '@/components/common/FigureImage';
-import { Tabs } from '@/components/common/Tabs';
+import { TabSet } from '@/components/common/TabSet';
 import { useProgressStore } from '@/store/progressStore';
 import { CoupledCoilsSim } from '@/components/simulations/CoupledCoilsSim';
 
@@ -34,6 +34,9 @@ const CHALLENGE = {
 
 export function Transformers() {
   const markVisited = useProgressStore((s) => s.markVisited);
+  const incrementConceptChecks = useProgressStore((s) => s.incrementConceptChecks);
+  const incrementHints = useProgressStore((s) => s.incrementHints);
+  const markPredictionGate = useProgressStore((s) => s.markPredictionGate);
   useEffect(() => { markVisited('transformers'); }, [markVisited]);
 
   return (
@@ -55,7 +58,7 @@ export function Transformers() {
 
       <SectionHook text="Every phone charger, laptop adapter, and power substation depends on transformers. Understanding how energy couples magnetically from one coil to another is the first step toward understanding how signals propagate along transmission lines." />
 
-      <Tabs tabs={[
+      <TabSet tabs={[
         {
           label: 'Theory',
           icon: <BookOpen className="w-4 h-4" />,
@@ -218,6 +221,8 @@ export function Transformers() {
         </div>
 
         <ConceptCheck
+          onComplete={() => incrementConceptChecks('transformers')}
+          onHint={() => incrementHints('transformers')}
           data={{
             mode: 'multiple-choice',
             question: 'Current enters the undotted terminal of the primary coil. What is the polarity of the induced voltage at the dotted terminal of the secondary?',
@@ -291,6 +296,24 @@ export function Transformers() {
             The load impedance "seen" by the source is scaled by the square of the turns ratio.
           </p>
         </div>
+
+        <ConceptCheck
+          onComplete={() => incrementConceptChecks('transformers')}
+          onHint={() => incrementHints('transformers')}
+          data={{
+            mode: 'multiple-choice',
+            question: 'An ideal transformer steps the voltage up by a factor of 2 (N₂/N₁ = 2). What happens to the maximum available secondary current relative to the primary?',
+            options: [
+              { text: 'It is halved (I₂/I₁ = N₁/N₂ = ½)', correct: true, explanation: 'Correct. An ideal transformer conserves power, so V₁I₁ = V₂I₂. Doubling the voltage forces the current to halve: I₂/I₁ = N₁/N₂ = ½.' },
+              { text: 'It also doubles', correct: false, explanation: 'That would double the output power for free. An ideal transformer conserves power (V₁I₁ = V₂I₂), so stepping the voltage up steps the current down.' },
+              { text: 'It stays the same', correct: false, explanation: 'Current scales inversely with the turns ratio, I₂/I₁ = N₁/N₂, so it cannot stay constant while the voltage changes if power is conserved.' },
+            ],
+            hints: [
+              'An ideal transformer conserves power: V₁I₁ = V₂I₂.',
+              'The current ratio is the inverse of the voltage (turns) ratio: I₂/I₁ = N₁/N₂.',
+            ],
+          }}
+        />
 
         {/* Worked example */}
         <div className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-5 space-y-3 mt-4">
@@ -389,6 +412,7 @@ export function Transformers() {
             { id: 'quadruples', label: 'Quadruples' },
           ]}
           getCorrectAnswer={() => 'doubles'}
+          onPredict={(correct) => markPredictionGate('transformers', correct)}
           explanation={
             <p>
               The voltage ratio is{' '}
@@ -484,7 +508,7 @@ export function Transformers() {
 
       <GuidedChallenge challenge={CHALLENGE} />
 
-      <ModuleNavigation />
+      <ModuleNavigation currentModuleId="transformers" />
     </div>
   );
 }

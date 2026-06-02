@@ -3,6 +3,8 @@ import {
   calculateComplexReflectionCoefficient,
   calculateVSWR,
 } from '@/utils/transmissionMath';
+import { useCanvasSetup } from '@/hooks/useCanvasSetup';
+import { useAnimationFrame } from '@/hooks/useAnimationFrame';
 
 /** Props for the SmithChartSim component. */
 interface SmithChartSimProps {
@@ -98,32 +100,19 @@ export function SmithChartSim({ className }: SmithChartSimProps) {
 
   /* ── Canvas refs & animation ──────────────────────────────────── */
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { canvasRef, prepareFrame } = useCanvasSetup();
   const containerRef = useRef<HTMLDivElement>(null);
-  const animFrameRef = useRef<number>(0);
 
   /** Ref holding derived values for the canvas render function. */
   const stateRef = useRef({ gamma, zr, zi });
   useEffect(() => { stateRef.current = { gamma, zr, zi }; }, [gamma, zr, zi]);
 
-  /** Animation loop — reads latest state from ref, never re-created. */
-  useEffect(() => {
-    const loop = () => {
-      const canvas = canvasRef.current;
-      if (!canvas) { animFrameRef.current = requestAnimationFrame(loop); return; }
-      const ctx = canvas.getContext('2d');
-      if (!ctx) { animFrameRef.current = requestAnimationFrame(loop); return; }
-
+  /** Repaint each frame so live params and dark-mode toggles are reflected. */
+  useAnimationFrame(() => {
+      const frame = prepareFrame();
+      if (!frame) return;
+      const { ctx, width: w, height: h } = frame;
       const { gamma: g, zr: znr, zi: zni } = stateRef.current;
-
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
-
-      const w = rect.width;
-      const h = rect.height;
       const dark = isDark();
 
       ctx.clearRect(0, 0, w, h);
@@ -271,11 +260,7 @@ export function SmithChartSim({ className }: SmithChartSimProps) {
         pt.y + labelOffY,
       );
 
-      animFrameRef.current = requestAnimationFrame(loop);
-    };
-    animFrameRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(animFrameRef.current);
-  }, []);
+  });
 
   /* ── Click-to-place and drag interaction ──────────────────────── */
 
